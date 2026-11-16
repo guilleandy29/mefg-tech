@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOVA PLAY · Juegos digitales</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ['"Chakra Petch"', 'sans-serif'], sans: ['Inter', 'sans-serif'] },
+          colors: {
+            night: { 950: '#070a17', 900: '#0b1020', 800: '#121833', 700: '#1a2247', 600: '#263066' },
+            neon: { violet: '#8b5cf6', cyan: '#22d3ee', pink: '#f43f5e', lime: '#a3e635' },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { background: #0b1020; }
+    .grad { background-image: linear-gradient(90deg, #8b5cf6, #22d3ee); }
+    .grad-text { background-image: linear-gradient(90deg, #a78bfa, #22d3ee); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .glow { box-shadow: 0 0 0 1px rgba(139,92,246,.35), 0 10px 30px -10px rgba(34,211,238,.25); }
+    .row-scroll { scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .row-scroll::-webkit-scrollbar { display: none; }
+    .row-scroll > * { scroll-snap-align: start; }
+    .grid-bg { background-image: linear-gradient(rgba(139,92,246,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,.07) 1px, transparent 1px); background-size: 28px 28px; }
+  </style>
+</head>
+<body class="font-sans text-slate-200 antialiased">
+
+
+  <!-- Cabecera -->
+  <header class="sticky top-0 z-40 bg-night-950/90 backdrop-blur border-b border-white/5">
+    <div class="mx-auto max-w-7xl px-4 py-4 flex flex-wrap items-center gap-4">
+      <a href="#" class="flex items-center gap-2 shrink-0">
+        <span class="grid place-items-center h-10 w-10 rounded-xl grad text-night-950 font-display font-bold text-xl">N</span>
+        <span class="font-display font-bold text-xl leading-none tracking-wide">NOVA<span class="grad-text">PLAY</span><br><span class="text-[10px] tracking-[.3em] text-slate-400 font-sans">JUEGOS DIGITALES</span></span>
+      </a>
+      <form class="order-3 md:order-none w-full md:w-auto md:flex-1 flex items-center rounded-xl bg-night-800 ring-1 ring-white/10 focus-within:ring-neon-violet">
+        <i class="fa-solid fa-magnifying-glass pl-4 text-slate-400"></i>
+        <input type="search" placeholder="Buscar juegos, membresías y más..." class="w-full bg-transparent px-3 py-3 text-sm outline-none placeholder:text-slate-500" />
+        <button class="m-1 rounded-lg grad px-4 py-2 text-sm font-semibold text-night-950">Buscar</button>
+      </form>
+      <div class="ml-auto flex items-center gap-2 sm:gap-3">
+        <button class="flex items-center gap-2 rounded-xl bg-night-800 ring-1 ring-white/10 px-3 py-2.5 text-sm font-semibold">🇦🇷 ARS <i class="fa-solid fa-chevron-down text-[10px]"></i></button>
+        <button class="relative flex items-center gap-2 rounded-xl bg-night-800 ring-1 ring-white/10 px-3 py-2.5 text-sm font-semibold">
+          <i class="fa-solid fa-cart-shopping text-neon-cyan"></i> <span class="hidden sm:inline">Carrito</span>
+          <span id="cart-count" class="absolute -top-2 -right-2 grid place-items-center h-5 min-w-5 px-1 rounded-full bg-neon-pink text-[11px] text-white">0</span>
+        </button>
+      </div>
+    </div>
+    <nav class="border-t border-white/5">
+      <ul class="mx-auto max-w-7xl px-4 flex gap-1 overflow-x-auto row-scroll text-sm font-display font-semibold tracking-wide">
+        <li><a href="#" class="flex items-center gap-2 my-2 rounded-lg grad text-night-950 px-4 py-2 whitespace-nowrap"><i class="fa-solid fa-bars"></i> CATEGORÍAS</a></li>
+        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">PS5 <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
+        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">PS4 <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
+        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">PS3 <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
+        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">NINTENDO <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
+        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">XBOX <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
+        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">MEMBRESÍAS <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
+        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">🕹️ PACKS</a></li>
+        <li><a href="#opiniones" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">🎯 OPINIONES</a></li>
+        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">👾 COLECCIONES</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4">
+
+    <!-- Hero -->
+    <section class="mt-6 grid gap-4 lg:grid-cols-[1fr_300px]">
+      <div class="relative overflow-hidden rounded-3xl glow h-[300px] sm:h-[340px] lg:h-[380px]">
+        <div id="hero-track" class="flex h-full transition-transform duration-700">
+          <div class="relative min-w-full h-full">
+            <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #8b5cf6aa, transparent 50%), radial-gradient(circle at 95% 90%, #f43f5e66, transparent 40%), #120d2e"></div>
+            <div class="absolute inset-0 grid-bg"></div>
+            <div class="relative h-full flex flex-col justify-end px-6 pt-6 pb-10 sm:px-16 sm:pb-12 max-w-xl">
+              <span class="w-fit rounded-full bg-neon-violet/20 ring-1 ring-neon-violet text-neon-violet text-xs font-semibold px-3 py-1">SAGA COMPLETA</span>
+              <h2 class="mt-3 font-display text-3xl sm:text-4xl font-bold leading-tight">Desafía el Olimpo de descuentos</h2>
+              <p class="mt-2 text-slate-300">Desde <span class="font-display text-2xl font-bold grad-text">$1.400</span> pesos</p>
+            </div>
+          </div>
+          <div class="relative min-w-full h-full">
+            <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #22d3eeaa, transparent 50%), radial-gradient(circle at 95% 90%, #8b5cf666, transparent 40%), #071c28"></div>
+            <div class="absolute inset-0 grid-bg"></div>
+            <div class="relative h-full flex flex-col justify-end px-6 pt-6 pb-10 sm:px-16 sm:pb-12 max-w-xl">
+              <span class="w-fit rounded-full bg-neon-cyan/20 ring-1 ring-neon-cyan text-neon-cyan text-xs font-semibold px-3 py-1">FLASH</span>
+              <h2 class="mt-3 font-display text-3xl sm:text-4xl font-bold leading-tight">¡Precios congelados en PS5!</h2>
+              <p class="mt-2 text-slate-300">Hasta <span class="font-display text-2xl font-bold text-neon-pink">-90%</span> por tiempo limitado</p>
+            </div>
+          </div>
+          <div class="relative min-w-full h-full">
+            <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #f43f5eaa, transparent 50%), radial-gradient(circle at 95% 90%, #8b5cf666, transparent 40%), #24081a"></div>
+            <div class="absolute inset-0 grid-bg"></div>
+            <div class="relative h-full flex flex-col justify-end px-6 pt-6 pb-10 sm:px-16 sm:pb-12 max-w-xl">
+              <span class="w-fit rounded-full bg-neon-pink/20 ring-1 ring-neon-pink text-neon-pink text-xs font-semibold px-3 py-1">BLACK FRIDAY</span>
+              <h2 class="mt-3 font-display text-3xl sm:text-4xl font-bold leading-tight">Las mejores rebajas del año</h2>
+              <p class="mt-2 text-slate-300">PS5, PS4, Xbox y Nintendo Switch</p>
+            </div>
+          </div>
+        </div>
+        <button id="hero-prev" class="hidden sm:grid absolute left-3 top-1/2 -translate-y-1/2 grid place-items-center h-10 w-10 rounded-full bg-night-950/70 hover:bg-night-950" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="hero-next" class="hidden sm:grid absolute right-3 top-1/2 -translate-y-1/2 grid place-items-center h-10 w-10 rounded-full bg-night-950/70 hover:bg-night-950" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+        <div id="hero-dots" class="absolute bottom-4 right-6 flex gap-2"></div>
+      </div>
+
+      <a href="#" class="relative overflow-hidden rounded-3xl bg-night-800 glow p-5 flex flex-col">
+        <p class="font-display text-xl font-bold italic tracking-wide">FLASH<span class="grad-text">⚡GAMERS</span></p>
+        <div class="mt-4 grid grid-cols-3 gap-2">
+          <img src="https://placehold.co/120x150/1a2247/a78bfa?text=EXP+33" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/1a2247/22d3ee?text=KCD+II" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/1a2247/a78bfa?text=MGS" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/1a2247/22d3ee?text=WWE" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/1a2247/a78bfa?text=COD" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/1a2247/22d3ee?text=SPIDEY" alt="" class="rounded-lg w-full" />
+        </div>
+        <p class="mt-auto pt-4 text-sm text-slate-400">Desde <span class="font-display text-3xl font-bold grad-text">$7.000</span> pesos</p>
+      </a>
+    </section>
+
+    <!-- Banner Black Friday + redes -->
+    <section class="mt-4 rounded-2xl grad p-[1px]">
+      <div class="rounded-2xl bg-night-900/90 px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="hidden sm:grid place-items-center h-10 w-10 shrink-0 rounded-xl grad text-night-950 text-lg">⚡</span>
+          <p class="font-display text-base sm:text-xl font-bold tracking-wide whitespace-nowrap">VIVE EL <span class="grad-text whitespace-nowrap">BLACK FRIDAY!!</span></p>
+          <a href="#black-friday" class="ml-1 rounded-full grad px-4 py-1.5 text-sm font-semibold text-night-950 hover:brightness-110 whitespace-nowrap">Ver más</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="#" aria-label="WhatsApp" class="grid place-items-center h-9 w-9 rounded-full bg-night-800 ring-1 ring-white/10 text-slate-300 hover:text-night-950 hover:bg-neon-cyan transition"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook" class="grid place-items-center h-9 w-9 rounded-full bg-night-800 ring-1 ring-white/10 text-slate-300 hover:text-night-950 hover:bg-neon-cyan transition"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Messenger" class="grid place-items-center h-9 w-9 rounded-full bg-night-800 ring-1 ring-white/10 text-slate-300 hover:text-night-950 hover:bg-neon-cyan transition"><i class="fa-brands fa-facebook-messenger"></i></a>
+          <a href="#" aria-label="TikTok" class="grid place-items-center h-9 w-9 rounded-full bg-night-800 ring-1 ring-white/10 text-slate-300 hover:text-night-950 hover:bg-neon-cyan transition"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" aria-label="YouTube" class="grid place-items-center h-9 w-9 rounded-full bg-night-800 ring-1 ring-white/10 text-slate-300 hover:text-night-950 hover:bg-neon-cyan transition"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" aria-label="Pinterest" class="grid place-items-center h-9 w-9 rounded-full bg-night-800 ring-1 ring-white/10 text-slate-300 hover:text-night-950 hover:bg-neon-cyan transition"><i class="fa-brands fa-pinterest-p"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flash: precios congelados -->
+    <section id="flash" class="mt-12"></section>
+
+    <!-- Precio rebajados por plataforma -->
+    <section class="mt-14">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">PLATAFORMAS</p>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold">Precios rebajados</h2>
+        </div>
+      </div>
+      <div class="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-4" id="platforms"></div>
+    </section>
+
+    <section id="black-friday" class="mt-14"></section>
+    <section id="esperado" class="mt-14"></section>
+    <section id="legendario" class="mt-14"></section>
+    <section id="viene" class="mt-14"></section>
+    <section id="reciente" class="mt-14"></section>
+    <section id="vendido" class="mt-14"></section>
+    <section id="nintendo" class="mt-14"></section>
+    <section id="xbox" class="mt-14"></section>
+
+    <!-- Opiniones -->
+    <section id="opiniones" class="mt-16">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">COMUNIDAD</p>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold">Lo que dicen los gamers</h2>
+        </div>
+        <button class="rounded-xl ring-1 ring-neon-violet px-5 py-2.5 text-sm font-semibold text-neon-violet hover:bg-neon-violet hover:text-white transition"><i class="fa-regular fa-comment-dots mr-1"></i> Escribir una opinión</button>
+      </div>
+      <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" id="reviews"></div>
+    </section>
+
+    <!-- Redes sociales -->
+    <section class="mt-16">
+      <div>
+        <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">SÍGUENOS</p>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold">En redes sociales</h2>
+      </div>
+      <div class="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="socials"></div>
+    </section>
+
+    <!-- Info -->
+    <section class="mt-16 rounded-3xl bg-night-950 grid-bg ring-1 ring-white/5 p-6 sm:p-10">
+      <div class="grid gap-6 lg:grid-cols-3">
+        <div class="lg:pr-6">
+          <h2 class="font-display text-2xl font-bold tracking-wide">NOVA<span class="grad-text">PLAY</span></h2>
+          <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">LICENCIAS ORIGINALES</p>
+          <p class="mt-4 text-sm text-slate-300">¡Hola, gamer! Agranda tu biblioteca en PS5, PS4, PS3, Xbox y Nintendo Switch al precio más barato del país. <span class="text-neon-cyan font-semibold">¡Elige tu formato ideal ya mismo!</span></p>
+          <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+            <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">PS5</span>
+            <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">PS4</span>
+            <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">PS3</span>
+            <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">XBOX</span>
+            <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">SWITCH</span>
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2 text-xs font-bold">
+            <span class="rounded-md grad text-night-950 px-3 py-1.5">19 AÑOS DE EXPERIENCIA</span>
+            <span class="rounded-md ring-1 ring-neon-cyan text-neon-cyan px-3 py-1.5">+500K SEGUIDORES</span>
+          </div>
+          <p class="mt-4 text-sm italic text-slate-500">"No arriesgues tu inversión en páginas pasajeras."</p>
+        </div>
+        <article class="rounded-2xl bg-night-800/80 ring-1 ring-neon-violet/40 p-6">
+          <span class="rounded-full bg-neon-violet/20 text-neon-violet text-[11px] font-bold px-3 py-1">PERFIL PROPIO</span>
+          <h3 class="mt-3 font-display text-xl font-bold">Cuentas primarias</h3>
+          <p class="text-xs text-slate-400">Juega desde tu perfil personal de siempre</p>
+          <p class="mt-4 text-sm text-slate-300">Descarga el juego en tu consola y juega de <b class="text-white">forma permanente</b> desde tu cuenta personal de siempre. Acumula tus propios trofeos, logros y partidas guardadas con <span class="text-neon-violet font-semibold">acceso ilimitado</span>.</p>
+          <p class="mt-4 text-[11px] font-semibold tracking-wider text-slate-500">// ACCESO DIRECTO / ENLACE COMPLETO</p>
+        </article>
+        <article class="rounded-2xl bg-night-800/80 ring-1 ring-neon-cyan/40 p-6">
+          <span class="rounded-full bg-neon-cyan/20 text-neon-cyan text-[11px] font-bold px-3 py-1">EL MENOR PRECIO</span>
+          <h3 class="mt-3 font-display text-xl font-bold">Cuentas secundarias</h3>
+          <p class="text-xs text-slate-400">El precio más bajo</p>
+          <p class="mt-4 text-sm text-slate-300">Ahorra al máximo en tu biblioteca con cuentas secundarias baratas. Accede al juego completo directamente desde el perfil proporcionado para jugar de manera <span class="text-neon-cyan font-semibold">ilimitada</span>. La alternativa más económica en Argentina.</p>
+          <p class="mt-4 text-[11px] font-semibold tracking-wider text-slate-500">// VENTAJAS: EL PRECIO MÁS BAJO DEL MERCADO</p>
+        </article>
+      </div>
+      <h3 class="mt-10 font-display text-lg font-bold text-center grad-text">¿Por qué comprar videojuegos digitales en nuestra plataforma?</h3>
+      <div class="mt-4 grid gap-4 md:grid-cols-2 text-sm text-slate-300">
+        <p class="rounded-2xl bg-night-800/60 ring-1 ring-white/10 p-5">Todos nuestros productos cuentan con <b class="text-neon-cyan">GARANTÍA TOTAL</b> y soporte inmediato. Facilita tus compras en pesos argentinos (ARS) pagando de forma segura mediante BBVA, transferencias desde Otros Bancos con CBU, Alias directo y PayPal sin complicaciones.</p>
+        <p class="rounded-2xl bg-night-800/60 ring-1 ring-white/10 p-5">Encuentra de inmediato los últimos estrenos como <b class="text-white">EA Sports FC 27</b>, la preventa de <b class="text-white">Grand Theft Auto VI</b> o suscripciones esenciales como <b class="text-white">PlayStation Plus</b> con descargas 100% seguras. ¡Disfruta tu próximo juego hoy!</p>
+      </div>
+    </section>
+
+    <!-- Noticias -->
+    <section class="mt-16">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">BLOG</p>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold">Noticias</h2>
+        </div>
+        <a href="#" class="text-sm font-semibold text-neon-cyan hover:underline">Ver todo <i class="fa-solid fa-arrow-right ml-1"></i></a>
+      </div>
+      <div class="mt-5 grid gap-4 md:grid-cols-3">
+        <a href="#" class="group overflow-hidden rounded-2xl bg-night-800 ring-1 ring-white/5 hover:ring-neon-violet transition">
+          <img src="https://placehold.co/600x340/2a0f14/f43f5e?text=GEARS+OF+WAR&font=montserrat" alt="" class="w-full aspect-[16/9] object-cover group-hover:scale-105 transition duration-500" />
+          <div class="p-5"><h3 class="font-display font-bold leading-snug">Gears of War: E-Day nos traslada a los acontecimientos del juego original</h3><span class="mt-3 inline-block text-sm text-neon-cyan">Ver más →</span></div>
+        </a>
+        <a href="#" class="group overflow-hidden rounded-2xl bg-night-800 ring-1 ring-white/5 hover:ring-neon-violet transition">
+          <img src="https://placehold.co/600x340/0f2a1a/a3e635?text=ZELDA&font=montserrat" alt="" class="w-full aspect-[16/9] object-cover group-hover:scale-105 transition duration-500" />
+          <div class="p-5"><h3 class="font-display font-bold leading-snug">Todo lo que se sabe de Zelda Ocarina of Time Remake</h3><span class="mt-3 inline-block text-sm text-neon-cyan">Ver más →</span></div>
+        </a>
+        <a href="#" class="group overflow-hidden rounded-2xl bg-night-800 ring-1 ring-white/5 hover:ring-neon-violet transition">
+          <img src="https://placehold.co/600x340/2a1240/f0abfc?text=GTA+VI&font=montserrat" alt="" class="w-full aspect-[16/9] object-cover group-hover:scale-105 transition duration-500" />
+          <div class="p-5"><h3 class="font-display font-bold leading-snug">Esto es lo más loco de GTA VI</h3><span class="mt-3 inline-block text-sm text-neon-cyan">Ver más →</span></div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-16 bg-night-950 border-t border-white/5">
+    <div class="mx-auto max-w-7xl px-4 py-10 grid gap-8 md:grid-cols-3">
+      <div>
+        <a href="#" class="flex items-center gap-2">
+          <span class="grid place-items-center h-10 w-10 rounded-xl grad text-night-950 font-display font-bold text-xl">N</span>
+          <span class="font-display font-bold text-xl tracking-wide">NOVA<span class="grad-text">PLAY</span></span>
+        </a>
+        <div class="mt-4 flex gap-4 text-lg text-slate-400">
+          <a href="#" class="hover:text-neon-cyan" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" class="hover:text-neon-cyan" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="hover:text-neon-cyan" aria-label="Messenger"><i class="fa-brands fa-facebook-messenger"></i></a>
+          <a href="#" class="hover:text-neon-cyan" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" class="hover:text-neon-cyan" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" class="hover:text-neon-cyan" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-display font-bold text-neon-violet">INFORMACIÓN</h4>
+        <ul class="mt-3 space-y-2 text-sm text-slate-300">
+          <li><a href="#" class="hover:text-white">Preguntas frecuentes</a></li>
+          <li><a href="#" class="hover:text-white">Medios de pago</a></li>
+          <li><a href="#" class="hover:text-white">Términos y condiciones</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display font-bold text-neon-cyan">SOPORTE</h4>
+        <ul class="mt-3 space-y-2 text-sm text-slate-300">
+          <li><a href="#" class="hover:text-white">Asistencia técnica</a></li>
+          <li><a href="#" class="hover:text-white">Contacto</a></li>
+        </ul>
+        <p class="mt-4 text-xs text-slate-400"><i class="fa-regular fa-clock mr-1 text-neon-cyan"></i> Lunes a Sábado de 12:30 PM a 10:00 PM. Órdenes del Domingo se procesan el Lunes.</p>
+      </div>
+    </div>
+    <p class="border-t border-white/5 py-4 text-center text-xs text-slate-500">2026 © Todos los derechos reservados</p>
+  </footer>
+
+  <!-- Botón de chat flotante -->
+  <a href="#" class="fixed bottom-5 right-5 z-50 grid place-items-center h-14 w-14 rounded-full grad text-night-950 text-2xl shadow-lg shadow-neon-violet/40" aria-label="Chat"><i class="fa-regular fa-comment"></i></a>
+
+  <script>
+    // ---------- Datos ----------
+    const P = (name, old, price, off, plat) => ({ name, old, price, off, plat });
+    const sections = {
+      flash: {
+        eyebrow: 'FLASH', title: '¡Precios congelados! ❄️', countdown: { d: 0, h: 11, m: 8 }, accent: 'cyan',
+        items: [
+          P('Call of Duty: Black Ops II PS5', 11600, 7000, 40, 'PS5'), P('The Blood of Dawnwalker PS5', 11600, 7000, 40, 'PS5'),
+          P('Black Myth: Wukong PS5', 11600, 7000, 40, 'PS5'), P('Mortal Shell II PS5', 11600, 7000, 40, 'PS5'),
+          P('Clair Obscur: Expedition 33 PS5', 17500, 7000, 60, 'PS5'), P('Indiana Jones and the Great Circle PS5', 11600, 7000, 40, 'PS5'),
+          P("Five Nights at Freddy's: Secret of the Mimic", 35000, 7000, 80, 'PS5'), P('Call of Duty: Black Ops PS5', 32100, 22400, 30, 'PS5'),
+          P('Cyberpunk 2077: Ultimate Edition PS5', 35000, 7000, 80, 'PS5'), P('Silent Hill 2 PS5', 11600, 7000, 40, 'PS5'),
+          P('Ace Combat 7: Skies Unknown PS5', 70000, 7000, 90, 'PS5'), P('Helldivers 2 - PS5', 17500, 7000, 60, 'PS5'),
+          P('Horizon Zero Dawn Remastered PS5', 11600, 7000, 40, 'PS5'), P('Resident Evil 4 Gold Edition PS5', 35000, 7000, 80, 'PS5'),
+          P('Returnal PS5', 17500, 7000, 60, 'PS5'), P('The Last of Us Complete PS5', 17500, 7000, 60, 'PS5'),
+          P('Pragmata PS5', 14000, 7000, 50, 'PS5'), P('Marvel Tōkon: Fighting Souls PS5', 17500, 7000, 60, 'PS5'),
+          P('Resident Evil Remake Trilogy PS5', 98000, 19600, 80, 'PS5'), P('Kingdom Come: Deliverance II PS5', 11600, 7000, 40, 'PS5'),
+          P('Resident Evil 4 Gold Edition PS4', null, 7000, 0, 'PS4'), P('Call of Duty: Black Ops 7 PS5', 11600, 7000, 40, 'PS5'),
+          P('Call of Duty WWII Gold Edition PS5', 35000, 7000, 80, 'PS5'), P('Call of Duty: Modern Warfare III PS5', 23400, 7000, 70, 'PS5'),
+        ],
+      },
+      'black-friday': {
+        eyebrow: 'BLACK FRIDAY 🔥', title: '¡Antes que termine! 🕰️', countdown: { d: 15, h: 18, m: 14 }, accent: 'pink',
+        items: [
+          P('Grand Theft Auto V PS5', 17500, 7000, 60, 'PS5'), P('FC26 PS5', 23400, 7000, 70, 'PS5'), P('007 First Light PS5', 39600, 23800, 40, 'PS5'),
+          P('Silent Hill f PS5', 11600, 7000, 40, 'PS5'), P('FC26 Ultimate Edition PS5', 24500, 9800, 60, 'PS5'), P('Assassins Creed Shadows PS5', 17500, 7000, 60, 'PS5'),
+          P('Silent Hill 2 PS5', 11600, 7000, 40, 'PS5'), P('Beast of Reincarnation PS5', 42000, 25200, 40, 'PS5'),
+          P('2 juegos en 1 Mortal Kombat 11 Ultimate más…', 28000, 5600, 80, 'PS5'), P('Cyberpunk 2077: Ultimate Edition PS5', 35000, 7000, 80, 'PS5'),
+          P('Subnautica PS5', 21000, 4200, 80, 'PS5'), P('Metal Gear Solid Delta: Snake Eater PS5', 23400, 7000, 70, 'PS5'),
+          P('Avatar Legends: The Fighting Game PS5', 32100, 22400, 30, 'PS5'), P('The Forest PS5', 14000, 2800, 80, 'PS5'),
+          P('Little Nightmares I y II PS4', 42000, 8400, 80, 'PS4'), P('Astro Bot PS5', 59500, 23800, 60, 'PS5'),
+          P('Poppy Playtime: Chapter 5 PS5', 25600, 15400, 40, 'PS5'), P('Resident Evil 2 PS5', 14000, 4200, 70, 'PS5'),
+          P('Mortal Kombat Legacy Kollection PS4', 35000, 14000, 60, 'PS4'), P('Poppy Playtime: Chapter 4 PS5', 18600, 11200, 40, 'PS5'),
+          P('Code Vein II PS5', 37400, 22400, 40, 'PS5'), P('Hogwarts Legacy Digital Deluxe Edition PS5', 23400, 7000, 70, 'PS5'),
+          P('Mortal Kombat X PS5', 9400, 2800, 70, 'PS5'), P('Little Nightmares I y II PS5', 21000, 8400, 60, 'PS5'),
+        ],
+      },
+      esperado: {
+        eyebrow: 'LO ESPERADO', title: '¡Domina el juego! ⚽️', countdown: { d: 0, h: 11, m: 8 }, accent: 'lime',
+        items: [
+          P('FC27 PS5', 37400, 22400, 40, 'PS5'), P('FC27 PS4', 32600, 19600, 40, 'PS4'), P('FC27 - Nintendo Switch 2', 58400, 35000, 40, 'SWITCH 2'),
+          P('FC27 - Xbox Series X/S', 79400, 47600, 40, 'XBOX'), P('FC27 - Xbox One', 79400, 47600, 40, 'XBOX'),
+        ],
+      },
+      legendario: {
+        eyebrow: 'EL LEGENDARIO', title: '¡Botín de ofertas! 💰', countdown: { d: 3, h: 5, m: 14 }, accent: 'violet',
+        items: [
+          P('Grand Theft Auto VI PS5', 109200, 54600, 50, 'PS5'), P('Grand Theft Auto VI - Xbox Series X|S', 91000, 54600, 40, 'XBOX'),
+          P('Grand Theft Auto V PS5', 17500, 7000, 60, 'PS5'), P('Grand Theft Auto V PS4', 35000, 7000, 80, 'PS4'),
+          P('Grand Theft Auto 3 PS3', 4100, 2800, 31, 'PS3'), P('Grand Theft Auto 5 (GTA V) PS3', 4600, 1400, 70, 'PS3'),
+        ],
+      },
+    };
+
+    const groups = {
+      viene: { eyebrow: 'LO QUE SE VIENE', rows: [
+        { title: 'Pre orden', sub: 'Tómalo antes que nadie', color: '#8b5cf6', tag: 'PRE ORDEN', items: [
+          P('Grand Theft Auto VI PS5', 109200, 54600, 50, 'PS5'), P('Rayman Legends Retold PS5', 51900, 36400, 30, 'PS5'),
+          P('Metroid Ravenous - Nintendo Switch 2', 77000, 30800, 60, 'SWITCH 2'), P('Until Dawn 2 PS5', 70000, 28000, 60, 'PS5'),
+          P('Tomb Raider: Legacy of Atlantis PS5', 67800, 40600, 40, 'PS5'), P('Fable - Xbox Series X/S', 70000, 42000, 40, 'XBOX') ] },
+      ] },
+      reciente: { eyebrow: 'LO MÁS RECIENTE', rows: [
+        { title: 'Estrenos', sub: 'Juega lo más nuevo', color: '#22d3ee', tag: 'NUEVO', items: [
+          P("Dragon's Dogma 2: Dark Arisen PS5", 56000, 33600, 40, 'PS5'), P('Phantom Blade Zero PS5', 56000, 33600, 40, 'PS5'),
+          P('The Legend of Zelda: Ocarina of Time - Nintendo…', 101500, 40600, 60, 'SWITCH 2'), P('Planet Zoo 2 - Xbox Series X/S', 58400, 35000, 40, 'XBOX'),
+          P('Call of Duty: Modern Warfare 4 PS5', 58400, 35000, 40, 'PS5'), P('Final Fantasy Resonance PS5', 56000, 33600, 40, 'PS5') ] },
+      ] },
+      vendido: { eyebrow: 'LO MÁS VENDIDO', rows: [
+        { title: 'Fijos', sub: 'Los juegazos de siempre', color: '#f43f5e', tag: 'TOP', items: [
+          P('FC25 PS5', 7000, 1400, 80, 'PS5'), P('Grand Theft Auto V PS4', 35000, 7000, 80, 'PS4'), P('Crash Team Racing Nitro Fueled PS4', 14000, 2800, 80, 'PS4'),
+          P('God of War III Remastered PS5', 28000, 5600, 80, 'PS5'), P('Mortal Kombat 11 Ultimate PS5', 28000, 5600, 80, 'PS5'),
+          P('The Last of Us Part II PS5', 35000, 7000, 80, 'PS5'), P('Red Dead Redemption 2 PS4', 28000, 5600, 80, 'PS4'), P('Minecraft PS4', 37300, 11200, 70, 'PS4') ] },
+        { title: 'PS4', sub: 'Las mejores obras maestras', color: '#3b82f6', tag: 'TOP', items: [
+          P('FC27 PS4', 32600, 19600, 40, 'PS4'), P('God of War PS4', 7000, 1400, 80, 'PS4'), P('Red Dead Redemption 2 PS4', 28000, 5600, 80, 'PS4'),
+          P("Marvel's Spider-Man Game of the Year Edition…", 28000, 5600, 80, 'PS4'), P('Minecraft PS4', 37300, 11200, 70, 'PS4'), P('Mortal Kombat XL PS4', 14000, 2800, 80, 'PS4') ] },
+      ] },
+      nintendo: { eyebrow: 'MUNDO NINTENDO', title: '¡Corre el reloj! ☣️', countdown: { d: 15, h: 18, m: 14 }, rows: [
+        { title: null, items: [
+          P('Splatoon Raiders - Nintendo Switch 2', 42000, 25200, 40, 'SWITCH 2'), P('Pokémon Violet - Nintendo Switch 2', 70000, 21000, 70, 'SWITCH 2'),
+          P('Dragon Ball: Sparking! Zero - Nintendo Switch…', 65200, 19600, 70, 'SWITCH 2'), P('Pokémon Legends Arceus - Nintendo Switch 2', 105000, 21000, 80, 'SWITCH 2'),
+          P('MLB The Show 26 - Nintendo Switch 2', 18600, 11200, 40, 'SWITCH 2') ] },
+        { title: 'Switch 2', sub: 'Lo último de Nintendo', color: '#ef4444', tag: 'SWITCH 2', items: [
+          P('FC27 - Nintendo Switch 2', 58400, 35000, 40, 'SWITCH 2'), P('The Legend of Zelda: Ocarina of Time - Nintendo…', 101500, 40600, 60, 'SWITCH 2'),
+          P('Tormented Souls 2 - Nintendo Switch 2', 49000, 19600, 60, 'SWITCH 2'), P('Mario Kart World - Nintendo Switch 2 Exclusivo', 93400, 28000, 70, 'SWITCH 2'),
+          P('Fatal Fury: City of the Wolves - Nintendo…', 28000, 11200, 60, 'SWITCH 2'), P('Nintendo Switch Sports Resort - Nintendo Switch…', 44400, 26600, 40, 'SWITCH 2') ] },
+        { title: 'Switch', sub: 'La diversión portátil', color: '#f97316', tag: 'SWITCH', items: [
+          P('Dragon Quest VII Reimagined - Nintendo Switch', 77000, 30800, 60, 'SWITCH'), P('FC26 - Nintendo Switch', 39600, 23800, 40, 'SWITCH'),
+          P('Mario Kart 8 Deluxe - Nintendo Switch', 63000, 25200, 60, 'SWITCH'), P('Super Mario Party Jamboree - Nintendo Switch', 70000, 21000, 70, 'SWITCH'),
+          P('Super Mario Odyssey - Nintendo Switch', 66500, 26600, 60, 'SWITCH'), P('Super Smash Bros Ultimate - Nintendo Switch…', 70000, 21000, 70, 'SWITCH') ] },
+      ] },
+      xbox: { eyebrow: 'UNIVERSO XBOX', title: '¡Lo quiero ya! 🛡️', countdown: { d: 15, h: 18, m: 14 }, rows: [
+        { title: null, items: [
+          P('Resident Evil 4 Remake - Xbox Series X/S', 28000, 5600, 80, 'XBOX'), P('LEGO Batman Legacy of the Dark Knight - Xbox…', 70000, 42000, 40, 'XBOX'),
+          P('UFC 6 Xbox Series X/S', 70000, 42000, 40, 'XBOX'), P('Battlefield 6 - Xbox Series X|S', 77000, 30800, 60, 'XBOX'), P('Pragmata - Xbox Series X/S', 51400, 30800, 40, 'XBOX') ] },
+        { title: 'Series', sub: 'Poder de nueva generación', color: '#22c55e', tag: 'SERIES X|S', items: [
+          P('Halo: Campaign Evolved - Xbox Series X/S', 67600, 40600, 40, 'XBOX'), P('FC27 - Xbox Series X/S', 79400, 47600, 40, 'XBOX'),
+          P('Call of Duty: Modern Warfare 4 - Xbox Series…', 70000, 42000, 40, 'XBOX'), P('Grand Theft Auto VI - Xbox Series X|S', 91000, 54600, 40, 'XBOX'),
+          P('Resonance: A Plague Tale Legacy - Xbox Series…', 79900, 56000, 30, 'XBOX'), P('Minecraft Dungeons II - Xbox Series X/S', 32600, 19600, 40, 'XBOX') ] },
+        { title: 'One', sub: 'A precios reducidos', color: '#16a34a', tag: 'XBOX ONE', items: [
+          P('Grand Theft Auto V GTA V - Xbox One', 51800, 14000, 73, 'XBOX'), P('FC27 - Xbox One', 79400, 47600, 40, 'XBOX'),
+          P('Halo 5 Guardians - Xbox One', 14000, 2800, 80, 'XBOX'), P('Red Dead Redemption 2 - Xbox One', 56000, 11200, 80, 'XBOX'),
+          P('Elden Ring - Xbox One', 56000, 33600, 40, 'XBOX'), P('FC26 - Xbox One', 32600, 9800, 70, 'XBOX') ] },
+        { title: 'PS3', sub: 'Clásicos que marcan época', color: '#64748b', tag: 'PS3', items: [
+          P('Call of Duty Black Ops III PS3', 4600, 1400, 70, 'PS3'), P('The Last of Us PS3', 4600, 1400, 70, 'PS3'), P('Gran Turismo 6 PS3', 4600, 1400, 70, 'PS3'),
+          P('FIFA 18 PS3', 4600, 1400, 70, 'PS3'), P('Pro Evolution Soccer 2018 PS3', 4600, 1400, 70, 'PS3'), P('God of War Ascension', 3500, 1400, 60, 'PS3') ] },
+      ] },
+    };
+
+    // ---------- Helpers ----------
+    const fmt = n => '$ ' + n.toLocaleString('es-AR');
+    const platColor = { 'PS5': '#3b82f6', 'PS4': '#2563eb', 'PS3': '#64748b', 'XBOX': '#22c55e', 'SWITCH': '#ef4444', 'SWITCH 2': '#ef4444' };
+    const accents = { cyan: '#22d3ee', pink: '#f43f5e', lime: '#a3e635', violet: '#8b5cf6' };
+    const shortName = n => n.replace(/ - .*| PS[345]$| PS[345] .*/i, '').replace(/…$/, '');
+    // Portada de marcador: degradado con el título (reemplazar por <img src="portada.jpg"> cuando tengas las imágenes)
+    const hue = s => [...s].reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 360, 7);
+    const cover = p => {
+      const h = hue(p.name);
+      return `<div class="w-full aspect-[3/4] flex items-end p-4 group-hover:scale-105 transition duration-500" style="background:radial-gradient(circle at 70% 25%, hsl(${h} 80% 55% / .55), transparent 55%), linear-gradient(160deg, hsl(${h} 45% 22%), #0b1020)">
+        <span class="font-display text-lg font-bold leading-tight text-white/90 uppercase line-clamp-3 mb-6">${shortName(p.name)}</span></div>`;
+    };
+
+    const card = (p, tag) => `
+      <article class="group w-[180px] sm:w-[200px] shrink-0 rounded-2xl bg-night-800 ring-1 ring-white/5 hover:ring-neon-violet/70 transition overflow-hidden flex flex-col">
+        <div class="relative">
+          ${cover(p)}
+          <span class="absolute top-2 left-2 rounded-md px-2 py-0.5 text-[10px] font-bold text-white" style="background:${platColor[p.plat] || '#475569'}">${p.plat}</span>
+          ${tag && tag !== p.plat ? `<span class="absolute top-2 right-2 rounded-md bg-night-950/80 px-2 py-0.5 text-[10px] font-bold text-neon-cyan">${tag}</span>` : ''}
+          ${p.off ? `<span class="absolute bottom-2 left-2 rounded-full bg-neon-pink px-2.5 py-0.5 text-xs font-bold text-white">-${p.off}%</span>` : ''}
+        </div>
+        <div class="p-3 flex flex-col flex-1">
+          <h3 class="text-[13px] font-semibold leading-snug line-clamp-2 min-h-[2.4rem]" title="${p.name}">${p.name}</h3>
+          <div class="mt-2">
+            ${p.old ? `<p class="text-xs text-slate-500 line-through">${fmt(p.old)} ARS</p>` : '<p class="text-xs">&nbsp;</p>'}
+            <p class="font-display text-xl font-bold text-white">${fmt(p.price)} <span class="text-xs text-slate-400">ARS</span></p>
+          </div>
+          <div class="mt-3 flex gap-2">
+            <button class="flex-1 rounded-lg grad py-2 text-sm font-semibold text-night-950 hover:brightness-110 whitespace-nowrap"><i class="fa-solid fa-bolt mr-1 hidden sm:inline"></i>Comprar</button>
+            <button class="grid place-items-center w-9 rounded-lg bg-night-700 hover:bg-night-600" title="Detalles" aria-label="Detalles"><i class="fa-solid fa-magnifying-glass text-xs"></i></button>
+            <button class="add grid place-items-center w-9 rounded-lg bg-night-700 hover:bg-night-600" title="Añadir" aria-label="Añadir al carrito"><i class="fa-solid fa-cart-plus text-xs"></i></button>
+          </div>
+        </div>
+      </article>`;
+
+    const rowControls = id => `
+      <div class="hidden sm:flex gap-2">
+        <button data-scroll="${id}" data-dir="-1" class="grid place-items-center h-9 w-9 rounded-full bg-night-800 ring-1 ring-white/10 hover:ring-neon-violet" aria-label="Anterior"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+        <button data-scroll="${id}" data-dir="1" class="grid place-items-center h-9 w-9 rounded-full bg-night-800 ring-1 ring-white/10 hover:ring-neon-violet" aria-label="Siguiente"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+      </div>`;
+
+    const countdownEl = (cd, color) => {
+      const end = Date.now() + ((cd.d * 24 + cd.h) * 60 + cd.m) * 60000;
+      const box = l => `<div class="text-center"><span data-u="${l}" class="block min-w-[2.6rem] rounded-lg bg-night-950 ring-1 px-2 py-1 font-display text-xl font-bold" style="--tw-ring-color:${color}66;color:${color}">00</span><span class="text-[10px] tracking-widest text-slate-400">${l}</span></div>`;
+      return `<div class="countdown flex items-start gap-1.5" data-end="${end}">${box('DÍAS')}${box('HORAS')}${box('MINS')}${box('SEGS')}</div>`;
+    };
+
+    let rowId = 0;
+    const row = (items, tag) => {
+      const id = 'row' + (rowId++);
+      return { id, html: `<div id="${id}" class="row-scroll flex gap-4 overflow-x-auto pb-2">${items.map(p => card(p, tag)).join('')}</div>` };
+    };
+
+    // Secciones con contador
+    Object.entries(sections).forEach(([key, s]) => {
+      const color = accents[s.accent];
+      const r = row(s.items);
+      document.getElementById(key).innerHTML = `
+        <div class="rounded-3xl bg-night-900 ring-1 ring-white/5 p-5 sm:p-6" style="background-image:radial-gradient(circle at 0% 0%, ${color}22, transparent 45%)">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold tracking-[.3em]" style="color:${color}">${s.eyebrow}</p>
+              <h2 class="font-display text-2xl sm:text-3xl font-bold">${s.title}</h2>
+            </div>
+            <div class="flex items-center gap-4">${countdownEl(s.countdown, color)}${rowControls(r.id)}</div>
+          </div>
+          <div class="mt-5">${r.html}</div>
+        </div>`;
+    });
+
+    // Secciones agrupadas con banner lateral
+    Object.entries(groups).forEach(([key, g]) => {
+      const built = g.rows.map(rw => ({ rw, r: row(rw.items, rw.tag) }));
+      const lead = built[0].rw.title ? null : built[0].r;
+      let html = `<div class="flex flex-wrap items-end justify-between gap-4">
+        <div><p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">${g.eyebrow}</p>${g.title ? `<h2 class="font-display text-2xl sm:text-3xl font-bold">${g.title}</h2>` : ''}</div>
+        <div class="flex items-center gap-4">${g.countdown ? countdownEl(g.countdown, '#22d3ee') : ''}${lead ? rowControls(lead.id) : ''}</div></div>`;
+      built.forEach(({ rw, r }) => {
+        if (!rw.title) {
+          html += `<div class="mt-5">${r.html}</div>`;
+          return;
+        }
+        html += `
+          <div class="mt-5 grid gap-4 md:grid-cols-[220px_1fr] items-stretch">
+            <div class="relative overflow-hidden rounded-2xl p-6 flex md:flex-col justify-between items-center md:items-start gap-4" style="background:linear-gradient(160deg, ${rw.color}, #0b1020 85%)">
+              <div>
+                <h3 class="font-display text-3xl font-bold leading-none">${rw.title}</h3>
+                <p class="mt-2 text-sm text-white/80">${rw.sub}</p>
+              </div>
+              <div class="flex flex-col gap-3 items-end md:items-start">
+                <a href="#" class="rounded-lg bg-white text-night-950 px-4 py-2 text-sm font-bold hover:bg-slate-200 whitespace-nowrap">Comprar ahora</a>
+                ${rowControls(r.id)}
+              </div>
+            </div>
+            <div class="min-w-0">${r.html}</div>
+          </div>`;
+      });
+      document.getElementById(key).innerHTML = html;
+    });
+
+    // Plataformas
+    const plats = [
+      { name: 'PS5', icon: 'fa-playstation', color: '#3b82f6' }, { name: 'PS4', icon: 'fa-playstation', color: '#2563eb' },
+      { name: 'Nintendo', icon: 'fa-gamepad', color: '#ef4444', solid: true }, { name: 'Xbox', icon: 'fa-xbox', color: '#22c55e' },
+    ];
+    document.getElementById('platforms').innerHTML = plats.map(p => `
+      <a href="#" class="group relative overflow-hidden rounded-2xl ring-1 ring-white/10 hover:ring-white/40 transition p-5 flex flex-col min-h-[260px]" style="background:linear-gradient(180deg, ${p.color}33, #121833 60%)">
+        <div class="flex items-center gap-2 font-display text-2xl font-bold"><i class="${p.solid ? 'fa-solid' : 'fa-brands'} ${p.icon}" style="color:${p.color}"></i> ${p.name}</div>
+        <img src="https://placehold.co/400x220/121833/94a3b8?text=${p.name}+UI&font=montserrat" alt="" class="mt-4 rounded-xl w-full aspect-[16/9] object-cover group-hover:scale-[1.03] transition" />
+        <div class="mt-auto pt-4 flex items-end justify-between">
+          <p class="text-xs text-slate-400">Desde<br><span class="font-display text-2xl font-bold text-white">$1.400</span> <span class="text-xs">pesos</span></p>
+          <span class="grid place-items-center h-9 w-9 rounded-full bg-white/10 group-hover:bg-white group-hover:text-night-950 transition"><i class="fa-solid fa-arrow-right text-sm"></i></span>
+        </div>
+      </a>`).join('');
+
+    // Opiniones
+    const reviews = [
+      { n: 'Lucas Esteban', t: '1 día', s: 5, q: '10000/10. La mejor página' },
+      { n: 'Thiago Grau', t: '2 semanas', s: 4, q: 'Muy barato y es real, recibí las cuentas secundarias aunque como 5 o 7 horas después de que las pedí' },
+      { n: 'Tute Serri', t: '2 semanas', s: 5, q: 'Siempre han cumplido en tiempo y forma, me generan confianza y les sigo comprando asiduamente' },
+      { n: 'Sr Baaan', t: '1 mes', s: 5, q: 'Muy bueno el servicio y rápido la verdad!!! 😁' },
+    ];
+    document.getElementById('reviews').innerHTML = reviews.map(r => `
+      <figure class="rounded-2xl bg-night-800 ring-1 ring-white/5 p-5 flex flex-col">
+        <div class="text-neon-cyan text-sm">${'<i class="fa-solid fa-star"></i>'.repeat(r.s)}${'<i class="fa-regular fa-star"></i>'.repeat(5 - r.s)}</div>
+        <blockquote class="mt-3 text-sm text-slate-300 flex-1">"${r.q}"</blockquote>
+        <figcaption class="mt-4 flex items-center gap-3">
+          <span class="grid place-items-center h-9 w-9 rounded-full grad text-night-950 font-bold">${r.n[0]}</span>
+          <span><b class="block text-sm text-white">${r.n}</b><span class="text-xs text-slate-500">${r.t}</span></span>
+        </figcaption>
+      </figure>`).join('');
+
+    // Redes
+    const socials = [
+      { n: 'WhatsApp', i: 'fa-whatsapp', c: '#22c55e', a: 'El más esperado', b: 'Hasta 60% de dscto.' },
+      { n: 'YouTube', i: 'fa-youtube', c: '#ef4444', a: 'Alta manija terror', b: 'Asegura la rebaja' },
+      { n: 'Facebook', i: 'fa-facebook', c: '#3b82f6', a: 'Precio anti-crisis', b: 'Arma tu escuadrón' },
+      { n: 'TikTok', i: 'fa-tiktok', c: '#22d3ee', a: 'Oferta exclusiva', b: 'Un juegazo real' },
+      { n: 'Instagram', i: 'fa-instagram', c: '#ec4899', a: 'Rebaja para viciar', b: 'Descuento único' },
+    ];
+    document.getElementById('socials').innerHTML = socials.map(s => `
+      <a href="#" class="group overflow-hidden rounded-2xl bg-night-800 ring-1 ring-white/5 hover:ring-white/30 transition">
+        <div class="flex items-center justify-between px-4 py-3 font-display font-bold" style="background:${s.c}22;color:${s.c}"><span>${s.n}</span><i class="fa-brands ${s.i} text-lg"></i></div>
+        <img src="https://placehold.co/300x200/121833/94a3b8?text=${s.n}&font=montserrat" alt="" class="w-full aspect-[3/2] object-cover" />
+        <div class="p-4"><p class="font-display font-bold uppercase text-sm" style="color:${s.c}">${s.a}</p><p class="text-xs text-slate-400 uppercase">${s.b}</p></div>
+      </a>`).join('');
+
+    // Contadores
+    const pad = n => String(n).padStart(2, '0');
+    const tick = () => document.querySelectorAll('.countdown').forEach(el => {
+      let s = Math.max(0, Math.floor((+el.dataset.end - Date.now()) / 1000));
+      const v = { 'DÍAS': Math.floor(s / 86400), 'HORAS': Math.floor(s % 86400 / 3600), 'MINS': Math.floor(s % 3600 / 60), 'SEGS': s % 60 };
+      el.querySelectorAll('[data-u]').forEach(b => b.textContent = pad(v[b.dataset.u]));
+    });
+    tick(); setInterval(tick, 1000);
+
+    // Flechas de filas
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-scroll]');
+      if (b) { const r = document.getElementById(b.dataset.scroll); r.scrollBy({ left: +b.dataset.dir * r.clientWidth * 0.8, behavior: 'smooth' }); }
+      if (e.target.closest('.add')) { const c = document.getElementById('cart-count'); c.textContent = +c.textContent + 1; }
+    });
+
+    // Carrusel hero
+    const track = document.getElementById('hero-track'), dots = document.getElementById('hero-dots');
+    const total = track.children.length; let cur = 0;
+    dots.innerHTML = Array.from({ length: total }, (_, i) => `<button class="h-1.5 rounded-full transition-all" data-i="${i}" aria-label="Slide ${i + 1}"></button>`).join('');
+    const go = i => {
+      cur = (i + total) % total; track.style.transform = `translateX(-${cur * 100}%)`;
+      dots.querySelectorAll('button').forEach((d, j) => d.className = `h-1.5 rounded-full transition-all ${j === cur ? 'w-8 grad' : 'w-3 bg-white/40'}`);
+    };
+    dots.addEventListener('click', e => e.target.dataset.i && go(+e.target.dataset.i));
+    document.getElementById('hero-prev').onclick = () => go(cur - 1);
+    document.getElementById('hero-next').onclick = () => go(cur + 1);
+    go(0); setInterval(() => go(cur + 1), 6000);
+  </script>
+</body>
+</html>
