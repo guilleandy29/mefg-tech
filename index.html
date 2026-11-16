@@ -61,13 +61,8 @@
         <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">PS5 <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
         <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">PS4 <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
         <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">PS3 <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
-        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">NINTENDO <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
-        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">XBOX <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
         <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">MEMBRESÍAS <i class="fa-solid fa-chevron-down text-[9px] opacity-60"></i></a></li>
-        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">🕹️ PACKS</a></li>
-        <li><a href="#opiniones" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">🎯 OPINIONES</a></li>
-        <li><a href="#" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">👾 COLECCIONES</a></li>
-      </ul>
+        <li><a href="#opiniones" class="block my-2 px-3 py-2 rounded-lg hover:bg-white/5 whitespace-nowrap">🎯 OPINIONES</a></li>      </ul>
     </nav>
   </header>
 
@@ -101,7 +96,7 @@
             <div class="relative h-full flex flex-col justify-end px-6 pt-6 pb-10 sm:px-16 sm:pb-12 max-w-xl">
               <span class="w-fit rounded-full bg-neon-pink/20 ring-1 ring-neon-pink text-neon-pink text-xs font-semibold px-3 py-1">BLACK FRIDAY</span>
               <h2 class="mt-3 font-display text-3xl sm:text-4xl font-bold leading-tight">Las mejores rebajas del año</h2>
-              <p class="mt-2 text-slate-300">PS5, PS4, Xbox y Nintendo Switch</p>
+              <p class="mt-2 text-slate-300">PS5, PS4 y PS3</p>
             </div>
           </div>
         </div>
@@ -154,7 +149,7 @@
           <h2 class="font-display text-2xl sm:text-3xl font-bold">Precios rebajados</h2>
         </div>
       </div>
-      <div class="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-4" id="platforms"></div>
+      <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4" id="platforms"></div>
     </section>
 
     <section id="black-friday" class="mt-14"></section>
@@ -163,8 +158,6 @@
     <section id="viene" class="mt-14"></section>
     <section id="reciente" class="mt-14"></section>
     <section id="vendido" class="mt-14"></section>
-    <section id="nintendo" class="mt-14"></section>
-    <section id="xbox" class="mt-14"></section>
 
     <!-- Opiniones -->
     <section id="opiniones" class="mt-16">
@@ -193,13 +186,11 @@
         <div class="lg:pr-6">
           <h2 class="font-display text-2xl font-bold tracking-wide">NOVA<span class="grad-text">PLAY</span></h2>
           <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">LICENCIAS ORIGINALES</p>
-          <p class="mt-4 text-sm text-slate-300">¡Hola, gamer! Agranda tu biblioteca en PS5, PS4, PS3, Xbox y Nintendo Switch al precio más barato del país. <span class="text-neon-cyan font-semibold">¡Elige tu formato ideal ya mismo!</span></p>
+          <p class="mt-4 text-sm text-slate-300">¡Hola, gamer! Agranda tu biblioteca en PS5, PS4 y PS3 al precio más barato del país. <span class="text-neon-cyan font-semibold">¡Elige tu formato ideal ya mismo!</span></p>
           <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
             <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">PS5</span>
             <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">PS4</span>
             <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">PS3</span>
-            <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">XBOX</span>
-            <span class="rounded-md bg-night-800 ring-1 ring-white/10 px-2.5 py-1">SWITCH</span>
           </div>
           <div class="mt-3 flex flex-wrap gap-2 text-xs font-bold">
             <span class="rounded-md grad text-night-950 px-3 py-1.5">19 AÑOS DE EXPERIENCIA</span>
@@ -335,14 +326,13 @@
       esperado: {
         eyebrow: 'LO ESPERADO', title: '¡Domina el juego! ⚽️', countdown: { d: 0, h: 11, m: 8 }, accent: 'lime',
         items: [
-          P('FC27 PS5', 37400, 22400, 40, 'PS5'), P('FC27 PS4', 32600, 19600, 40, 'PS4'), P('FC27 - Nintendo Switch 2', 58400, 35000, 40, 'SWITCH 2'),
-          P('FC27 - Xbox Series X/S', 79400, 47600, 40, 'XBOX'), P('FC27 - Xbox One', 79400, 47600, 40, 'XBOX'),
+          P('FC27 PS5', 37400, 22400, 40, 'PS5'), P('FC27 PS4', 32600, 19600, 40, 'PS4'),
         ],
       },
       legendario: {
         eyebrow: 'EL LEGENDARIO', title: '¡Botín de ofertas! 💰', countdown: { d: 3, h: 5, m: 14 }, accent: 'violet',
         items: [
-          P('Grand Theft Auto VI PS5', 109200, 54600, 50, 'PS5'), P('Grand Theft Auto VI - Xbox Series X|S', 91000, 54600, 40, 'XBOX'),
+          P('Grand Theft Auto VI PS5', 109200, 54600, 50, 'PS5'),
           P('Grand Theft Auto V PS5', 17500, 7000, 60, 'PS5'), P('Grand Theft Auto V PS4', 35000, 7000, 80, 'PS4'),
           P('Grand Theft Auto 3 PS3', 4100, 2800, 31, 'PS3'), P('Grand Theft Auto 5 (GTA V) PS3', 4600, 1400, 70, 'PS3'),
         ],
@@ -353,13 +343,11 @@
       viene: { eyebrow: 'LO QUE SE VIENE', rows: [
         { title: 'Pre orden', sub: 'Tómalo antes que nadie', color: '#8b5cf6', tag: 'PRE ORDEN', items: [
           P('Grand Theft Auto VI PS5', 109200, 54600, 50, 'PS5'), P('Rayman Legends Retold PS5', 51900, 36400, 30, 'PS5'),
-          P('Metroid Ravenous - Nintendo Switch 2', 77000, 30800, 60, 'SWITCH 2'), P('Until Dawn 2 PS5', 70000, 28000, 60, 'PS5'),
-          P('Tomb Raider: Legacy of Atlantis PS5', 67800, 40600, 40, 'PS5'), P('Fable - Xbox Series X/S', 70000, 42000, 40, 'XBOX') ] },
+          P('Until Dawn 2 PS5', 70000, 28000, 60, 'PS5'), P('Tomb Raider: Legacy of Atlantis PS5', 67800, 40600, 40, 'PS5') ] },
       ] },
       reciente: { eyebrow: 'LO MÁS RECIENTE', rows: [
         { title: 'Estrenos', sub: 'Juega lo más nuevo', color: '#22d3ee', tag: 'NUEVO', items: [
           P("Dragon's Dogma 2: Dark Arisen PS5", 56000, 33600, 40, 'PS5'), P('Phantom Blade Zero PS5', 56000, 33600, 40, 'PS5'),
-          P('The Legend of Zelda: Ocarina of Time - Nintendo…', 101500, 40600, 60, 'SWITCH 2'), P('Planet Zoo 2 - Xbox Series X/S', 58400, 35000, 40, 'XBOX'),
           P('Call of Duty: Modern Warfare 4 PS5', 58400, 35000, 40, 'PS5'), P('Final Fantasy Resonance PS5', 56000, 33600, 40, 'PS5') ] },
       ] },
       vendido: { eyebrow: 'LO MÁS VENDIDO', rows: [
@@ -370,33 +358,6 @@
         { title: 'PS4', sub: 'Las mejores obras maestras', color: '#3b82f6', tag: 'TOP', items: [
           P('FC27 PS4', 32600, 19600, 40, 'PS4'), P('God of War PS4', 7000, 1400, 80, 'PS4'), P('Red Dead Redemption 2 PS4', 28000, 5600, 80, 'PS4'),
           P("Marvel's Spider-Man Game of the Year Edition…", 28000, 5600, 80, 'PS4'), P('Minecraft PS4', 37300, 11200, 70, 'PS4'), P('Mortal Kombat XL PS4', 14000, 2800, 80, 'PS4') ] },
-      ] },
-      nintendo: { eyebrow: 'MUNDO NINTENDO', title: '¡Corre el reloj! ☣️', countdown: { d: 15, h: 18, m: 14 }, rows: [
-        { title: null, items: [
-          P('Splatoon Raiders - Nintendo Switch 2', 42000, 25200, 40, 'SWITCH 2'), P('Pokémon Violet - Nintendo Switch 2', 70000, 21000, 70, 'SWITCH 2'),
-          P('Dragon Ball: Sparking! Zero - Nintendo Switch…', 65200, 19600, 70, 'SWITCH 2'), P('Pokémon Legends Arceus - Nintendo Switch 2', 105000, 21000, 80, 'SWITCH 2'),
-          P('MLB The Show 26 - Nintendo Switch 2', 18600, 11200, 40, 'SWITCH 2') ] },
-        { title: 'Switch 2', sub: 'Lo último de Nintendo', color: '#ef4444', tag: 'SWITCH 2', items: [
-          P('FC27 - Nintendo Switch 2', 58400, 35000, 40, 'SWITCH 2'), P('The Legend of Zelda: Ocarina of Time - Nintendo…', 101500, 40600, 60, 'SWITCH 2'),
-          P('Tormented Souls 2 - Nintendo Switch 2', 49000, 19600, 60, 'SWITCH 2'), P('Mario Kart World - Nintendo Switch 2 Exclusivo', 93400, 28000, 70, 'SWITCH 2'),
-          P('Fatal Fury: City of the Wolves - Nintendo…', 28000, 11200, 60, 'SWITCH 2'), P('Nintendo Switch Sports Resort - Nintendo Switch…', 44400, 26600, 40, 'SWITCH 2') ] },
-        { title: 'Switch', sub: 'La diversión portátil', color: '#f97316', tag: 'SWITCH', items: [
-          P('Dragon Quest VII Reimagined - Nintendo Switch', 77000, 30800, 60, 'SWITCH'), P('FC26 - Nintendo Switch', 39600, 23800, 40, 'SWITCH'),
-          P('Mario Kart 8 Deluxe - Nintendo Switch', 63000, 25200, 60, 'SWITCH'), P('Super Mario Party Jamboree - Nintendo Switch', 70000, 21000, 70, 'SWITCH'),
-          P('Super Mario Odyssey - Nintendo Switch', 66500, 26600, 60, 'SWITCH'), P('Super Smash Bros Ultimate - Nintendo Switch…', 70000, 21000, 70, 'SWITCH') ] },
-      ] },
-      xbox: { eyebrow: 'UNIVERSO XBOX', title: '¡Lo quiero ya! 🛡️', countdown: { d: 15, h: 18, m: 14 }, rows: [
-        { title: null, items: [
-          P('Resident Evil 4 Remake - Xbox Series X/S', 28000, 5600, 80, 'XBOX'), P('LEGO Batman Legacy of the Dark Knight - Xbox…', 70000, 42000, 40, 'XBOX'),
-          P('UFC 6 Xbox Series X/S', 70000, 42000, 40, 'XBOX'), P('Battlefield 6 - Xbox Series X|S', 77000, 30800, 60, 'XBOX'), P('Pragmata - Xbox Series X/S', 51400, 30800, 40, 'XBOX') ] },
-        { title: 'Series', sub: 'Poder de nueva generación', color: '#22c55e', tag: 'SERIES X|S', items: [
-          P('Halo: Campaign Evolved - Xbox Series X/S', 67600, 40600, 40, 'XBOX'), P('FC27 - Xbox Series X/S', 79400, 47600, 40, 'XBOX'),
-          P('Call of Duty: Modern Warfare 4 - Xbox Series…', 70000, 42000, 40, 'XBOX'), P('Grand Theft Auto VI - Xbox Series X|S', 91000, 54600, 40, 'XBOX'),
-          P('Resonance: A Plague Tale Legacy - Xbox Series…', 79900, 56000, 30, 'XBOX'), P('Minecraft Dungeons II - Xbox Series X/S', 32600, 19600, 40, 'XBOX') ] },
-        { title: 'One', sub: 'A precios reducidos', color: '#16a34a', tag: 'XBOX ONE', items: [
-          P('Grand Theft Auto V GTA V - Xbox One', 51800, 14000, 73, 'XBOX'), P('FC27 - Xbox One', 79400, 47600, 40, 'XBOX'),
-          P('Halo 5 Guardians - Xbox One', 14000, 2800, 80, 'XBOX'), P('Red Dead Redemption 2 - Xbox One', 56000, 11200, 80, 'XBOX'),
-          P('Elden Ring - Xbox One', 56000, 33600, 40, 'XBOX'), P('FC26 - Xbox One', 32600, 9800, 70, 'XBOX') ] },
         { title: 'PS3', sub: 'Clásicos que marcan época', color: '#64748b', tag: 'PS3', items: [
           P('Call of Duty Black Ops III PS3', 4600, 1400, 70, 'PS3'), P('The Last of Us PS3', 4600, 1400, 70, 'PS3'), P('Gran Turismo 6 PS3', 4600, 1400, 70, 'PS3'),
           P('FIFA 18 PS3', 4600, 1400, 70, 'PS3'), P('Pro Evolution Soccer 2018 PS3', 4600, 1400, 70, 'PS3'), P('God of War Ascension', 3500, 1400, 60, 'PS3') ] },
@@ -506,7 +467,7 @@
     // Plataformas
     const plats = [
       { name: 'PS5', icon: 'fa-playstation', color: '#3b82f6' }, { name: 'PS4', icon: 'fa-playstation', color: '#2563eb' },
-      { name: 'Nintendo', icon: 'fa-gamepad', color: '#ef4444', solid: true }, { name: 'Xbox', icon: 'fa-xbox', color: '#22c55e' },
+      { name: 'PS3', icon: 'fa-playstation', color: '#64748b' },
     ];
     document.getElementById('platforms').innerHTML = plats.map(p => `
       <a href="#" class="group relative overflow-hidden rounded-2xl ring-1 ring-white/10 hover:ring-white/40 transition p-5 flex flex-col min-h-[260px]" style="background:linear-gradient(180deg, ${p.color}33, #121833 60%)">
