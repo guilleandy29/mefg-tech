@@ -171,15 +171,6 @@
       <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" id="reviews"></div>
     </section>
 
-    <!-- Redes sociales -->
-    <section class="mt-16">
-      <div>
-        <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">SÍGUENOS</p>
-        <h2 class="font-display text-2xl sm:text-3xl font-bold">En redes sociales</h2>
-      </div>
-      <div class="mt-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="socials"></div>
-    </section>
-
     <!-- Info -->
     <section class="mt-16 rounded-3xl bg-night-950 grid-bg ring-1 ring-white/5 p-6 sm:p-10">
       <div class="grid gap-6 lg:grid-cols-3">
@@ -490,20 +481,6 @@
         </figcaption>
       </figure>`).join('');
 
-    // Redes
-    const socials = [
-      { n: 'WhatsApp', i: 'fa-whatsapp', c: '#22c55e', a: 'El más esperado', b: 'Hasta 60% de dscto.' },
-      { n: 'YouTube', i: 'fa-youtube', c: '#ef4444', a: 'Alta manija terror', b: 'Asegura la rebaja' },
-      { n: 'Facebook', i: 'fa-facebook', c: '#3b82f6', a: 'Precio anti-crisis', b: 'Arma tu escuadrón' },
-      { n: 'TikTok', i: 'fa-tiktok', c: '#22d3ee', a: 'Oferta exclusiva', b: 'Un juegazo real' },
-      { n: 'Instagram', i: 'fa-instagram', c: '#ec4899', a: 'Rebaja para viciar', b: 'Descuento único' },
-    ];
-    document.getElementById('socials').innerHTML = socials.map(s => `
-      <a href="#" class="group overflow-hidden rounded-2xl bg-night-800 ring-1 ring-white/5 hover:ring-white/30 transition">
-        <div class="flex items-center justify-between px-4 py-3 font-display font-bold" style="background:${s.c}22;color:${s.c}"><span>${s.n}</span><i class="fa-brands ${s.i} text-lg"></i></div>
-        <img src="https://placehold.co/300x200/121833/94a3b8?text=${s.n}&font=montserrat" alt="" class="w-full aspect-[3/2] object-cover" />
-        <div class="p-4"><p class="font-display font-bold uppercase text-sm" style="color:${s.c}">${s.a}</p><p class="text-xs text-slate-400 uppercase">${s.b}</p></div>
-      </a>`).join('');
 
     // Contadores
     const pad = n => String(n).padStart(2, '0');
