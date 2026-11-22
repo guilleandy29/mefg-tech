@@ -130,11 +130,8 @@
       </div>
     </section>
 
-    <!-- Flash: precios congelados -->
-    <section id="flash" class="mt-12"></section>
-
     <!-- Precio rebajados por plataforma -->
-    <section class="mt-14">
+    <section class="mt-12">
       <div class="flex items-end justify-between gap-4">
         <div>
           <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">PLATAFORMAS</p>
@@ -248,23 +245,6 @@
     // ---------- Datos ----------
     const P = (name, old, price, off, plat) => ({ name, old, price, off, plat });
     const sections = {
-      flash: {
-        eyebrow: 'FLASH', title: '¡Precios congelados! ❄️', countdown: { d: 0, h: 11, m: 8 }, accent: 'cyan',
-        items: [
-          P('Call of Duty: Black Ops II PS5', 11600, 7000, 40, 'PS5'), P('The Blood of Dawnwalker PS5', 11600, 7000, 40, 'PS5'),
-          P('Black Myth: Wukong PS5', 11600, 7000, 40, 'PS5'), P('Mortal Shell II PS5', 11600, 7000, 40, 'PS5'),
-          P('Clair Obscur: Expedition 33 PS5', 17500, 7000, 60, 'PS5'), P('Indiana Jones and the Great Circle PS5', 11600, 7000, 40, 'PS5'),
-          P("Five Nights at Freddy's: Secret of the Mimic", 35000, 7000, 80, 'PS5'), P('Call of Duty: Black Ops PS5', 32100, 22400, 30, 'PS5'),
-          P('Cyberpunk 2077: Ultimate Edition PS5', 35000, 7000, 80, 'PS5'), P('Silent Hill 2 PS5', 11600, 7000, 40, 'PS5'),
-          P('Ace Combat 7: Skies Unknown PS5', 70000, 7000, 90, 'PS5'), P('Helldivers 2 - PS5', 17500, 7000, 60, 'PS5'),
-          P('Horizon Zero Dawn Remastered PS5', 11600, 7000, 40, 'PS5'), P('Resident Evil 4 Gold Edition PS5', 35000, 7000, 80, 'PS5'),
-          P('Returnal PS5', 17500, 7000, 60, 'PS5'), P('The Last of Us Complete PS5', 17500, 7000, 60, 'PS5'),
-          P('Pragmata PS5', 14000, 7000, 50, 'PS5'), P('Marvel Tōkon: Fighting Souls PS5', 17500, 7000, 60, 'PS5'),
-          P('Resident Evil Remake Trilogy PS5', 98000, 19600, 80, 'PS5'), P('Kingdom Come: Deliverance II PS5', 11600, 7000, 40, 'PS5'),
-          P('Resident Evil 4 Gold Edition PS4', null, 7000, 0, 'PS4'), P('Call of Duty: Black Ops 7 PS5', 11600, 7000, 40, 'PS5'),
-          P('Call of Duty WWII Gold Edition PS5', 35000, 7000, 80, 'PS5'), P('Call of Duty: Modern Warfare III PS5', 23400, 7000, 70, 'PS5'),
-        ],
-      },
       'black-friday': {
         eyebrow: 'BLACK FRIDAY 🔥', title: '¡Antes que termine! 🕰️', countdown: { d: 15, h: 18, m: 14 }, accent: 'pink',
         items: [
