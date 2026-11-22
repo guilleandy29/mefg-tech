@@ -130,20 +130,7 @@
       </div>
     </section>
 
-    <!-- Precio rebajados por plataforma -->
-    <section class="mt-12">
-      <div class="flex items-end justify-between gap-4">
-        <div>
-          <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">PLATAFORMAS</p>
-          <h2 class="font-display text-2xl sm:text-3xl font-bold">Precios rebajados</h2>
-        </div>
-      </div>
-      <div class="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4" id="platforms"></div>
-    </section>
-
-    <section id="black-friday" class="mt-14"></section>
-    <section id="esperado" class="mt-14"></section>
-    <section id="legendario" class="mt-14"></section>
+    <section id="black-friday" class="mt-12"></section>
     <section id="viene" class="mt-14"></section>
     <section id="reciente" class="mt-14"></section>
     <section id="vendido" class="mt-14"></section>
@@ -259,20 +246,6 @@
           P('Mortal Kombat Legacy Kollection PS4', 35000, 14000, 60, 'PS4'), P('Poppy Playtime: Chapter 4 PS5', 18600, 11200, 40, 'PS5'),
           P('Code Vein II PS5', 37400, 22400, 40, 'PS5'), P('Hogwarts Legacy Digital Deluxe Edition PS5', 23400, 7000, 70, 'PS5'),
           P('Mortal Kombat X PS5', 9400, 2800, 70, 'PS5'), P('Little Nightmares I y II PS5', 21000, 8400, 60, 'PS5'),
-        ],
-      },
-      esperado: {
-        eyebrow: 'LO ESPERADO', title: '¡Domina el juego! ⚽️', countdown: { d: 0, h: 11, m: 8 }, accent: 'lime',
-        items: [
-          P('FC27 PS5', 37400, 22400, 40, 'PS5'), P('FC27 PS4', 32600, 19600, 40, 'PS4'),
-        ],
-      },
-      legendario: {
-        eyebrow: 'EL LEGENDARIO', title: '¡Botín de ofertas! 💰', countdown: { d: 3, h: 5, m: 14 }, accent: 'violet',
-        items: [
-          P('Grand Theft Auto VI PS5', 109200, 54600, 50, 'PS5'),
-          P('Grand Theft Auto V PS5', 17500, 7000, 60, 'PS5'), P('Grand Theft Auto V PS4', 35000, 7000, 80, 'PS4'),
-          P('Grand Theft Auto 3 PS3', 4100, 2800, 31, 'PS3'), P('Grand Theft Auto 5 (GTA V) PS3', 4600, 1400, 70, 'PS3'),
         ],
       },
     };
@@ -401,21 +374,6 @@
       });
       document.getElementById(key).innerHTML = html;
     });
-
-    // Plataformas
-    const plats = [
-      { name: 'PS3', icon: 'fa-playstation', color: '#64748b' },
-      { name: 'PS4', icon: 'fa-playstation', color: '#2563eb' }, { name: 'PS5', icon: 'fa-playstation', color: '#3b82f6' },
-    ];
-    document.getElementById('platforms').innerHTML = plats.map(p => `
-      <a href="#" class="group relative overflow-hidden rounded-2xl ring-1 ring-white/10 hover:ring-white/40 transition p-5 flex flex-col min-h-[260px]" style="background:linear-gradient(180deg, ${p.color}33, #121833 60%)">
-        <div class="flex items-center gap-2 font-display text-2xl font-bold"><i class="${p.solid ? 'fa-solid' : 'fa-brands'} ${p.icon}" style="color:${p.color}"></i> ${p.name}</div>
-        <img src="https://placehold.co/400x220/121833/94a3b8?text=${p.name}+UI&font=montserrat" alt="" class="mt-4 rounded-xl w-full aspect-[16/9] object-cover group-hover:scale-[1.03] transition" />
-        <div class="mt-auto pt-4 flex items-end justify-between">
-          <p class="text-xs text-slate-400">Desde<br><span class="font-display text-2xl font-bold text-white">$1.400</span> <span class="text-xs">pesos</span></p>
-          <span class="grid place-items-center h-9 w-9 rounded-full bg-white/10 group-hover:bg-white group-hover:text-night-950 transition"><i class="fa-solid fa-arrow-right text-sm"></i></span>
-        </div>
-      </a>`).join('');
 
     // Opiniones
     const reviews = [
