@@ -449,12 +449,56 @@
       { n: 'Extra', c: '#22d3ee', img: 'img/ps-plus-extra.jpg', f: ['Todo lo de Essential', 'Catálogo de cientos de juegos de PS4 y PS5'], hot: true },
       { n: 'Premium', c: '#1ee6fb', img: 'img/ps-plus-premium.jpg', f: ['Todo lo de Extra', 'Clásicos de PS1, PS2, PS3 y PSP', 'Pruebas de juegos por tiempo limitado', 'Streaming en la nube'] },
     ];
+    // Precios por plan y duración en pesos. Mientras falte uno, se muestra "A consultar".
+    // Ejemplo: { 'Essential-1': 12000, 'Essential-3': 30000, 'Extra-12': 150000 }
+    const psPrices = {};
+    const psDurations = [1, 3, 12];
+    const psConsoles = ['PS5', 'PS4'];
+    // Tabla comparativa: beneficio + si lo incluye [Essential, Extra, Premium]
+    const psCompare = [
+      ['Juego online multijugador', 1, 1, 1],
+      ['Juegos mensuales para descargar', 1, 1, 1],
+      ['Guardado en la nube', 1, 1, 1],
+      ['Descuentos exclusivos', 1, 1, 1],
+      ['Catálogo de cientos de juegos de PS4 y PS5', 0, 1, 1],
+      ['Clásicos de PS1, PS2, PS3 y PSP', 0, 0, 1],
+      ['Pruebas de juegos por tiempo limitado', 0, 0, 1],
+      ['Streaming en la nube', 0, 0, 1],
+    ];
+    const plusSel = { plan: 'Extra', dur: 12, cons: 'PS5' };
+    const chip = (group, value, label) => `
+      <button type="button" data-plus="${group}" data-value="${value}" aria-pressed="false"
+        class="rounded-xl px-3 py-3 text-sm sm:text-base font-semibold bg-night-900/60 ring-1 ring-white/10 text-slate-300 hover:ring-white/30 transition aria-pressed:ring-2 aria-pressed:ring-neon-cyan aria-pressed:bg-neon-cyan/10 aria-pressed:text-white">${label}</button>`;
+    const stepTitle = (n, t) => `<p class="flex items-center gap-3 font-display font-bold tracking-wide"><span class="grid place-items-center h-7 w-7 rounded-lg grad text-night-950 text-sm">${n}</span>${t}</p>`;
+
+    // Marca en pantalla lo elegido y actualiza el resumen
+    const updatePlus = () => {
+      document.querySelectorAll('[data-plus]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.value) === String(plusSel[b.dataset.plus])));
+      document.querySelectorAll('[data-plan-card], [data-col]').forEach(el => el.dataset.sel = (el.dataset.planCard || el.dataset.col) === plusSel.plan);
+      const sum = document.getElementById('plus-summary');
+      if (!sum) return;
+      const meses = `${plusSel.dur} ${plusSel.dur === 1 ? 'mes' : 'meses'}`;
+      const price = psPrices[`${plusSel.plan}-${plusSel.dur}`];
+      sum.querySelector('[data-sum=plan]').textContent = plusSel.plan;
+      sum.querySelector('[data-sum=detail]').textContent = `${meses} · ${plusSel.cons}`;
+      sum.querySelector('[data-sum=price]').textContent = price ? '$' + price.toLocaleString('es-AR') : 'A consultar';
+      document.getElementById('plus-wa').href = waLink(`Hola, quiero PlayStation Plus ${plusSel.plan} por ${meses} para ${plusSel.cons}.`);
+    };
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-plus]');
+      if (b) { plusSel[b.dataset.plus] = b.dataset.plus === 'dur' ? +b.dataset.value : b.dataset.value; updatePlus(); }
+      const pick = e.target.closest('[data-pick]');
+      if (pick) { plusSel.plan = pick.dataset.pick; updatePlus(); document.getElementById('plus-config').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      if (e.target.closest('#plus-wa') && !WHATSAPP) { e.preventDefault(); alert('El WhatsApp de soporte estará disponible muy pronto.'); }
+    });
+
     const plusView = () => imageHeader('PlayStation Plus', 'PlayStation Plus',
       'Elige tu plan y juega online con todos los beneficios.', 'img/ps-plus-header.jpg') + `
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         ${psPlans.map(pl => `
-          <article class="relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'}">
+          <article data-plan-card="${pl.n}" class="group relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'} transition data-[sel=true]:ring-2 data-[sel=true]:ring-neon-cyan data-[sel=true]:glow">
             ${pl.hot ? '<span class="absolute z-10 -top-3 left-6 rounded-full grad px-3 py-1 text-[11px] font-bold text-night-950">MÁS ELEGIDO</span>' : ''}
+            <span class="absolute z-10 top-3 right-3 hidden group-data-[sel=true]:flex items-center gap-1.5 rounded-full bg-night-950/85 px-3 py-1 text-xs font-bold text-neon-cyan"><i class="fa-solid fa-circle-check"></i> Elegido</span>
             ${pl.img
               /* La imagen ya trae "PlayStation Plus" y el nombre del plan: el título queda solo para lectores de pantalla */
               ? `<img src="${pl.img}" alt="" class="-mx-6 -mt-6 block rounded-t-2xl max-w-none w-[calc(100%+3rem)] aspect-[1411/1115] object-cover" />
@@ -465,9 +509,94 @@
               ${pl.f.map(x => `<li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-neon-cyan"></i>${x}</li>`).join('')}
             </ul>
             <p class="mt-6 text-xs text-slate-400">1, 3 y 12 meses</p>
-            <button class="mt-3 rounded-lg grad py-2.5 text-sm font-bold text-night-950 hover:brightness-110">Consultar precio</button>
+            <button type="button" data-pick="${pl.n}" class="mt-3 rounded-lg grad py-2.5 text-sm font-bold text-night-950 hover:brightness-110">Elegir plan</button>
           </article>`).join('')}
-      </div>`;
+      </div>
+
+      <!-- Armá tu suscripción -->
+      <section id="plus-config" class="mt-14 scroll-mt-40">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold">Armá tu <span class="grad-text">suscripción</span></h2>
+        <p class="mt-1 text-slate-400">Elegí plan, duración y consola. Te mostramos el resumen al instante.</p>
+        <div class="mt-6 grid gap-4 lg:grid-cols-[1fr_340px]">
+          <div class="rounded-3xl bg-night-800 ring-1 ring-white/10 p-6 sm:p-8 space-y-7">
+            <div>
+              ${stepTitle(1, 'Plan')}
+              <div class="mt-3 grid grid-cols-3 gap-2">${psPlans.map(pl => chip('plan', pl.n, pl.n)).join('')}</div>
+            </div>
+            <div>
+              ${stepTitle(2, 'Duración')}
+              <div class="mt-3 grid grid-cols-3 gap-2">${psDurations.map(d => chip('dur', d, `${d} ${d === 1 ? 'mes' : 'meses'}`)).join('')}</div>
+            </div>
+            <div>
+              ${stepTitle(3, 'Consola')}
+              <div class="mt-3 grid grid-cols-2 gap-2">${psConsoles.map(c => chip('cons', c, `<i class="fa-brands fa-playstation mr-1.5"></i>${c}`)).join('')}</div>
+            </div>
+          </div>
+          <aside id="plus-summary" class="relative overflow-hidden rounded-3xl ring-1 ring-neon-cyan/40 bg-night-800 p-6 sm:p-8 flex flex-col">
+            <div class="absolute inset-0 grid-bg"></div>
+            <div class="relative flex flex-col h-full">
+              <p class="text-xs font-semibold tracking-[.25em] text-neon-cyan">TU SUSCRIPCIÓN</p>
+              <p class="mt-3 font-display text-lg font-semibold text-slate-300">PlayStation Plus</p>
+              <p data-sum="plan" class="font-display text-4xl font-bold"></p>
+              <p data-sum="detail" class="mt-1 text-slate-300"></p>
+              <div class="my-6 border-t border-dashed border-white/15"></div>
+              <p class="text-xs text-slate-400">Precio</p>
+              <p data-sum="price" class="font-display text-3xl font-bold grad-text"></p>
+              <div class="mt-6 lg:mt-auto lg:pt-6 grid gap-2">
+                <a id="plus-wa" href="#" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-xl bg-[#25d366] py-3 text-sm font-bold text-night-950 hover:brightness-110"><i class="fa-brands fa-whatsapp text-lg"></i> Pedir por WhatsApp</a>
+                <button type="button" class="add flex items-center justify-center gap-2 rounded-xl ring-1 ring-white/15 py-3 text-sm font-semibold hover:bg-white/5"><i class="fa-solid fa-cart-plus text-neon-cyan"></i> Agregar al carrito</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Compará los planes -->
+      <section class="mt-14">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold">Compará los <span class="grad-text">planes</span></h2>
+        <div class="mt-6 overflow-hidden rounded-3xl ring-1 ring-white/10 bg-night-800">
+          <table class="w-full text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-white/10">
+                <th class="p-3 sm:p-4 sm:px-6 text-left font-semibold text-slate-400">Beneficio</th>
+                ${psPlans.map(pl => `<th data-col="${pl.n}" class="px-1 py-3 sm:p-4 w-[4.5rem] sm:w-36 font-display text-xs sm:text-base font-bold transition data-[sel=true]:bg-neon-cyan/10 data-[sel=true]:text-neon-cyan">${pl.n}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${psCompare.map(([txt, ...has]) => `
+                <tr class="border-b border-white/5 last:border-0">
+                  <td class="p-3 sm:p-4 sm:px-6 text-slate-300">${txt}</td>
+                  ${has.map((h, i) => `<td data-col="${psPlans[i].n}" class="px-1 py-3 sm:p-4 text-center transition data-[sel=true]:bg-neon-cyan/10">${h
+                    ? '<i class="fa-solid fa-circle-check text-neon-cyan text-base"></i><span class="sr-only">Incluido</span>'
+                    : '<i class="fa-solid fa-minus text-slate-600"></i><span class="sr-only">No incluido</span>'}</td>`).join('')}
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Cómo funciona -->
+      <section class="mt-14">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold">¿Cómo <span class="grad-text">funciona</span>?</h2>
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          ${[
+            ['fa-sliders', 'Armá tu suscripción', 'Elegí el plan, la duración y tu consola, y envianos el pedido.'],
+            ['fa-building-columns', 'Pagá en pesos', 'Transferencia BBVA, otros bancos con CBU, Alias o PayPal.'],
+            ['fa-gamepad', 'Empezá a jugar', 'Te guiamos por WhatsApp para activar PlayStation Plus en tu cuenta.'],
+          ].map(([ic, t, d], i) => `
+            <div class="relative rounded-2xl bg-night-800 ring-1 ring-white/10 p-6">
+              <span class="absolute top-4 right-5 font-display text-5xl font-bold text-white/5">0${i + 1}</span>
+              <span class="grid place-items-center h-11 w-11 rounded-xl bg-neon-cyan/10 text-neon-cyan text-lg"><i class="fa-solid ${ic}"></i></span>
+              <h3 class="mt-4 font-display text-lg font-bold">${t}</h3>
+              <p class="mt-1 text-sm text-slate-400">${d}</p>
+            </div>`).join('')}
+        </div>
+        <p class="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-400">
+          <span><i class="fa-solid fa-shield-halved mr-1.5 text-neon-cyan"></i>Garantía total</span>
+          <span><i class="fa-solid fa-headset mr-1.5 text-neon-cyan"></i>Soporte inmediato</span>
+          <span><i class="fa-solid fa-lock mr-1.5 text-neon-cyan"></i>Pago seguro</span>
+        </p>
+      </section>`;
 
     const opinionsView = () => viewHeader('Opiniones', 'Lo que dicen los gamers', 'Opiniones de nuestros clientes.', '#22d3ee') + `
       <div class="mt-8 flex justify-end">
@@ -483,6 +612,7 @@
       document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('bg-white/10', a.dataset.nav === key));
       if (views[key]) {
         viewEl.innerHTML = views[key]();
+        if (key === 'playstation-plus') updatePlus();
         viewEl.classList.remove('hidden'); homeEl.classList.add('hidden');
         window.scrollTo(0, 0);
       } else {
