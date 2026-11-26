@@ -412,6 +412,18 @@
       return [...seen.values()];
     })();
 
+    // Banner con imagen de fondo completa. La imagen ya trae el logo, así que el título queda solo para lectores de pantalla.
+    // En celular el texto va debajo de la imagen; desde sm va encima (texto oscuro porque la imagen es clara).
+    const imageHeader = (crumb, title, sub, img) => `
+      <div class="mt-6 relative overflow-hidden rounded-3xl ring-1 ring-white/10 bg-night-800">
+        <img src="${img}" alt="" class="block w-full aspect-[2038/772] object-cover" />
+        <h1 class="sr-only">${title}</h1>
+        <div class="p-6 sm:p-0">
+          <p class="text-xs text-slate-400 sm:absolute sm:top-6 sm:left-8 sm:text-night-950 sm:font-medium lg:top-8 lg:left-10"><a href="#" class="hover:text-white sm:hover:text-night-950">Inicio</a> <span class="mx-1">›</span> <span class="text-slate-200 sm:text-night-950 font-medium">${crumb}</span></p>
+          <p class="mt-2 text-slate-300 sm:mt-0 sm:absolute sm:bottom-6 sm:left-8 sm:text-night-950 sm:font-medium lg:bottom-8 lg:left-10 lg:text-lg">${sub}</p>
+        </div>
+      </div>`;
+
     const viewHeader = (crumb, title, sub, color) => `
       <div class="mt-6 relative overflow-hidden rounded-3xl p-6 sm:p-10 ring-1 ring-white/10" style="background:radial-gradient(circle at 85% 20%, ${color}66, transparent 55%), linear-gradient(135deg, ${color}33, #11141a 70%)">
         <div class="absolute inset-0 grid-bg"></div>
@@ -437,8 +449,8 @@
       { n: 'Extra', c: '#22d3ee', f: ['Todo lo de Essential', 'Catálogo de cientos de juegos de PS4 y PS5'], hot: true },
       { n: 'Premium', c: '#1ee6fb', f: ['Todo lo de Extra', 'Clásicos de PS1, PS2, PS3 y PSP', 'Pruebas de juegos por tiempo limitado', 'Streaming en la nube'] },
     ];
-    const plusView = () => viewHeader('PlayStation Plus', '<i class="fa-brands fa-playstation text-[#1ee6fb]"></i> PlayStation Plus',
-      'Elige tu plan y juega online con todos los beneficios.', '#1ee6fb') + `
+    const plusView = () => imageHeader('PlayStation Plus', 'PlayStation Plus',
+      'Elige tu plan y juega online con todos los beneficios.', 'img/ps-plus-header.jpg') + `
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         ${psPlans.map(pl => `
           <article class="relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'}">
