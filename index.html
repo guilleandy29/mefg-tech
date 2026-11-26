@@ -439,11 +439,8 @@
       { n: 'Extra', c: '#22d3ee', f: ['Todo lo de Essential', 'Catálogo de cientos de juegos de PS4 y PS5'], hot: true },
       { n: 'Premium', c: '#1ee6fb', f: ['Todo lo de Extra', 'Clásicos de PS1, PS2, PS3 y PSP', 'Pruebas de juegos por tiempo limitado', 'Streaming en la nube'] },
     ];
-    // Banner de PlayStation Plus: la imagen completa (ya trae el logo y el nombre)
-    const plusView = () => `
-      <p class="mt-6 text-xs text-slate-400"><a href="#" class="hover:text-white">Inicio</a> <span class="mx-1">›</span> <span class="text-slate-200">PlayStation Plus</span></p>
-      <h1 class="sr-only">PlayStation Plus: elige tu plan y juega online con todos los beneficios</h1>
-      <img src="img/ps-plus-banner.jpg" alt="PlayStation Plus" class="mt-3 w-full aspect-[16/9] object-cover rounded-3xl ring-1 ring-white/10" />` + `
+    const plusView = () => viewHeader('PlayStation Plus', '<i class="fa-brands fa-playstation text-[#1ee6fb]"></i> PlayStation Plus',
+      'Elige tu plan y juega online con todos los beneficios.', '#1ee6fb', 'img/ps-plus-banner.jpg') + `
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         ${psPlans.map(pl => `
           <article class="relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'}">
