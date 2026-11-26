@@ -15,22 +15,23 @@
         extend: {
           fontFamily: { display: ['"Chakra Petch"', 'sans-serif'], sans: ['Inter', 'sans-serif'] },
           colors: {
-            night: { 950: '#070a17', 900: '#0b1020', 800: '#121833', 700: '#1a2247', 600: '#263066' },
-            neon: { violet: '#8b5cf6', cyan: '#22d3ee', pink: '#f43f5e', lime: '#a3e635' },
+            // Paleta tomada del logo MCFG Tech: grises carbón + celeste de la "G"
+            night: { 950: '#0c0f14', 900: '#11141a', 800: '#181c24', 700: '#222731', 600: '#2d333e' },
+            neon: { violet: '#2cc0d6', cyan: '#22d3ee', pink: '#1ee6fb', lime: '#22d3ee' },
           },
         },
       },
     };
   </script>
   <style>
-    body { background: #0b1020; }
-    .grad { background-image: linear-gradient(90deg, #8b5cf6, #22d3ee); }
-    .grad-text { background-image: linear-gradient(90deg, #a78bfa, #22d3ee); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .glow { box-shadow: 0 0 0 1px rgba(139,92,246,.35), 0 10px 30px -10px rgba(34,211,238,.25); }
+    body { background: #11141a; }
+    .grad { background-image: linear-gradient(90deg, #2cc0d6, #1ee6fb); }
+    .grad-text { background-image: linear-gradient(90deg, #22d3ee, #1ee6fb); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .glow { box-shadow: 0 0 0 1px rgba(46,211,232,.3), 0 10px 30px -10px rgba(30,230,251,.25); }
     .row-scroll { scroll-snap-type: x mandatory; scrollbar-width: none; }
     .row-scroll::-webkit-scrollbar { display: none; }
     .row-scroll > * { scroll-snap-align: start; }
-    .grid-bg { background-image: linear-gradient(rgba(139,92,246,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,.07) 1px, transparent 1px); background-size: 28px 28px; }
+    .grid-bg { background-image: linear-gradient(rgba(46,211,232,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(46,211,232,.06) 1px, transparent 1px); background-size: 28px 28px; }
   </style>
 </head>
 <body class="font-sans text-slate-200 antialiased">
@@ -50,7 +51,7 @@
       <div class="ml-auto flex items-center gap-2 sm:gap-3">
         <button class="relative flex items-center gap-2 rounded-xl bg-night-800 ring-1 ring-white/10 px-3 py-2.5 text-sm font-semibold">
           <i class="fa-solid fa-cart-shopping text-neon-cyan"></i> <span class="hidden sm:inline">Carrito</span>
-          <span id="cart-count" class="absolute -top-2 -right-2 grid place-items-center h-5 min-w-5 px-1 rounded-full bg-neon-pink text-[11px] text-white">0</span>
+          <span id="cart-count" class="absolute -top-2 -right-2 grid place-items-center h-5 min-w-5 px-1 rounded-full bg-neon-pink text-[11px] font-bold text-night-950">0</span>
         </button>
       </div>
     </div>
@@ -79,7 +80,7 @@
       <div class="relative overflow-hidden rounded-3xl glow h-[300px] sm:h-[340px] lg:h-[380px]">
         <div id="hero-track" class="flex h-full transition-transform duration-700">
           <div class="relative min-w-full h-full">
-            <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #8b5cf6aa, transparent 50%), radial-gradient(circle at 95% 90%, #f43f5e66, transparent 40%), #120d2e"></div>
+            <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #4a4f52aa, transparent 50%), radial-gradient(circle at 95% 90%, #22d3ee55, transparent 40%), #12161c"></div>
             <div class="absolute inset-0 grid-bg"></div>
             <div class="relative h-full flex flex-col justify-end px-6 pt-6 pb-10 sm:px-16 sm:pb-12 max-w-xl">
               <span class="w-fit rounded-full bg-neon-violet/20 ring-1 ring-neon-violet text-neon-violet text-xs font-semibold px-3 py-1">SAGA COMPLETA</span>
@@ -88,17 +89,17 @@
             </div>
           </div>
           <div class="relative min-w-full h-full">
-            <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #22d3eeaa, transparent 50%), radial-gradient(circle at 95% 90%, #8b5cf666, transparent 40%), #071c28"></div>
+            <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #22d3eeaa, transparent 50%), radial-gradient(circle at 95% 90%, #4a4f5266, transparent 40%), #0e1a21"></div>
             <div class="absolute inset-0 grid-bg"></div>
             <div class="relative h-full flex flex-col justify-end px-6 pt-6 pb-10 sm:px-16 sm:pb-12 max-w-xl">
               <span class="w-fit rounded-full bg-neon-cyan/20 ring-1 ring-neon-cyan text-neon-cyan text-xs font-semibold px-3 py-1">BLACK FRIDAY · PS5</span>
               <h2 class="mt-3 font-display text-3xl sm:text-4xl font-bold leading-tight">FC26 al precio más bajo</h2>
-              <p class="mt-2 text-slate-300"><span class="line-through text-slate-500">$23.400</span> <span class="font-display text-2xl font-bold text-white">$7.000</span> <span class="ml-1 rounded-full bg-neon-pink px-2 py-0.5 text-xs font-bold text-white">-70%</span></p>
+              <p class="mt-2 text-slate-300"><span class="line-through text-slate-500">$23.400</span> <span class="font-display text-2xl font-bold text-white">$7.000</span> <span class="ml-1 rounded-full bg-neon-pink px-2 py-0.5 text-xs font-bold text-night-950">-70%</span></p>
               <a href="#black-friday" class="mt-4 w-fit rounded-lg grad px-5 py-2.5 text-sm font-bold text-night-950 hover:brightness-110">Comprar ahora</a>
             </div>
           </div>
           <div class="relative min-w-full h-full">
-            <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #f43f5eaa, transparent 50%), radial-gradient(circle at 95% 90%, #8b5cf666, transparent 40%), #24081a"></div>
+            <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #1ee6fb88, transparent 50%), radial-gradient(circle at 15% 90%, #4a4f5299, transparent 45%), #10161b"></div>
             <div class="absolute inset-0 grid-bg"></div>
             <div class="relative h-full flex flex-col justify-end px-6 pt-6 pb-10 sm:px-16 sm:pb-12 max-w-xl">
               <span class="w-fit rounded-full bg-neon-pink/20 ring-1 ring-neon-pink text-neon-pink text-xs font-semibold px-3 py-1">BLACK FRIDAY</span>
@@ -115,12 +116,12 @@
       <a href="#" class="relative overflow-hidden rounded-3xl bg-night-800 glow p-5 flex flex-col">
         <p class="font-display text-xl font-bold italic tracking-wide">FLASH<span class="grad-text">⚡GAMERS</span></p>
         <div class="mt-4 grid grid-cols-3 gap-2">
-          <img src="https://placehold.co/120x150/1a2247/a78bfa?text=EXP+33" alt="" class="rounded-lg w-full" />
-          <img src="https://placehold.co/120x150/1a2247/22d3ee?text=KCD+II" alt="" class="rounded-lg w-full" />
-          <img src="https://placehold.co/120x150/1a2247/a78bfa?text=MGS" alt="" class="rounded-lg w-full" />
-          <img src="https://placehold.co/120x150/1a2247/22d3ee?text=WWE" alt="" class="rounded-lg w-full" />
-          <img src="https://placehold.co/120x150/1a2247/a78bfa?text=COD" alt="" class="rounded-lg w-full" />
-          <img src="https://placehold.co/120x150/1a2247/22d3ee?text=SPIDEY" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/222731/9aa3a8?text=EXP+33" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/222731/22d3ee?text=KCD+II" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/222731/9aa3a8?text=MGS" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/222731/22d3ee?text=WWE" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/222731/9aa3a8?text=COD" alt="" class="rounded-lg w-full" />
+          <img src="https://placehold.co/120x150/222731/22d3ee?text=SPIDEY" alt="" class="rounded-lg w-full" />
         </div>
         <p class="mt-auto pt-4 text-sm text-slate-400">Desde <span class="font-display text-3xl font-bold grad-text">$7.000</span> pesos</p>
       </a>
@@ -147,7 +148,7 @@
           <p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">COMUNIDAD</p>
           <h2 class="font-display text-2xl sm:text-3xl font-bold">Lo que dicen los gamers</h2>
         </div>
-        <button class="rounded-xl ring-1 ring-neon-violet px-5 py-2.5 text-sm font-semibold text-neon-violet hover:bg-neon-violet hover:text-white transition"><i class="fa-regular fa-comment-dots mr-1"></i> Escribir una opinión</button>
+        <button class="rounded-xl ring-1 ring-neon-violet px-5 py-2.5 text-sm font-semibold text-neon-violet hover:bg-neon-violet hover:text-night-950 transition"><i class="fa-regular fa-comment-dots mr-1"></i> Escribir una opinión</button>
       </div>
       <div class="reviews mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"></div>
     </section>
@@ -267,14 +268,14 @@
 
     const groups = {
       vendido: { eyebrow: 'LO MÁS VENDIDO', rows: [
-        { title: 'Fijos', sub: 'Los juegazos de siempre', color: '#f43f5e', tag: 'TOP', items: [
+        { title: 'Fijos', sub: 'Los juegazos de siempre', color: '#1fb8cf', tag: 'TOP', items: [
           P('FC25 PS5', 7000, 1400, 80, 'PS5'), P('Grand Theft Auto V PS4', 35000, 7000, 80, 'PS4'), P('Crash Team Racing Nitro Fueled PS4', 14000, 2800, 80, 'PS4'),
           P('God of War III Remastered PS5', 28000, 5600, 80, 'PS5'), P('Mortal Kombat 11 Ultimate PS5', 28000, 5600, 80, 'PS5'),
           P('The Last of Us Part II PS5', 35000, 7000, 80, 'PS5'), P('Red Dead Redemption 2 PS4', 28000, 5600, 80, 'PS4'), P('Minecraft PS4', 37300, 11200, 70, 'PS4') ] },
-        { title: 'PS3', sub: 'Clásicos que marcan época', color: '#64748b', tag: 'PS3', items: [
+        { title: 'PS3', sub: 'Clásicos que marcan época', color: '#4a4f52', tag: 'PS3', items: [
           P('Call of Duty Black Ops III PS3', 4600, 1400, 70, 'PS3'), P('The Last of Us PS3', 4600, 1400, 70, 'PS3'), P('Gran Turismo 6 PS3', 4600, 1400, 70, 'PS3'),
           P('FIFA 18 PS3', 4600, 1400, 70, 'PS3'), P('Pro Evolution Soccer 2018 PS3', 4600, 1400, 70, 'PS3'), P('God of War Ascension', 3500, 1400, 60, 'PS3') ] },
-        { title: 'PS4', sub: 'Las mejores obras maestras', color: '#3b82f6', tag: 'TOP', items: [
+        { title: 'PS4', sub: 'Las mejores obras maestras', color: '#14899c', tag: 'TOP', items: [
           P('FC27 PS4', 32600, 19600, 40, 'PS4'), P('God of War PS4', 7000, 1400, 80, 'PS4'), P('Red Dead Redemption 2 PS4', 28000, 5600, 80, 'PS4'),
           P("Marvel's Spider-Man Game of the Year Edition…", 28000, 5600, 80, 'PS4'), P('Minecraft PS4', 37300, 11200, 70, 'PS4'), P('Mortal Kombat XL PS4', 14000, 2800, 80, 'PS4') ] },
       ] },
@@ -282,14 +283,15 @@
 
     // ---------- Helpers ----------
     const fmt = n => '$ ' + n.toLocaleString('es-AR');
-    const platColor = { 'PS5': '#3b82f6', 'PS4': '#2563eb', 'PS3': '#64748b', 'XBOX': '#22c55e', 'SWITCH': '#ef4444', 'SWITCH 2': '#ef4444' };
-    const accents = { cyan: '#22d3ee', pink: '#f43f5e', lime: '#a3e635', violet: '#8b5cf6' };
+    const platColor = { 'PS5': '#1599ae', 'PS4': '#14899c', 'PS3': '#4a4f52' };
+    const accents = { cyan: '#22d3ee', pink: '#1ee6fb', lime: '#22d3ee', violet: '#2cc0d6' };
     const shortName = n => n.replace(/ - .*| PS[345]$| PS[345] .*/i, '').replace(/…$/, '');
     // Portada de marcador: degradado con el título (reemplazar por <img src="portada.jpg"> cuando tengas las imágenes)
     const hue = s => [...s].reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 360, 7);
+    // Variaciones dentro de la paleta del logo: tonos celestes y grises carbón
     const cover = p => {
-      const h = hue(p.name);
-      return `<div class="w-full aspect-[3/4] flex items-end p-4 group-hover:scale-105 transition duration-500" style="background:radial-gradient(circle at 70% 25%, hsl(${h} 80% 55% / .55), transparent 55%), linear-gradient(160deg, hsl(${h} 45% 22%), #0b1020)">
+      const n = hue(p.name), h = 182 + (n % 18), s = n % 3 === 0 ? 6 : 55 + (n % 30);
+      return `<div class="w-full aspect-[3/4] flex items-end p-4 group-hover:scale-105 transition duration-500" style="background:radial-gradient(circle at 70% 25%, hsl(${h} ${s}% 50% / .5), transparent 55%), linear-gradient(160deg, hsl(${h} ${Math.round(s / 2)}% 20%), #11141a)">
         <span class="font-display text-lg font-bold leading-tight text-white/90 uppercase line-clamp-3 mb-6">${shortName(p.name)}</span></div>`;
     };
 
@@ -299,7 +301,7 @@
           ${cover(p)}
           <span class="absolute top-2 left-2 rounded-md px-2 py-0.5 text-[10px] font-bold text-white" style="background:${platColor[p.plat] || '#475569'}">${p.plat}</span>
           ${tag && tag !== p.plat ? `<span class="absolute top-2 right-2 rounded-md bg-night-950/80 px-2 py-0.5 text-[10px] font-bold text-neon-cyan">${tag}</span>` : ''}
-          ${p.off ? `<span class="absolute bottom-2 left-2 rounded-full bg-neon-pink px-2.5 py-0.5 text-xs font-bold text-white">-${p.off}%</span>` : ''}
+          ${p.off ? `<span class="absolute bottom-2 left-2 rounded-full bg-neon-pink px-2.5 py-0.5 text-xs font-bold text-night-950">-${p.off}%</span>` : ''}
         </div>
         <div class="p-3 flex flex-col flex-1">
           <h3 class="text-[13px] font-semibold leading-snug line-clamp-2 min-h-[2.4rem]" title="${p.name}">${p.name}</h3>
@@ -364,7 +366,7 @@
         }
         html += `
           <div class="mt-5 grid gap-4 md:grid-cols-[220px_1fr] items-stretch">
-            <div class="relative overflow-hidden rounded-2xl p-6 flex md:flex-col justify-between items-center md:items-start gap-4" style="background:linear-gradient(160deg, ${rw.color}, #0b1020 85%)">
+            <div class="relative overflow-hidden rounded-2xl p-6 flex md:flex-col justify-between items-center md:items-start gap-4" style="background:linear-gradient(160deg, ${rw.color}, #11141a 85%)">
               <div>
                 <h3 class="font-display text-3xl font-bold leading-none">${rw.title}</h3>
                 <p class="mt-2 text-sm text-white/80">${rw.sub}</p>
@@ -409,7 +411,7 @@
     })();
 
     const viewHeader = (crumb, title, sub, color) => `
-      <div class="mt-6 relative overflow-hidden rounded-3xl p-6 sm:p-10 ring-1 ring-white/10" style="background:radial-gradient(circle at 85% 20%, ${color}66, transparent 55%), linear-gradient(135deg, ${color}33, #0b1020 70%)">
+      <div class="mt-6 relative overflow-hidden rounded-3xl p-6 sm:p-10 ring-1 ring-white/10" style="background:radial-gradient(circle at 85% 20%, ${color}66, transparent 55%), linear-gradient(135deg, ${color}33, #11141a 70%)">
         <div class="absolute inset-0 grid-bg"></div>
         <div class="relative">
           <p class="text-xs text-slate-400"><a href="#" class="hover:text-white">Inicio</a> <span class="mx-1">›</span> <span class="text-slate-200">${crumb}</span></p>
@@ -429,12 +431,12 @@
 
     // Planes de PlayStation Plus (precios a definir con el cliente)
     const psPlans = [
-      { n: 'Essential', c: '#eab308', f: ['Juego online multijugador', 'Juegos mensuales para descargar', 'Guardado en la nube', 'Descuentos exclusivos'] },
-      { n: 'Extra', c: '#3b82f6', f: ['Todo lo de Essential', 'Catálogo de cientos de juegos de PS4 y PS5'], hot: true },
-      { n: 'Premium', c: '#8b5cf6', f: ['Todo lo de Extra', 'Clásicos de PS1, PS2, PS3 y PSP', 'Pruebas de juegos por tiempo limitado', 'Streaming en la nube'] },
+      { n: 'Essential', c: '#9aa3a8', f: ['Juego online multijugador', 'Juegos mensuales para descargar', 'Guardado en la nube', 'Descuentos exclusivos'] },
+      { n: 'Extra', c: '#22d3ee', f: ['Todo lo de Essential', 'Catálogo de cientos de juegos de PS4 y PS5'], hot: true },
+      { n: 'Premium', c: '#1ee6fb', f: ['Todo lo de Extra', 'Clásicos de PS1, PS2, PS3 y PSP', 'Pruebas de juegos por tiempo limitado', 'Streaming en la nube'] },
     ];
-    const plusView = () => viewHeader('PlayStation Plus', '<i class="fa-brands fa-playstation text-[#eab308]"></i> PlayStation Plus',
-      'Elige tu plan y juega online con todos los beneficios.', '#eab308') + `
+    const plusView = () => viewHeader('PlayStation Plus', '<i class="fa-brands fa-playstation text-[#1ee6fb]"></i> PlayStation Plus',
+      'Elige tu plan y juega online con todos los beneficios.', '#1ee6fb') + `
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         ${psPlans.map(pl => `
           <article class="relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'}">
@@ -451,7 +453,7 @@
 
     const opinionsView = () => viewHeader('Opiniones', 'Lo que dicen los gamers', 'Opiniones de nuestros clientes.', '#22d3ee') + `
       <div class="mt-8 flex justify-end">
-        <button class="rounded-xl ring-1 ring-neon-violet px-5 py-2.5 text-sm font-semibold text-neon-violet hover:bg-neon-violet hover:text-white transition"><i class="fa-regular fa-comment-dots mr-1"></i> Escribir una opinión</button>
+        <button class="rounded-xl ring-1 ring-neon-violet px-5 py-2.5 text-sm font-semibold text-neon-violet hover:bg-neon-violet hover:text-night-950 transition"><i class="fa-regular fa-comment-dots mr-1"></i> Escribir una opinión</button>
       </div>
       <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">${reviewsHtml()}</div>`;
 
