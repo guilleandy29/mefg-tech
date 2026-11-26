@@ -205,7 +205,7 @@
           <span class="font-display font-bold text-xl tracking-wide">NOVA<span class="grad-text">PLAY</span></span>
         </a>
         <div class="mt-4 flex gap-4 text-lg text-slate-400">
-          <a href="#" class="hover:text-neon-cyan" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" data-wa="Hola, tengo una consulta" target="_blank" rel="noopener" class="hover:text-neon-cyan" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           <a href="#" class="hover:text-neon-cyan" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>        </div>
       </div>
       <div>
@@ -228,10 +228,25 @@
     <p class="border-t border-white/5 py-4 text-center text-xs text-slate-500">2026 © Todos los derechos reservados</p>
   </footer>
 
-  <!-- Botón de chat flotante -->
-  <a href="#" class="fixed bottom-5 right-5 z-50 grid place-items-center h-14 w-14 rounded-full grad text-night-950 text-2xl shadow-lg shadow-neon-violet/40" aria-label="Chat"><i class="fa-regular fa-comment"></i></a>
+  <!-- Botón flotante de soporte por WhatsApp -->
+  <a href="#" data-wa="Hola, necesito ayuda con" target="_blank" rel="noopener" class="group fixed bottom-5 right-5 z-50 flex items-center gap-3" aria-label="Soporte por WhatsApp">
+    <span class="hidden sm:block rounded-full bg-white px-4 py-2 text-sm font-semibold text-night-950 shadow-lg opacity-0 translate-x-2 transition group-hover:opacity-100 group-hover:translate-x-0">Soporte</span>
+    <span class="relative grid place-items-center h-14 w-14 rounded-full bg-[#25D366] text-white text-3xl shadow-lg shadow-[#25D366]/40 transition group-hover:scale-110">
+      <span class="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30"></span>
+      <i class="relative fa-brands fa-whatsapp"></i>
+    </span>
+  </a>
 
   <script>
+    // ---------- WhatsApp ----------
+    // Número de WhatsApp de la tienda: código de país + número, sin espacios ni signos (ej: '5491112345678').
+    const WHATSAPP = '';
+    const waLink = text => WHATSAPP ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}` : '#';
+    document.querySelectorAll('[data-wa]').forEach(a => {
+      a.href = waLink(a.dataset.wa);
+      if (!WHATSAPP) a.addEventListener('click', e => { e.preventDefault(); alert('El WhatsApp de soporte estará disponible muy pronto.'); });
+    });
+
     // ---------- Datos ----------
     const P = (name, old, price, off, plat) => ({ name, old, price, off, plat });
     const sections = {
