@@ -412,17 +412,6 @@
       return [...seen.values()];
     })();
 
-    // Banner con imagen completa de fondo (proporción 16:9). En celular el texto va arriba y la imagen debajo.
-    const imageHeader = (crumb, title, sub, img) => `
-      <div class="mt-6 flex flex-col-reverse lg:block relative overflow-hidden rounded-3xl ring-1 ring-white/10 bg-night-800">
-        <img src="${img}" alt="" class="block w-full aspect-[16/9] object-cover" />
-        <div class="lg:absolute lg:inset-x-0 lg:top-0 p-6 sm:p-10">
-          <p class="text-xs text-slate-400 lg:text-slate-600"><a href="#" class="hover:text-white lg:hover:text-night-950">Inicio</a> <span class="mx-1">›</span> <span class="text-slate-200 lg:text-night-900 font-medium">${crumb}</span></p>
-          <h1 class="mt-3 font-display text-3xl sm:text-5xl font-bold text-white lg:text-night-950">${title}</h1>
-          <p class="mt-2 text-slate-300 lg:text-slate-700">${sub}</p>
-        </div>
-      </div>`;
-
     const viewHeader = (crumb, title, sub, color) => `
       <div class="mt-6 relative overflow-hidden rounded-3xl p-6 sm:p-10 ring-1 ring-white/10" style="background:radial-gradient(circle at 85% 20%, ${color}66, transparent 55%), linear-gradient(135deg, ${color}33, #11141a 70%)">
         <div class="absolute inset-0 grid-bg"></div>
@@ -448,8 +437,8 @@
       { n: 'Extra', c: '#22d3ee', f: ['Todo lo de Essential', 'Catálogo de cientos de juegos de PS4 y PS5'], hot: true },
       { n: 'Premium', c: '#1ee6fb', f: ['Todo lo de Extra', 'Clásicos de PS1, PS2, PS3 y PSP', 'Pruebas de juegos por tiempo limitado', 'Streaming en la nube'] },
     ];
-    const plusView = () => imageHeader('PlayStation Plus', '<i class="fa-brands fa-playstation"></i> PlayStation Plus',
-      'Elige tu plan y juega online con todos los beneficios.', 'img/ps-plus-banner-completo.jpg') + `
+    const plusView = () => viewHeader('PlayStation Plus', '<i class="fa-brands fa-playstation text-[#1ee6fb]"></i> PlayStation Plus',
+      'Elige tu plan y juega online con todos los beneficios.', '#1ee6fb') + `
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         ${psPlans.map(pl => `
           <article class="relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'}">
