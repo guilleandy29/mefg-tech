@@ -445,7 +445,7 @@
 
     // Planes de PlayStation Plus (precios a definir con el cliente)
     const psPlans = [
-      { n: 'Essential', c: '#9aa3a8', f: ['Juego online multijugador', 'Juegos mensuales para descargar', 'Guardado en la nube', 'Descuentos exclusivos'] },
+      { n: 'Essential', c: '#9aa3a8', img: 'img/ps-plus-essential.jpg', f: ['Juego online multijugador', 'Juegos mensuales para descargar', 'Guardado en la nube', 'Descuentos exclusivos'] },
       { n: 'Extra', c: '#22d3ee', f: ['Todo lo de Essential', 'Catálogo de cientos de juegos de PS4 y PS5'], hot: true },
       { n: 'Premium', c: '#1ee6fb', f: ['Todo lo de Extra', 'Clásicos de PS1, PS2, PS3 y PSP', 'Pruebas de juegos por tiempo limitado', 'Streaming en la nube'] },
     ];
@@ -453,10 +453,14 @@
       'Elige tu plan y juega online con todos los beneficios.', 'img/ps-plus-header.jpg') + `
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         ${psPlans.map(pl => `
-          <article class="relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'}">
+          <article class="relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'} ${pl.img ? 'overflow-hidden' : ''}">
             ${pl.hot ? '<span class="absolute -top-3 left-6 rounded-full grad px-3 py-1 text-[11px] font-bold text-night-950">MÁS ELEGIDO</span>' : ''}
-            <p class="font-display text-sm font-bold tracking-[.2em]" style="color:${pl.c}">PLAYSTATION PLUS</p>
-            <h3 class="font-display text-3xl font-bold">${pl.n}</h3>
+            ${pl.img
+              /* La imagen ya trae "PlayStation Plus" y el nombre del plan: el título queda solo para lectores de pantalla */
+              ? `<img src="${pl.img}" alt="" class="-mx-6 -mt-6 block max-w-none w-[calc(100%+3rem)] aspect-[1411/1115] object-cover" />
+                 <h3 class="sr-only">PlayStation Plus ${pl.n}</h3>`
+              : `<p class="font-display text-sm font-bold tracking-[.2em]" style="color:${pl.c}">PLAYSTATION PLUS</p>
+                 <h3 class="font-display text-3xl font-bold">${pl.n}</h3>`}
             <ul class="mt-5 space-y-2 text-sm text-slate-300 flex-1">
               ${pl.f.map(x => `<li class="flex gap-2"><i class="fa-solid fa-check mt-1 text-neon-cyan"></i>${x}</li>`).join('')}
             </ul>
