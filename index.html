@@ -114,14 +114,16 @@
       </div>
 
       <!-- Anuncio PlayStation Plus -->
-      <a href="#playstation-plus" class="group relative overflow-hidden rounded-3xl bg-night-800 glow p-5 flex flex-col" style="background-image:radial-gradient(circle at 90% 0%, #22d3ee33, transparent 55%)">
-        <i class="fa-brands fa-playstation absolute -right-6 -bottom-6 text-[150px] text-white/[.04] pointer-events-none"></i>
+      <a href="#playstation-plus" class="group relative isolate overflow-hidden rounded-3xl bg-night-800 glow p-5 flex flex-col">
+        <!-- Fondo: imagen + capa oscura para que el texto se lea -->
+        <div class="absolute inset-0 -z-10 bg-cover transition duration-700 group-hover:scale-105" style="background-image:url('img/ps-plus-fondo.jpg');background-position:center 40%"></div>
+        <div class="absolute inset-0 -z-10" style="background:linear-gradient(180deg, rgba(17,20,26,.82) 0%, rgba(17,20,26,.35) 45%, rgba(17,20,26,.5) 70%, rgba(17,20,26,.92) 100%)"></div>
         <p class="flex items-center gap-2 text-xs font-semibold tracking-[.25em] text-neon-cyan"><i class="fa-brands fa-playstation text-base"></i> PLAYSTATION PLUS</p>
-        <h3 class="mt-2 font-display text-2xl font-bold leading-tight">Juega online con todos los beneficios</h3>
+        <h3 class="mt-2 font-display text-2xl font-bold leading-tight [text-shadow:0_2px_12px_rgba(0,0,0,.9)]">Juega online con todos los beneficios</h3>
         <ul class="mt-4 space-y-2 text-sm">
-          <li class="flex items-center gap-3 rounded-xl bg-night-700/60 px-3 py-2.5"><span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[#9aa3a8]"></span><span><b class="text-white">Essential</b> <span class="text-slate-400">· Juego online</span></span></li>
-          <li class="flex items-center gap-3 rounded-xl bg-night-700/60 px-3 py-2.5 ring-1 ring-neon-cyan/50"><span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[#22d3ee]"></span><span><b class="text-white">Extra</b> <span class="text-slate-400">· Cientos de juegos</span></span></li>
-          <li class="flex items-center gap-3 rounded-xl bg-night-700/60 px-3 py-2.5"><span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[#1ee6fb]"></span><span><b class="text-white">Premium</b> <span class="text-slate-400">· Clásicos y streaming</span></span></li>
+          <li class="flex items-center gap-3 rounded-xl bg-night-900/75 backdrop-blur-sm px-3 py-2.5"><span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[#9aa3a8]"></span><span><b class="text-white">Essential</b> <span class="text-slate-300">· Juego online</span></span></li>
+          <li class="flex items-center gap-3 rounded-xl bg-night-900/75 backdrop-blur-sm px-3 py-2.5 ring-1 ring-neon-cyan/60"><span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[#22d3ee]"></span><span><b class="text-white">Extra</b> <span class="text-slate-300">· Cientos de juegos</span></span></li>
+          <li class="flex items-center gap-3 rounded-xl bg-night-900/75 backdrop-blur-sm px-3 py-2.5"><span class="h-2.5 w-2.5 shrink-0 rounded-full bg-[#1ee6fb]"></span><span><b class="text-white">Premium</b> <span class="text-slate-300">· Clásicos y streaming</span></span></li>
         </ul>
         <span class="mt-auto pt-4"><span class="flex items-center justify-center gap-2 rounded-lg grad py-2.5 text-sm font-bold text-night-950 group-hover:brightness-110">Ver planes <i class="fa-solid fa-arrow-right text-xs"></i></span></span>
       </a>
