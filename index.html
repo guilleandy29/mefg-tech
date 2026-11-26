@@ -496,7 +496,7 @@
       'Elige tu plan y juega online con todos los beneficios.', 'img/ps-plus-header.jpg') + `
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         ${psPlans.map(pl => `
-          <article data-plan-card="${pl.n}" class="group relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'} transition data-[sel=true]:ring-2 data-[sel=true]:ring-neon-cyan data-[sel=true]:glow">
+          <article data-plan-card="${pl.n}" class="group relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ring-white/10 transition data-[sel=true]:ring-2 data-[sel=true]:ring-neon-cyan data-[sel=true]:glow">
             ${pl.hot ? '<span class="absolute z-10 -top-3 left-6 rounded-full grad px-3 py-1 text-[11px] font-bold text-night-950">MÁS ELEGIDO</span>' : ''}
             <span class="absolute z-10 top-3 right-3 hidden group-data-[sel=true]:flex items-center gap-1.5 rounded-full bg-night-950/85 px-3 py-1 text-xs font-bold text-neon-cyan"><i class="fa-solid fa-circle-check"></i> Elegido</span>
             ${pl.img
