@@ -412,9 +412,11 @@
       return [...seen.values()];
     })();
 
-    const viewHeader = (crumb, title, sub, color) => `
+    // img (opcional): imagen que se muestra a la derecha del banner, fundida hacia la izquierda
+    const viewHeader = (crumb, title, sub, color, img) => `
       <div class="mt-6 relative overflow-hidden rounded-3xl p-6 sm:p-10 ring-1 ring-white/10" style="background:radial-gradient(circle at 85% 20%, ${color}66, transparent 55%), linear-gradient(135deg, ${color}33, #11141a 70%)">
         <div class="absolute inset-0 grid-bg"></div>
+        ${img ? `<div class="absolute inset-y-0 right-0 w-full sm:w-auto sm:aspect-square bg-no-repeat bg-cover bg-center sm:bg-[length:115%] opacity-40 sm:opacity-100" style="background-image:url('${img}');-webkit-mask-image:linear-gradient(90deg, transparent, #000 55%);mask-image:linear-gradient(90deg, transparent, #000 55%)"></div>` : ''}
         <div class="relative">
           <p class="text-xs text-slate-400"><a href="#" class="hover:text-white">Inicio</a> <span class="mx-1">›</span> <span class="text-slate-200">${crumb}</span></p>
           <h1 class="mt-3 font-display text-3xl sm:text-5xl font-bold">${title}</h1>
@@ -438,7 +440,7 @@
       { n: 'Premium', c: '#1ee6fb', f: ['Todo lo de Extra', 'Clásicos de PS1, PS2, PS3 y PSP', 'Pruebas de juegos por tiempo limitado', 'Streaming en la nube'] },
     ];
     const plusView = () => viewHeader('PlayStation Plus', '<i class="fa-brands fa-playstation text-[#1ee6fb]"></i> PlayStation Plus',
-      'Elige tu plan y juega online con todos los beneficios.', '#1ee6fb') + `
+      'Elige tu plan y juega online con todos los beneficios.', '#1ee6fb', 'img/ps-plus-banner.jpg') + `
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         ${psPlans.map(pl => `
           <article class="relative rounded-2xl bg-night-800 p-6 flex flex-col ring-1 ${pl.hot ? 'ring-neon-cyan' : 'ring-white/10'}">
