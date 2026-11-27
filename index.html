@@ -50,10 +50,12 @@
       <a href="#" class="flex items-center gap-2 shrink-0">
         <img src="logo/mcfg-tech-transparente.png" alt="MCFG Tech" class="h-12 sm:h-16 w-auto" />
       </a>
-      <form class="order-3 md:order-none w-full md:w-auto md:flex-1 flex items-center rounded-xl bg-night-800 ring-1 ring-white/10 focus-within:ring-neon-violet">
-        <i class="fa-solid fa-magnifying-glass pl-4 text-slate-400"></i>
-        <input type="search" placeholder="Buscar juegos, PlayStation Plus y más..." class="w-full bg-transparent px-3 py-3 text-sm outline-none placeholder:text-slate-500" />
+      <form id="search-form" role="search" autocomplete="off" class="relative order-3 md:order-none w-full md:w-auto md:flex-1 flex items-center rounded-xl bg-night-800 ring-1 ring-white/10 focus-within:ring-neon-violet">
+        <i class="fa-solid fa-magnifying-glass pl-4 text-neon-cyan"></i>
+        <input id="search-input" type="search" placeholder="Buscar juegos, PlayStation Plus y más..." aria-label="Buscar juegos" aria-controls="search-results" aria-expanded="false" class="w-full bg-transparent px-3 py-3 text-sm outline-none placeholder:text-slate-500" />
         <button class="m-1 rounded-lg grad px-4 py-2 text-sm font-semibold text-night-950">Buscar</button>
+        <!-- Resultados al instante -->
+        <div id="search-results" role="listbox" class="hidden absolute left-0 right-0 top-full mt-2 z-50 max-h-[70vh] overflow-y-auto rounded-2xl bg-night-800 ring-1 ring-white/10 shadow-2xl shadow-black/60 p-2"></div>
       </form>
       <div class="ml-auto flex items-center gap-2 sm:gap-3">
         <button class="relative flex items-center gap-2 rounded-xl bg-night-800 ring-1 ring-white/10 px-3 py-2.5 text-sm font-semibold">
@@ -668,14 +670,36 @@
         ${offers.map(p => card(p, p.tag, true)).join('')}
       </div>`;
 
+    // ---------- Buscador ----------
+    // Sin tildes ni mayúsculas: "pokemon" encuentra "Pokémon", "GOD of war" encuentra "God of War"
+    const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+    const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const searchProducts = q => {
+      const words = norm(q).split(/\s+/).filter(Boolean);
+      if (!words.length) return [];
+      return allProducts
+        .filter(p => { const n = norm(p.name + ' ' + p.plat); return words.every(w => n.includes(w)); })
+        // Primero los que empiezan con lo buscado, después los de mayor descuento
+        .sort((a, b) => (norm(b.name).startsWith(words[0]) - norm(a.name).startsWith(words[0])) || (b.off || 0) - (a.off || 0));
+    };
+    const searchView = q => {
+      const res = searchProducts(q);
+      return viewHeader('Búsqueda', `<i class="fa-solid fa-magnifying-glass text-neon-cyan"></i> “${esc(q)}”`,
+        res.length ? `${res.length} ${res.length === 1 ? 'resultado' : 'resultados'}` : 'No encontramos juegos con ese nombre. Probá con otra palabra.', '#22d3ee') + `
+        <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          ${res.map(p => card(p, p.tag, true)).join('')}
+        </div>`;
+    };
+
     const views = { ofertas: offersView, ps3: () => consoleView('PS3'), ps4: () => consoleView('PS4'), ps5: () => consoleView('PS5'), 'playstation-plus': plusView, opiniones: opinionsView };
     const homeEl = document.getElementById('home'), viewEl = document.getElementById('view');
     const route = () => {
       const key = decodeURIComponent(location.hash.slice(1));
       document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('text-neon-cyan', a.dataset.nav === key));
       document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('bg-white/10', a.dataset.nav === key));
-      if (views[key]) {
-        viewEl.innerHTML = views[key]();
+      const view = views[key] || (key.startsWith('buscar/') ? () => searchView(key.slice(7)) : null);
+      if (view) {
+        viewEl.innerHTML = view();
         if (key === 'playstation-plus') updatePlus();
         viewEl.classList.remove('hidden'); homeEl.classList.add('hidden');
         window.scrollTo(0, 0);
@@ -687,6 +711,83 @@
     };
     window.addEventListener('hashchange', route);
     route();
+
+    // Buscador: resultados al instante, teclado y texto animado
+    (() => {
+      const form = document.getElementById('search-form'), input = document.getElementById('search-input'), box = document.getElementById('search-results');
+      const MAX = 6;
+      let res = [], active = -1;
+      const thumb = p => p.img
+        ? `<img src="${p.img}" alt="" class="h-14 w-[42px] shrink-0 rounded-md object-cover" />`
+        : `<span class="grid place-items-center h-14 w-[42px] shrink-0 rounded-md text-white/70" style="background:linear-gradient(160deg, hsl(${182 + hue(p.name) % 18} 50% 30%), #11141a)"><i class="fa-brands fa-playstation"></i></span>`;
+      const open = html => { box.innerHTML = html; box.classList.remove('hidden'); input.setAttribute('aria-expanded', 'true'); };
+      const close = () => { box.classList.add('hidden'); input.setAttribute('aria-expanded', 'false'); active = -1; };
+      const go = q => { if (q.trim()) { close(); input.blur(); location.hash = 'buscar/' + q.trim(); } };
+      const render = () => {
+        const q = input.value;
+        if (!q.trim()) return close();
+        res = searchProducts(q); active = -1;
+        if (!res.length) return open(`<p class="px-3 py-4 text-sm text-slate-400"><i class="fa-regular fa-face-frown mr-2"></i>No encontramos “${esc(q)}”. Probá con otra palabra.</p>`);
+        open(res.slice(0, MAX).map((p, i) => `
+          <button type="button" role="option" data-i="${i}" class="search-item w-full flex items-center gap-3 rounded-xl p-2 text-left hover:bg-white/5 aria-selected:bg-white/10">
+            ${thumb(p)}
+            <span class="min-w-0 flex-1">
+              <span class="block text-sm font-semibold text-white truncate">${esc(p.name)}</span>
+              <span class="mt-0.5 flex items-center gap-2 text-xs text-slate-400">
+                <span class="rounded px-1.5 py-0.5 text-[10px] font-bold text-white" style="background:${platColor[p.plat] || '#475569'}">${p.plat}</span>
+                ${p.old ? `<span class="line-through">${fmt(p.old)}</span>` : ''}
+              </span>
+            </span>
+            <span class="text-right shrink-0">
+              <span class="block font-display text-base font-bold text-white">${fmt(p.price)}</span>
+              ${p.off ? `<span class="inline-block rounded-full bg-neon-cyan px-2 py-0.5 text-[10px] font-bold text-night-950">-${p.off}%</span>` : ''}
+            </span>
+          </button>`).join('') + `
+          <button type="button" data-all class="mt-1 w-full rounded-xl py-2.5 text-sm font-semibold text-neon-cyan hover:bg-white/5">
+            Ver ${res.length > MAX ? `los ${res.length} resultados` : 'resultados'} para “${esc(q)}” <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>
+          </button>`);
+      };
+      const highlight = i => {
+        const items = box.querySelectorAll('.search-item');
+        if (!items.length) return;
+        active = (i + items.length) % items.length;
+        items.forEach((el, j) => el.setAttribute('aria-selected', j === active));
+        items[active].scrollIntoView({ block: 'nearest' });
+      };
+      input.addEventListener('input', render);
+      input.addEventListener('focus', render);
+      input.addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); highlight(active + 1); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); highlight(active - 1); }
+        else if (e.key === 'Escape') close();
+        else if (e.key === 'Enter' && active >= 0) { e.preventDefault(); go(res[active].name); }
+      });
+      box.addEventListener('mousedown', e => e.preventDefault()); // que el clic no cierre la lista antes de tiempo
+      box.addEventListener('click', e => {
+        const item = e.target.closest('.search-item');
+        if (item) go(res[+item.dataset.i].name);
+        else if (e.target.closest('[data-all]')) go(input.value);
+      });
+      input.addEventListener('blur', close);
+      form.addEventListener('submit', e => { e.preventDefault(); go(input.value); });
+
+      // Texto animado: escribe y borra nombres de juegos de la tienda
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const fallback = input.placeholder;
+      const names = [...new Set(allProducts.map(p => shortName(p.name)))].sort(() => Math.random() - .5);
+      let n = 0, pos = 0, deleting = false;
+      const step = () => {
+        if (document.activeElement === input || input.value) { input.placeholder = fallback; return setTimeout(step, 600); }
+        const name = names[n % names.length];
+        pos += deleting ? -1 : 1;
+        input.placeholder = name.slice(0, pos) || ' ';
+        let wait = deleting ? 35 : 75;
+        if (!deleting && pos >= name.length) { deleting = true; wait = 1600; }
+        else if (deleting && pos <= 0) { deleting = false; n++; wait = 350; }
+        setTimeout(step, wait);
+      };
+      if (names.length) setTimeout(step, 800);
+    })();
 
 
     // Contadores
