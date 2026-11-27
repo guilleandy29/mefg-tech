@@ -31,6 +31,13 @@
     .row-scroll { scroll-snap-type: x mandatory; scrollbar-width: none; }
     .row-scroll::-webkit-scrollbar { display: none; }
     .row-scroll > * { scroll-snap-align: start; }
+    /* Filas de ofertas que se deslizan solas (el contenido va duplicado para que el bucle no tenga corte) */
+    @keyframes marquee { to { transform: translateX(-50%); } }
+    .marquee { animation: marquee var(--dur, 60s) linear infinite; }
+    .marquee.rev { animation-direction: reverse; }
+    .marquee-wrap { -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+    .marquee-wrap:hover .marquee { animation-play-state: paused; }
+    @media (prefers-reduced-motion: reduce) { .marquee { animation: none; } .marquee-wrap { overflow-x: auto; } }
     .grid-bg { background-image: linear-gradient(rgba(46,211,232,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(46,211,232,.06) 1px, transparent 1px); background-size: 28px 28px; }
   </style>
 </head>
@@ -146,6 +153,9 @@
       </div>
     </section>
 
+    <!-- Ofertas activas: se arma sola con todos los juegos que tienen descuento -->
+    <section id="ofertas-activas" class="mt-12"></section>
+
     <section id="black-friday" class="mt-12"></section>
     <section id="vendido" class="mt-14"></section>
 
@@ -254,7 +264,8 @@
     });
 
     // ---------- Datos ----------
-    const P = (name, old, price, off, plat) => ({ name, old, price, off, plat });
+    // img (opcional): ruta de la portada, ej. 'img/juegos/gta-v.jpg'. Sin img se dibuja una portada de marcador.
+    const P = (name, old, price, off, plat, img) => ({ name, old, price, off, plat, img });
     const sections = {
       'black-friday': {
         eyebrow: 'BLACK FRIDAY 🔥', title: '¡Antes que termine! 🕰️', countdown: { d: 15, h: 18, m: 14 }, accent: 'pink',
@@ -298,6 +309,7 @@
     const hue = s => [...s].reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 360, 7);
     // Variaciones dentro de la paleta del logo: tonos celestes y grises carbón
     const cover = p => {
+      if (p.img) return `<img src="${p.img}" alt="${p.name}" loading="lazy" class="w-full aspect-[3/4] object-cover group-hover:scale-105 transition duration-500" />`;
       const n = hue(p.name), h = 182 + (n % 18), s = n % 3 === 0 ? 6 : 55 + (n % 30);
       return `<div class="w-full aspect-[3/4] flex items-end p-4 group-hover:scale-105 transition duration-500" style="background:radial-gradient(circle at 70% 25%, hsl(${h} ${s}% 50% / .5), transparent 55%), linear-gradient(160deg, hsl(${h} ${Math.round(s / 2)}% 20%), #11141a)">
         <span class="font-display text-lg font-bold leading-tight text-white/90 uppercase line-clamp-3 mb-6">${shortName(p.name)}</span></div>`;
@@ -417,6 +429,46 @@
       Object.values(groups).forEach(g => g.rows.forEach(rw => rw.items.forEach(p => add(p, rw.tag))));
       return [...seen.values()];
     })();
+
+    // ---------- Ofertas activas ----------
+    // Todos los juegos con descuento, del mayor al menor descuento
+    const offers = allProducts.filter(p => p.off > 0).sort((a, b) => b.off - a.off);
+    const maxOff = offers.length ? offers[0].off : 0;
+    const offerCard = (p, hidden) => `
+      <div class="w-[150px] sm:w-[170px] shrink-0 pr-3" ${hidden ? 'aria-hidden="true"' : ''}>
+        <article class="group rounded-xl overflow-hidden bg-night-800 ring-1 ring-white/10 hover:ring-neon-cyan transition" title="${p.name}">
+          <div class="flex items-center justify-between bg-night-950 px-2.5 py-1.5">
+            <span class="text-[11px] font-bold tracking-wider text-white"><i class="fa-brands fa-playstation mr-1 text-neon-cyan"></i>${p.plat}</span>
+            <span class="rounded-md bg-neon-cyan px-1.5 py-0.5 text-[10px] font-extrabold text-night-950">-${p.off}%</span>
+          </div>
+          <div class="overflow-hidden [&>div]:p-3 [&_span]:text-sm [&_span]:mb-2 [&_span]:break-words">${cover(p)}</div>
+          <div class="px-2.5 py-2">
+            ${p.img ? `<p class="text-[11px] font-semibold text-slate-200 truncate">${shortName(p.name)}</p>` : ''}
+            <p class="text-[11px] text-slate-500 line-through">${fmt(p.old)}</p>
+            <p class="font-display text-base font-bold text-white leading-tight">${fmt(p.price)}</p>
+          </div>
+        </article>
+      </div>`;
+    const marqueeRow = (items, rev) => `
+      <div class="marquee-wrap overflow-hidden">
+        <div class="marquee ${rev ? 'rev' : ''} flex w-max" style="--dur:${Math.max(30, items.length * 4)}s">
+          ${items.map(p => offerCard(p)).join('')}${items.map(p => offerCard(p, true)).join('')}
+        </div>
+      </div>`;
+    const offersEl = document.getElementById('ofertas-activas');
+    if (offers.length) {
+      // Reparte las ofertas en dos filas alternadas
+      const rowA = offers.filter((_, i) => i % 2 === 0), rowB = offers.filter((_, i) => i % 2 === 1);
+      offersEl.innerHTML = `
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="flex items-center gap-2 text-xs font-semibold tracking-[.3em] text-neon-cyan"><i class="fa-solid fa-tag"></i> OFERTAS ACTIVAS</p>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold">Descuentos hasta <span class="grad-text">-${maxOff}%</span></h2>
+          </div>
+          <a href="#ofertas" class="flex items-center gap-2 rounded-lg grad px-4 py-2 text-sm font-bold text-night-950 hover:brightness-110">Ver todas <i class="fa-solid fa-arrow-right text-xs"></i></a>
+        </div>
+        <div class="mt-5 space-y-3">${marqueeRow(rowA)}${rowB.length ? marqueeRow(rowB, true) : ''}</div>`;
+    }
 
     // Banner con imagen de fondo completa. La imagen ya trae el logo, así que el título queda solo para lectores de pantalla.
     // En celular el texto va debajo de la imagen; desde sm va encima (texto oscuro porque la imagen es clara).
@@ -610,7 +662,13 @@
       </div>
       <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">${reviewsHtml()}</div>`;
 
-    const views = { ps3: () => consoleView('PS3'), ps4: () => consoleView('PS4'), ps5: () => consoleView('PS5'), 'playstation-plus': plusView, opiniones: opinionsView };
+    const offersView = () => viewHeader('Ofertas', '<i class="fa-solid fa-tag text-neon-cyan"></i> Ofertas activas',
+      `${offers.length} juegos con descuento, hasta -${maxOff}%`, '#22d3ee') + `
+      <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        ${offers.map(p => card(p, p.tag, true)).join('')}
+      </div>`;
+
+    const views = { ofertas: offersView, ps3: () => consoleView('PS3'), ps4: () => consoleView('PS4'), ps5: () => consoleView('PS5'), 'playstation-plus': plusView, opiniones: opinionsView };
     const homeEl = document.getElementById('home'), viewEl = document.getElementById('view');
     const route = () => {
       const key = decodeURIComponent(location.hash.slice(1));
