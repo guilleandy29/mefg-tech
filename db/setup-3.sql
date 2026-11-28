@@ -3,7 +3,7 @@
 -- Pegar TODO este archivo en Supabase → SQL Editor → New query → Run.
 -- No borra nada. Se puede volver a ejecutar.
 --   price / old_price           → cuenta PRIMARIA (lo que ya existía)
---   price_sec / old_price_sec   → cuenta SECUNDARIA (opcional: vacío = solo se vende primaria)
+--   price_sec / old_price_sec   → cuenta SECUNDARIA (opcional: vacío = en la web dice "Consultar stock")
 -- =====================================================================
 
 alter table public.products
