@@ -156,7 +156,9 @@
     </section>
 
     <!-- Ofertas activas: se arma sola con todos los juegos que tienen descuento -->
-    <section id="ofertas-activas" class="mt-12"></section>
+    <section id="ofertas-activas" class="mt-12">
+      <p class="py-10 text-center text-sm text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2 text-neon-cyan"></i>Cargando juegos…</p>
+    </section>
 
     <section id="black-friday" class="mt-12"></section>
     <section id="vendido" class="mt-14"></section>
@@ -315,43 +317,25 @@
     });
 
     // ---------- Datos ----------
-    // img (opcional): ruta de la portada, ej. 'img/juegos/gta-v.jpg'. Sin img se dibuja una portada de marcador.
-    const P = (name, old, price, off, plat, img) => ({ name, old, price, off, plat, img });
-    const sections = {
-      'black-friday': {
-        eyebrow: 'BLACK FRIDAY 🔥', title: '¡Antes que termine! 🕰️', countdown: { d: 15, h: 18, m: 14 }, accent: 'pink',
-        items: [
-          P('Grand Theft Auto V PS5', 17500, 7000, 60, 'PS5'), P('FC26 PS5', 23400, 7000, 70, 'PS5'), P('007 First Light PS5', 39600, 23800, 40, 'PS5'),
-          P('Silent Hill f PS5', 11600, 7000, 40, 'PS5'), P('FC26 Ultimate Edition PS5', 24500, 9800, 60, 'PS5'), P('Assassins Creed Shadows PS5', 17500, 7000, 60, 'PS5'),
-          P('Silent Hill 2 PS5', 11600, 7000, 40, 'PS5'), P('Beast of Reincarnation PS5', 42000, 25200, 40, 'PS5'),
-          P('2 juegos en 1 Mortal Kombat 11 Ultimate más…', 28000, 5600, 80, 'PS5'), P('Cyberpunk 2077: Ultimate Edition PS5', 35000, 7000, 80, 'PS5'),
-          P('Subnautica PS5', 21000, 4200, 80, 'PS5'), P('Metal Gear Solid Delta: Snake Eater PS5', 23400, 7000, 70, 'PS5'),
-          P('Avatar Legends: The Fighting Game PS5', 32100, 22400, 30, 'PS5'), P('The Forest PS5', 14000, 2800, 80, 'PS5'),
-          P('Little Nightmares I y II PS4', 42000, 8400, 80, 'PS4'), P('Astro Bot PS5', 59500, 23800, 60, 'PS5'),
-          P('Poppy Playtime: Chapter 5 PS5', 25600, 15400, 40, 'PS5'), P('Resident Evil 2 PS5', 14000, 4200, 70, 'PS5'),
-          P('Mortal Kombat Legacy Kollection PS4', 35000, 14000, 60, 'PS4'), P('Poppy Playtime: Chapter 4 PS5', 18600, 11200, 40, 'PS5'),
-          P('Code Vein II PS5', 37400, 22400, 40, 'PS5'), P('Hogwarts Legacy Digital Deluxe Edition PS5', 23400, 7000, 70, 'PS5'),
-          P('Mortal Kombat X PS5', 9400, 2800, 70, 'PS5'), P('Little Nightmares I y II PS5', 21000, 8400, 60, 'PS5'),
-        ],
-      },
-    };
+    // Los juegos y los precios de PS Plus se cargan desde Supabase y se editan en admin.html.
+    // La clave publicable puede estar en la web: la base solo deja editar a los administradores.
+    const SUPABASE_URL = 'https://sqxhyhqxbhnxqzkhmrko.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_xCRww9QYVWXjgXpb1s4n7w_c9BILTm_';
 
+    // Secciones del home. Cada juego elige en el panel en cuáles aparece (por la clave).
+    const sections = {
+      'black-friday': { key: 'black-friday', eyebrow: 'BLACK FRIDAY 🔥', title: '¡Antes que termine! 🕰️', countdown: { d: 15, h: 18, m: 14 }, accent: 'pink', items: [] },
+    };
     const groups = {
       vendido: { eyebrow: 'LO MÁS VENDIDO', rows: [
-        { title: 'Fijos', sub: 'Los juegazos de siempre', color: '#1fb8cf', tag: 'TOP', items: [
-          P('FC25 PS5', 7000, 1400, 80, 'PS5'), P('Grand Theft Auto V PS4', 35000, 7000, 80, 'PS4'), P('Crash Team Racing Nitro Fueled PS4', 14000, 2800, 80, 'PS4'),
-          P('God of War III Remastered PS5', 28000, 5600, 80, 'PS5'), P('Mortal Kombat 11 Ultimate PS5', 28000, 5600, 80, 'PS5'),
-          P('The Last of Us Part II PS5', 35000, 7000, 80, 'PS5'), P('Red Dead Redemption 2 PS4', 28000, 5600, 80, 'PS4'), P('Minecraft PS4', 37300, 11200, 70, 'PS4') ] },
-        { title: 'PS3', sub: 'Clásicos que marcan época', color: '#4a4f52', tag: 'PS3', items: [
-          P('Call of Duty Black Ops III PS3', 4600, 1400, 70, 'PS3'), P('The Last of Us PS3', 4600, 1400, 70, 'PS3'), P('Gran Turismo 6 PS3', 4600, 1400, 70, 'PS3'),
-          P('FIFA 18 PS3', 4600, 1400, 70, 'PS3'), P('Pro Evolution Soccer 2018 PS3', 4600, 1400, 70, 'PS3'), P('God of War Ascension', 3500, 1400, 60, 'PS3') ] },
-        { title: 'PS4', sub: 'Las mejores obras maestras', color: '#14899c', tag: 'TOP', items: [
-          P('FC27 PS4', 32600, 19600, 40, 'PS4'), P('God of War PS4', 7000, 1400, 80, 'PS4'), P('Red Dead Redemption 2 PS4', 28000, 5600, 80, 'PS4'),
-          P("Marvel's Spider-Man Game of the Year Edition…", 28000, 5600, 80, 'PS4'), P('Minecraft PS4', 37300, 11200, 70, 'PS4'), P('Mortal Kombat XL PS4', 14000, 2800, 80, 'PS4') ] },
+        { key: 'vendido-fijos', title: 'Fijos', sub: 'Los juegazos de siempre', color: '#1fb8cf', tag: 'TOP', items: [] },
+        { key: 'vendido-ps3', title: 'PS3', sub: 'Clásicos que marcan época', color: '#4a4f52', tag: 'PS3', items: [] },
+        { key: 'vendido-ps4', title: 'PS4', sub: 'Las mejores obras maestras', color: '#14899c', tag: 'TOP', items: [] },
       ] },
     };
 
     // ---------- Helpers ----------
+    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const fmt = n => '$ ' + n.toLocaleString('es-AR');
     const platColor = { 'PS5': '#1599ae', 'PS4': '#14899c', 'PS3': '#4a4f52' };
     const accents = { cyan: '#22d3ee', pink: '#1ee6fb', lime: '#22d3ee', violet: '#2cc0d6' };
@@ -360,10 +344,10 @@
     const hue = s => [...s].reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 360, 7);
     // Variaciones dentro de la paleta del logo: tonos celestes y grises carbón
     const cover = p => {
-      if (p.img) return `<img src="${p.img}" alt="${p.name}" loading="lazy" class="w-full aspect-[3/4] object-cover group-hover:scale-105 transition duration-500" />`;
+      if (p.img) return `<img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy" class="w-full aspect-[3/4] object-cover group-hover:scale-105 transition duration-500" />`;
       const n = hue(p.name), h = 182 + (n % 18), s = n % 3 === 0 ? 6 : 55 + (n % 30);
       return `<div class="w-full aspect-[3/4] flex items-end p-4 group-hover:scale-105 transition duration-500" style="background:radial-gradient(circle at 70% 25%, hsl(${h} ${s}% 50% / .5), transparent 55%), linear-gradient(160deg, hsl(${h} ${Math.round(s / 2)}% 20%), #11141a)">
-        <span class="font-display text-lg font-bold leading-tight text-white/90 uppercase line-clamp-3 mb-6">${shortName(p.name)}</span></div>`;
+        <span class="font-display text-lg font-bold leading-tight text-white/90 uppercase line-clamp-3 mb-6">${esc(shortName(p.name))}</span></div>`;
     };
 
     const card = (p, tag, fluid) => `
@@ -373,15 +357,18 @@
           <span class="absolute top-2 left-2 rounded-md px-2 py-0.5 text-[10px] font-bold text-white" style="background:${platColor[p.plat] || '#475569'}">${p.plat}</span>
           ${tag && tag !== p.plat ? `<span class="absolute top-2 right-2 rounded-md bg-night-950/80 px-2 py-0.5 text-[10px] font-bold text-neon-cyan">${tag}</span>` : ''}
           ${p.off ? `<span class="absolute bottom-2 left-2 rounded-full bg-neon-pink px-2.5 py-0.5 text-xs font-bold text-night-950">-${p.off}%</span>` : ''}
+          ${p.stock ? '' : `<span class="absolute inset-0 grid place-items-center bg-night-950/60"><span class="rounded-md bg-night-950/90 px-3 py-1 text-xs font-bold tracking-widest text-slate-200 ring-1 ring-white/20">SIN STOCK</span></span>`}
         </div>
         <div class="p-3 flex flex-col flex-1">
-          <h3 class="text-[13px] font-semibold leading-snug line-clamp-2 min-h-[2.4rem]" title="${p.name}">${p.name}</h3>
+          <h3 class="text-[13px] font-semibold leading-snug line-clamp-2 min-h-[2.4rem]" title="${esc(p.name)}">${esc(p.name)}</h3>
           <div class="mt-2">
             ${p.old ? `<p class="text-xs text-slate-500 line-through">${fmt(p.old)} ARS</p>` : '<p class="text-xs">&nbsp;</p>'}
             <p class="font-display text-xl font-bold text-white">${fmt(p.price)} <span class="text-xs text-slate-400">ARS</span></p>
           </div>
           <div class="mt-3 flex gap-1.5 sm:gap-2">
-            <button class="flex-1 min-w-0 rounded-lg grad py-2 text-xs sm:text-sm font-semibold text-night-950 hover:brightness-110 whitespace-nowrap"><i class="fa-solid fa-bolt mr-1 hidden sm:inline"></i>Comprar</button>
+            ${p.stock
+              ? `<button class="flex-1 min-w-0 rounded-lg grad py-2 text-xs sm:text-sm font-semibold text-night-950 hover:brightness-110 whitespace-nowrap"><i class="fa-solid fa-bolt mr-1 hidden sm:inline"></i>Comprar</button>`
+              : `<button disabled class="flex-1 min-w-0 rounded-lg bg-night-700 py-2 text-xs sm:text-sm font-semibold text-slate-400 cursor-not-allowed whitespace-nowrap">Sin stock</button>`}
             <button class="grid place-items-center w-8 sm:w-9 shrink-0 rounded-lg bg-night-700 hover:bg-night-600" title="Detalles" aria-label="Detalles"><i class="fa-solid fa-magnifying-glass text-xs"></i></button>
             <button class="add grid place-items-center w-8 sm:w-9 shrink-0 rounded-lg bg-night-700 hover:bg-night-600" title="Añadir" aria-label="Añadir al carrito"><i class="fa-solid fa-cart-plus text-xs"></i></button>
           </div>
@@ -406,8 +393,12 @@
       return { id, html: `<div id="${id}" class="row-scroll flex gap-4 overflow-x-auto pb-2">${items.map(p => card(p, tag)).join('')}</div>` };
     };
 
+    const renderHome = () => {
     // Secciones con contador
     Object.entries(sections).forEach(([key, s]) => {
+      const el = document.getElementById(key);
+      el.classList.toggle('hidden', !s.items.length);
+      if (!s.items.length) return;
       const color = accents[s.accent];
       const r = row(s.items);
       document.getElementById(key).innerHTML = `
@@ -423,9 +414,11 @@
         </div>`;
     });
 
-    // Secciones agrupadas con banner lateral
+    // Secciones agrupadas con banner lateral (las filas sin juegos no se muestran)
     Object.entries(groups).forEach(([key, g]) => {
-      const built = g.rows.map(rw => ({ rw, r: row(rw.items, rw.tag) }));
+      const built = g.rows.filter(rw => rw.items.length).map(rw => ({ rw, r: row(rw.items, rw.tag) }));
+      document.getElementById(key).classList.toggle('hidden', !built.length);
+      if (!built.length) return;
       const lead = built[0].rw.title ? null : built[0].r;
       let html = `<div class="flex flex-wrap items-end justify-between gap-4">
         <div><p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">${g.eyebrow}</p>${g.title ? `<h2 class="font-display text-2xl sm:text-3xl font-bold">${g.title}</h2>` : ''}</div>
@@ -452,6 +445,9 @@
       });
       document.getElementById(key).innerHTML = html;
     });
+    renderOffers();
+    tick();
+    };
 
     // Opiniones
     const reviews = [
@@ -472,29 +468,22 @@
     document.querySelectorAll('.reviews').forEach(el => el.innerHTML = reviewsHtml());
 
     // ---------- Vistas de categoría ----------
-    // Junta todos los juegos de la página (sin repetir) para armar las vistas PS3 / PS4 / PS5
-    const allProducts = (() => {
-      const seen = new Map();
-      const add = (p, tag) => { const k = p.name + '|' + p.plat; if (!seen.has(k)) seen.set(k, { ...p, tag }); };
-      Object.values(sections).forEach(s => s.items.forEach(p => add(p)));
-      Object.values(groups).forEach(g => g.rows.forEach(rw => rw.items.forEach(p => add(p, rw.tag))));
-      return [...seen.values()];
-    })();
+    // Todos los juegos de la tienda (se llena al cargar desde Supabase)
+    let allProducts = [];
 
     // ---------- Ofertas activas ----------
-    // Todos los juegos con descuento, del mayor al menor descuento
-    const offers = allProducts.filter(p => p.off > 0).sort((a, b) => b.off - a.off);
-    const maxOff = offers.length ? offers[0].off : 0;
+    // Todos los juegos con descuento y con stock, del mayor al menor descuento
+    let offers = [], maxOff = 0;
     const offerCard = (p, hidden) => `
       <div class="w-[150px] sm:w-[170px] shrink-0 pr-3" ${hidden ? 'aria-hidden="true"' : ''}>
-        <article class="group rounded-xl overflow-hidden bg-night-800 ring-1 ring-white/10 hover:ring-neon-cyan transition" title="${p.name}">
+        <article class="group rounded-xl overflow-hidden bg-night-800 ring-1 ring-white/10 hover:ring-neon-cyan transition" title="${esc(p.name)}">
           <div class="flex items-center justify-between bg-night-950 px-2.5 py-1.5">
             <span class="text-[11px] font-bold tracking-wider text-white"><i class="fa-brands fa-playstation mr-1 text-neon-cyan"></i>${p.plat}</span>
             <span class="rounded-md bg-neon-cyan px-1.5 py-0.5 text-[10px] font-extrabold text-night-950">-${p.off}%</span>
           </div>
           <div class="overflow-hidden [&>div]:p-3 [&_span]:text-sm [&_span]:mb-2 [&_span]:break-words">${cover(p)}</div>
           <div class="px-2.5 py-2">
-            ${p.img ? `<p class="text-[11px] font-semibold text-slate-200 truncate">${shortName(p.name)}</p>` : ''}
+            ${p.img ? `<p class="text-[11px] font-semibold text-slate-200 truncate">${esc(shortName(p.name))}</p>` : ''}
             <p class="text-[11px] text-slate-500 line-through">${fmt(p.old)}</p>
             <p class="font-display text-base font-bold text-white leading-tight">${fmt(p.price)}</p>
           </div>
@@ -506,7 +495,11 @@
           ${items.map(p => offerCard(p)).join('')}${items.map(p => offerCard(p, true)).join('')}
         </div>
       </div>`;
+    const renderOffers = () => {
+    offers = allProducts.filter(p => p.off > 0 && p.stock).sort((a, b) => b.off - a.off);
+    maxOff = offers.length ? offers[0].off : 0;
     const offersEl = document.getElementById('ofertas-activas');
+    offersEl.classList.toggle('hidden', !offers.length);
     if (offers.length) {
       // Reparte las ofertas en dos filas alternadas
       const rowA = offers.filter((_, i) => i % 2 === 0), rowB = offers.filter((_, i) => i % 2 === 1);
@@ -520,6 +513,7 @@
         </div>
         <div class="mt-5 space-y-3">${marqueeRow(rowA)}${rowB.length ? marqueeRow(rowB, true) : ''}</div>`;
     }
+    };
 
     // Banner con imagen de fondo completa. La imagen ya trae el logo, así que el título queda solo para lectores de pantalla.
     // En celular el texto va debajo de la imagen; desde sm va encima (texto oscuro porque la imagen es clara).
@@ -558,8 +552,8 @@
       { n: 'Extra', c: '#22d3ee', img: 'img/ps-plus-extra.jpg', f: ['Todo lo de Essential', 'Catálogo de cientos de juegos de PS4 y PS5'], hot: true },
       { n: 'Premium', c: '#1ee6fb', img: 'img/ps-plus-premium.jpg', f: ['Todo lo de Extra', 'Clásicos de PS1, PS2, PS3 y PSP', 'Pruebas de juegos por tiempo limitado', 'Streaming en la nube'] },
     ];
-    // Precios por plan y duración en pesos. Mientras falte uno, se muestra "A consultar".
-    // Ejemplo: { 'Essential-1': 12000, 'Essential-3': 30000, 'Extra-12': 150000 }
+    // Precios por plan y duración en pesos, ej. { 'Extra-12': 150000 }. Se cargan desde Supabase (se editan en el panel).
+    // Mientras falte uno, se muestra "A consultar".
     const psPrices = {};
     const psDurations = [3, 12];
     const psConsoles = ['PS5', 'PS4'];
@@ -722,7 +716,6 @@
     // ---------- Buscador ----------
     // Sin tildes ni mayúsculas: "pokemon" encuentra "Pokémon", "GOD of war" encuentra "God of War"
     const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
-    const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const searchProducts = q => {
       const words = norm(q).split(/\s+/).filter(Boolean);
       if (!words.length) return [];
@@ -767,7 +760,7 @@
       const MAX = 6;
       let res = [], active = -1;
       const thumb = p => p.img
-        ? `<img src="${p.img}" alt="" class="h-14 w-[42px] shrink-0 rounded-md object-cover" />`
+        ? `<img src="${esc(p.img)}" alt="" class="h-14 w-[42px] shrink-0 rounded-md object-cover" />`
         : `<span class="grid place-items-center h-14 w-[42px] shrink-0 rounded-md text-white/70" style="background:linear-gradient(160deg, hsl(${182 + hue(p.name) % 18} 50% 30%), #11141a)"><i class="fa-brands fa-playstation"></i></span>`;
       const open = html => { box.innerHTML = html; box.classList.remove('hidden'); input.setAttribute('aria-expanded', 'true'); };
       const close = () => { box.classList.add('hidden'); input.setAttribute('aria-expanded', 'false'); active = -1; };
@@ -823,10 +816,11 @@
       // Texto animado: escribe y borra nombres de juegos de la tienda
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const fallback = input.placeholder;
-      const names = [...new Set(allProducts.map(p => shortName(p.name)))].sort(() => Math.random() - .5);
-      let n = 0, pos = 0, deleting = false;
+      let names = [], n = 0, pos = 0, deleting = false;
       const step = () => {
-        if (document.activeElement === input || input.value) { input.placeholder = fallback; return setTimeout(step, 600); }
+        // Espera a que carguen los juegos para armar la lista de nombres
+        if (!names.length) names = [...new Set(allProducts.map(p => shortName(p.name)))].sort(() => Math.random() - .5);
+        if (!names.length || document.activeElement === input || input.value) { input.placeholder = fallback; return setTimeout(step, 600); }
         const name = names[n % names.length];
         pos += deleting ? -1 : 1;
         input.placeholder = name.slice(0, pos) || ' ';
@@ -835,7 +829,7 @@
         else if (deleting && pos <= 0) { deleting = false; n++; wait = 350; }
         setTimeout(step, wait);
       };
-      if (names.length) setTimeout(step, 800);
+      setTimeout(step, 800);
     })();
 
 
@@ -867,6 +861,54 @@
     document.getElementById('hero-prev').onclick = () => go(cur - 1);
     document.getElementById('hero-next').onclick = () => go(cur + 1);
     go(0); setInterval(() => go(cur + 1), 6000);
+
+    // ---------- Carga del catálogo desde Supabase ----------
+    // Primero muestra la última copia guardada en el navegador (carga instantánea) y después la actualiza.
+    const CACHE_KEY = 'mefg-catalogo-v1';
+    const api = path => fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: { apikey: SUPABASE_KEY } })
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+    const fromRow = r => ({
+      id: r.id, name: r.name, plat: r.plat, price: r.price, old: r.old_price || 0,
+      off: r.old_price > r.price ? Math.round((1 - r.price / r.old_price) * 100) : 0,
+      img: r.img || '', stock: r.in_stock !== false, secs: r.sections || [],
+    });
+    let catalogShown = false;
+    const applyCatalog = ({ products, prices }) => {
+      allProducts = products.map(fromRow);
+      allProducts.forEach(p => { const rw = groups.vendido.rows.find(r => p.secs.includes(r.key)); p.tag = rw && rw.tag; });
+      Object.values(sections).forEach(s => s.items = allProducts.filter(p => p.secs.includes(s.key)));
+      Object.values(groups).forEach(g => g.rows.forEach(rw => rw.items = allProducts.filter(p => p.secs.includes(rw.key))));
+      Object.keys(psPrices).forEach(k => delete psPrices[k]);
+      prices.forEach(r => { if (r.price != null) psPrices[`${r.plan}-${r.months}`] = r.price; });
+      renderHome();
+      // Si se está viendo una página que muestra juegos o precios, se actualiza sin mover el scroll
+      const key = decodeURIComponent(location.hash.slice(1));
+      if (key === 'playstation-plus') updatePlus();
+      else if (views[key] || key.startsWith('buscar/')) viewEl.innerHTML = (views[key] || (() => searchView(key.slice(7))))();
+      else if (!catalogShown && key && document.getElementById(key)) document.getElementById(key).scrollIntoView();
+      catalogShown = true;
+    };
+    (async () => {
+      let cached = null;
+      try { cached = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) {}
+      if (cached && cached.products) applyCatalog(cached);
+      try {
+        const [products, prices] = await Promise.all([
+          api('products?select=*&active=eq.true&order=sort.asc,id.asc'),
+          api('ps_prices?select=plan,months,price'),
+        ]);
+        const data = { products, prices };
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) {}
+        applyCatalog(data);
+      } catch (e) {
+        console.error('No se pudo cargar el catálogo', e);
+        if (!catalogShown) document.getElementById('ofertas-activas').innerHTML = `
+          <p class="rounded-2xl bg-night-800 ring-1 ring-white/10 p-6 text-center text-slate-300">
+            <i class="fa-solid fa-triangle-exclamation mr-2 text-neon-cyan"></i>No pudimos cargar los juegos. Recargá la página o
+            <a href="${waLink('Hola, quiero consultar por un juego.')}" class="text-neon-cyan hover:underline">escribinos por WhatsApp</a>.
+          </p>`;
+      }
+    })();
   </script>
 </body>
 </html>
