@@ -475,6 +475,7 @@
     // ---------- Vistas de categoría ----------
     // Todos los juegos de la tienda (se llena al cargar desde Supabase)
     let allProducts = [];
+    let catalogShown = false; // true cuando ya se mostró el catálogo (de la caché o de Supabase)
 
     // ---------- Ofertas activas ----------
     // Todos los juegos con descuento y con stock, del mayor al menor descuento
@@ -744,8 +745,9 @@
     const accounts = p => [
       { k: 'primaria', label: 'Cuenta primaria', tag: 'PERFIL PROPIO', price: p.price, old: p.old, off: p.off,
         info: 'Descargás el juego y jugás desde tu propio perfil de siempre, con tus trofeos y partidas guardadas.' },
-      ...(p.priceSec != null ? [{ k: 'secundaria', label: 'Cuenta secundaria', tag: 'EL MENOR PRECIO', price: p.priceSec, old: p.oldSec, off: p.offSec,
-        info: 'Jugás el juego completo desde el perfil que te damos. Es la opción más económica.' }] : []),
+      // Sin precio cargado, la secundaria aparece igual pero como "Consultar stock"
+      { k: 'secundaria', label: 'Cuenta secundaria', tag: 'EL MENOR PRECIO', price: p.priceSec, old: p.priceSec != null ? p.oldSec : 0, off: p.priceSec != null ? p.offSec : 0,
+        ask: p.priceSec == null, info: 'Jugás el juego completo desde el perfil que te damos. Es la opción más económica.' },
     ];
     const withPlat = p => p.name.includes(p.plat) ? p.name : `${p.name} (${p.plat})`; // evita "GTA V PS5 (PS5)"
     const buyMsg = (p, a) => `Hola, quiero comprar ${withPlat(p)} - ${a.label} - ${fmt(a.price)}`;
@@ -795,7 +797,7 @@
                 </span>
                 <span class="mt-1 block text-[10px] font-bold tracking-widest text-neon-cyan">${x.tag}</span>
                 <span class="mt-3 flex items-baseline gap-2">
-                  <span class="font-display text-2xl font-bold text-white">${fmt(x.price)}</span>
+                  <span class="font-display text-2xl font-bold text-white">${x.ask ? 'Consultar stock' : fmt(x.price)}</span>
                   ${x.old ? `<span class="text-sm text-slate-500 line-through">${fmt(x.old)}</span>` : ''}
                   ${x.off ? `<span class="rounded-full bg-neon-pink px-2 py-0.5 text-[11px] font-bold text-night-950">-${x.off}%</span>` : ''}
                 </span>
@@ -808,11 +810,13 @@
                 <div>
                   <p class="text-sm text-slate-400">${a.label}</p>
                   ${a.old ? `<p class="text-sm text-slate-500 line-through">${fmt(a.old)} ARS</p>` : ''}
-                  <p class="font-display text-4xl font-bold text-white">${fmt(a.price)} <span class="text-base text-slate-400">ARS</span></p>
+                  <p class="font-display text-4xl font-bold text-white">${a.ask ? 'Consultar stock' : `${fmt(a.price)} <span class="text-base text-slate-400">ARS</span>`}</p>
                 </div>
                 ${a.old > a.price ? `<p class="rounded-xl bg-neon-cyan/10 px-3 py-2 text-sm font-semibold text-neon-cyan">Ahorrás ${fmt(a.old - a.price)}</p>` : ''}
               </div>
-              ${p.stock
+              ${a.ask
+                ? `<a href="${waLink(`Hola, quiero consultar stock y precio de ${withPlat(p)} en cuenta secundaria`)}" target="_blank" rel="noopener" class="mt-5 flex items-center justify-center gap-2 rounded-xl grad py-3.5 font-bold text-night-950 hover:brightness-110"><i class="fa-brands fa-whatsapp text-xl"></i>Consultar stock por WhatsApp</a>`
+                : p.stock
                 ? `<a href="${waLink(buyMsg(p, a))}" target="_blank" rel="noopener" class="mt-5 flex items-center justify-center gap-2 rounded-xl grad py-3.5 font-bold text-night-950 hover:brightness-110"><i class="fa-brands fa-whatsapp text-xl"></i>Comprar por WhatsApp</a>`
                 : `<a href="${waLink(`Hola, quiero saber cuándo vuelve a haber stock de ${withPlat(p)}`)}" target="_blank" rel="noopener" class="mt-5 flex items-center justify-center gap-2 rounded-xl bg-night-700 py-3.5 font-bold text-white ring-1 ring-white/10 hover:bg-night-600"><i class="fa-brands fa-whatsapp text-xl"></i>Avisame cuando haya stock</a>`}
               <p class="mt-3 text-center text-xs text-slate-500">Te respondemos por WhatsApp con los datos para pagar. Pagás con transferencia o Mercado Pago.</p>
@@ -1045,7 +1049,6 @@
       offSec: r.old_price_sec > r.price_sec && r.price_sec != null ? Math.round((1 - r.price_sec / r.old_price_sec) * 100) : 0,
       desc: r.description || '',
     });
-    let catalogShown = false;
     const applyCatalog = ({ products, prices, banners, reviews: revs, settings }) => {
       if (settings) applySettings(settings);
       if (Array.isArray(banners)) renderBanners(banners);

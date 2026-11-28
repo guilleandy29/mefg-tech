@@ -145,7 +145,7 @@
             <p class="text-xs font-bold tracking-widest text-neon-cyan">CUENTA SECUNDARIA <span class="font-normal tracking-normal text-slate-500">(opcional)</span></p>
             <div class="mt-2 grid grid-cols-2 gap-3">
               <label class="block text-sm font-semibold">Precio
-                <input name="price_sec" type="number" min="0" step="1" inputmode="numeric" placeholder="Vacío = no se vende" class="field mt-1.5" />
+                <input name="price_sec" type="number" min="0" step="1" inputmode="numeric" placeholder="Vacío = consultar" class="field mt-1.5" />
               </label>
               <label class="block text-sm font-semibold">Precio anterior
                 <input name="old_price_sec" type="number" min="0" step="1" inputmode="numeric" class="field mt-1.5" />
@@ -572,7 +572,7 @@
     };
     const paintDiscount = () => {
       $('discount').innerHTML = discountText(gForm.price, gForm.old_price, ' · aparece en Ofertas activas');
-      $('discount-sec').innerHTML = gForm.price_sec.value ? discountText(gForm.price_sec, gForm.old_price_sec, '') : 'Sin precio: en la web solo se ofrece cuenta primaria.';
+      $('discount-sec').innerHTML = gForm.price_sec.value ? discountText(gForm.price_sec, gForm.old_price_sec, '') : 'Sin precio: en la web aparece como "Consultar stock" por WhatsApp.';
     };
     ['price', 'old_price', 'price_sec', 'old_price_sec'].forEach(n => gForm[n].addEventListener('input', paintDiscount));
     const openGame = g => {
