@@ -343,24 +343,24 @@
 
     const card = (p, tag, fluid) => `
       <article class="group ${fluid ? 'w-full' : 'w-[180px] sm:w-[200px] shrink-0'} rounded-2xl bg-night-800 ring-1 ring-white/5 hover:ring-neon-violet/70 transition overflow-hidden flex flex-col">
-        <div class="relative">
+        <a href="#juego/${p.id}" class="relative block overflow-hidden" aria-label="${esc(p.name)}">
           ${cover(p)}
           <span class="absolute top-2 left-2 rounded-md px-2 py-0.5 text-[10px] font-bold text-white" style="background:${platColor[p.plat] || '#475569'}">${p.plat}</span>
           ${tag && tag !== p.plat ? `<span class="absolute top-2 right-2 rounded-md bg-night-950/80 px-2 py-0.5 text-[10px] font-bold text-neon-cyan">${tag}</span>` : ''}
           ${p.off ? `<span class="absolute bottom-2 left-2 rounded-full bg-neon-pink px-2.5 py-0.5 text-xs font-bold text-night-950">-${p.off}%</span>` : ''}
           ${p.stock ? '' : `<span class="absolute inset-0 grid place-items-center bg-night-950/60"><span class="rounded-md bg-night-950/90 px-3 py-1 text-xs font-bold tracking-widest text-slate-200 ring-1 ring-white/20">SIN STOCK</span></span>`}
-        </div>
+        </a>
         <div class="p-3 flex flex-col flex-1">
-          <h3 class="text-[13px] font-semibold leading-snug line-clamp-2 min-h-[2.4rem]" title="${esc(p.name)}">${esc(p.name)}</h3>
+          <h3 class="text-[13px] font-semibold leading-snug line-clamp-2 min-h-[2.4rem]" title="${esc(p.name)}"><a href="#juego/${p.id}" class="hover:text-neon-cyan">${esc(p.name)}</a></h3>
           <div class="mt-2">
             ${p.old ? `<p class="text-xs text-slate-500 line-through">${fmt(p.old)} ARS</p>` : '<p class="text-xs">&nbsp;</p>'}
             <p class="font-display text-xl font-bold text-white">${fmt(p.price)} <span class="text-xs text-slate-400">ARS</span></p>
           </div>
           <div class="mt-3 flex gap-1.5 sm:gap-2">
             ${p.stock
-              ? `<button class="flex-1 min-w-0 rounded-lg grad py-2 text-xs sm:text-sm font-semibold text-night-950 hover:brightness-110 whitespace-nowrap"><i class="fa-solid fa-bolt mr-1 hidden sm:inline"></i>Comprar</button>`
+              ? `<a href="#juego/${p.id}" class="flex-1 min-w-0 rounded-lg grad py-2 text-center text-xs sm:text-sm font-semibold text-night-950 hover:brightness-110 whitespace-nowrap"><i class="fa-solid fa-bolt mr-1 hidden sm:inline"></i>Comprar</a>`
               : `<button disabled class="flex-1 min-w-0 rounded-lg bg-night-700 py-2 text-xs sm:text-sm font-semibold text-slate-400 cursor-not-allowed whitespace-nowrap">Sin stock</button>`}
-            <button class="grid place-items-center w-8 sm:w-9 shrink-0 rounded-lg bg-night-700 hover:bg-night-600" title="Detalles" aria-label="Detalles"><i class="fa-solid fa-magnifying-glass text-xs"></i></button>
+            <a href="#juego/${p.id}" class="grid place-items-center w-8 sm:w-9 shrink-0 rounded-lg bg-night-700 hover:bg-night-600" title="Detalles" aria-label="Ver detalles de ${esc(p.name)}"><i class="fa-solid fa-magnifying-glass text-xs"></i></a>
             <button class="add grid place-items-center w-8 sm:w-9 shrink-0 rounded-lg bg-night-700 hover:bg-night-600" title="Añadir" aria-label="Añadir al carrito"><i class="fa-solid fa-cart-plus text-xs"></i></button>
           </div>
         </div>
@@ -481,7 +481,7 @@
     let offers = [], maxOff = 0;
     const offerCard = (p, hidden) => `
       <div class="w-[150px] sm:w-[170px] shrink-0 pr-3" ${hidden ? 'aria-hidden="true"' : ''}>
-        <article class="group rounded-xl overflow-hidden bg-night-800 ring-1 ring-white/10 hover:ring-neon-cyan transition" title="${esc(p.name)}">
+        <a href="#juego/${p.id}" ${hidden ? 'tabindex="-1"' : ''} class="group block rounded-xl overflow-hidden bg-night-800 ring-1 ring-white/10 hover:ring-neon-cyan transition" title="${esc(p.name)}">
           <div class="flex items-center justify-between bg-night-950 px-2.5 py-1.5">
             <span class="text-[11px] font-bold tracking-wider text-white"><i class="fa-brands fa-playstation mr-1 text-neon-cyan"></i>${p.plat}</span>
             <span class="rounded-md bg-neon-cyan px-1.5 py-0.5 text-[10px] font-extrabold text-night-950">-${p.off}%</span>
@@ -492,7 +492,7 @@
             <p class="text-[11px] text-slate-500 line-through">${fmt(p.old)}</p>
             <p class="font-display text-base font-bold text-white leading-tight">${fmt(p.price)}</p>
           </div>
-        </article>
+        </a>
       </div>`;
     const marqueeRow = (items, rev) => `
       <div class="marquee-wrap overflow-hidden">
@@ -738,13 +738,137 @@
         </div>`;
     };
 
+    // ---------- Página de cada juego ----------
+    // Tipos de cuenta: primaria (price/old) y, si se cargó precio, secundaria (priceSec/oldSec)
+    let acct = 'primaria';
+    const accounts = p => [
+      { k: 'primaria', label: 'Cuenta primaria', tag: 'PERFIL PROPIO', price: p.price, old: p.old, off: p.off,
+        info: 'Descargás el juego y jugás desde tu propio perfil de siempre, con tus trofeos y partidas guardadas.' },
+      ...(p.priceSec != null ? [{ k: 'secundaria', label: 'Cuenta secundaria', tag: 'EL MENOR PRECIO', price: p.priceSec, old: p.oldSec, off: p.offSec,
+        info: 'Jugás el juego completo desde el perfil que te damos. Es la opción más económica.' }] : []),
+    ];
+    const withPlat = p => p.name.includes(p.plat) ? p.name : `${p.name} (${p.plat})`; // evita "GTA V PS5 (PS5)"
+    const buyMsg = (p, a) => `Hola, quiero comprar ${withPlat(p)} - ${a.label} - ${fmt(a.price)}`;
+    const productView = id => {
+      const p = allProducts.find(x => x.id === id);
+      if (!p) return catalogShown
+        ? viewHeader('Juego', 'No encontramos este juego', 'Puede que ya no esté disponible. <a href="#" class="text-neon-cyan hover:underline">Volver al inicio</a>', '#22d3ee')
+        : '<p class="py-20 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2 text-neon-cyan"></i>Cargando juego…</p>';
+      const accs = accounts(p);
+      if (!accs.find(a => a.k === acct)) acct = accs[0].k;
+      const a = accs.find(x => x.k === acct);
+      const related = allProducts.filter(x => x.plat === p.plat && x.id !== p.id && x.stock).slice(0, 5);
+      const perk = (icon, title, text) => `
+        <div class="flex items-start gap-3 rounded-xl bg-night-800 p-3 ring-1 ring-white/5">
+          <i class="fa-solid ${icon} mt-0.5 text-neon-cyan"></i>
+          <p class="text-xs text-slate-400"><b class="block text-sm text-white">${title}</b>${text}</p>
+        </div>`;
+      return `
+        <nav class="mt-6 text-sm text-slate-400" aria-label="Ruta">
+          <a href="#" class="hover:text-white">Inicio</a> <span class="mx-1">›</span>
+          <a href="#${p.plat.toLowerCase()}" class="hover:text-white">${p.plat}</a> <span class="mx-1">›</span>
+          <span class="text-slate-200">${esc(p.name)}</span>
+        </nav>
+        <div class="mt-5 grid gap-6 md:grid-cols-[minmax(0,340px)_1fr] lg:gap-10">
+          <div class="relative mx-auto w-full max-w-[340px] self-start overflow-hidden rounded-3xl ring-1 ring-white/10 glow [&_span]:text-3xl">
+            ${cover(p)}
+            ${p.stock ? '' : `<span class="absolute inset-0 grid place-items-center bg-night-950/60"><span class="rounded-md bg-night-950/90 px-4 py-1.5 !text-sm font-bold tracking-widest text-slate-200 ring-1 ring-white/20">SIN STOCK</span></span>`}
+          </div>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="rounded-md px-2 py-0.5 text-xs font-bold text-white" style="background:${platColor[p.plat]}"><i class="fa-brands fa-playstation mr-1"></i>${p.plat}</span>
+              <span class="rounded-md bg-night-800 px-2 py-0.5 text-xs font-semibold text-slate-300 ring-1 ring-white/10">Digital</span>
+              ${p.stock
+                ? '<span class="rounded-md bg-emerald-400/10 px-2 py-0.5 text-xs font-semibold text-emerald-300"><i class="fa-solid fa-circle-check mr-1"></i>Disponible</span>'
+                : '<span class="rounded-md bg-amber-400/10 px-2 py-0.5 text-xs font-semibold text-amber-300"><i class="fa-solid fa-clock mr-1"></i>Sin stock</span>'}
+            </div>
+            <h1 class="mt-3 font-display text-3xl sm:text-4xl font-bold leading-tight">${esc(p.name)}</h1>
+
+            <p class="mt-6 text-xs font-semibold tracking-[.25em] text-slate-400">TIPO DE CUENTA</p>
+            <div class="mt-2 grid gap-3 ${accs.length > 1 ? 'sm:grid-cols-2' : ''}" role="radiogroup" aria-label="Tipo de cuenta">
+              ${accs.map(x => `
+              <button type="button" data-acct="${x.k}" role="radio" aria-checked="${x.k === acct}"
+                class="group relative rounded-2xl bg-night-800 p-4 text-left ring-1 ring-white/10 transition hover:ring-white/30 aria-checked:ring-2 aria-checked:ring-neon-cyan aria-checked:bg-neon-cyan/5">
+                <span class="flex items-center justify-between gap-2">
+                  <span class="font-semibold text-white">${x.label}</span>
+                  <span class="grid h-5 w-5 place-items-center rounded-full ring-2 ring-white/30 group-aria-checked:ring-neon-cyan"><span class="h-2.5 w-2.5 rounded-full bg-neon-cyan opacity-0 group-aria-checked:opacity-100"></span></span>
+                </span>
+                <span class="mt-1 block text-[10px] font-bold tracking-widest text-neon-cyan">${x.tag}</span>
+                <span class="mt-3 flex items-baseline gap-2">
+                  <span class="font-display text-2xl font-bold text-white">${fmt(x.price)}</span>
+                  ${x.old ? `<span class="text-sm text-slate-500 line-through">${fmt(x.old)}</span>` : ''}
+                  ${x.off ? `<span class="rounded-full bg-neon-pink px-2 py-0.5 text-[11px] font-bold text-night-950">-${x.off}%</span>` : ''}
+                </span>
+                <span class="mt-2 block text-xs text-slate-400">${x.info}</span>
+              </button>`).join('')}
+            </div>
+
+            <div class="mt-6 rounded-2xl bg-night-900 p-5 ring-1 ring-white/10">
+              <div class="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p class="text-sm text-slate-400">${a.label}</p>
+                  ${a.old ? `<p class="text-sm text-slate-500 line-through">${fmt(a.old)} ARS</p>` : ''}
+                  <p class="font-display text-4xl font-bold text-white">${fmt(a.price)} <span class="text-base text-slate-400">ARS</span></p>
+                </div>
+                ${a.old > a.price ? `<p class="rounded-xl bg-neon-cyan/10 px-3 py-2 text-sm font-semibold text-neon-cyan">Ahorrás ${fmt(a.old - a.price)}</p>` : ''}
+              </div>
+              ${p.stock
+                ? `<a href="${waLink(buyMsg(p, a))}" target="_blank" rel="noopener" class="mt-5 flex items-center justify-center gap-2 rounded-xl grad py-3.5 font-bold text-night-950 hover:brightness-110"><i class="fa-brands fa-whatsapp text-xl"></i>Comprar por WhatsApp</a>`
+                : `<a href="${waLink(`Hola, quiero saber cuándo vuelve a haber stock de ${withPlat(p)}`)}" target="_blank" rel="noopener" class="mt-5 flex items-center justify-center gap-2 rounded-xl bg-night-700 py-3.5 font-bold text-white ring-1 ring-white/10 hover:bg-night-600"><i class="fa-brands fa-whatsapp text-xl"></i>Avisame cuando haya stock</a>`}
+              <p class="mt-3 text-center text-xs text-slate-500">Te respondemos por WhatsApp con los datos para pagar. Pagás con transferencia o Mercado Pago.</p>
+            </div>
+
+            <div class="mt-4 grid gap-3 sm:grid-cols-3">
+              ${perk('fa-bolt', 'Entrega rápida', 'Hasta 24 hs. Inmediata si hay stock.')}
+              ${perk('fa-shield-halved', 'Garantía permanente', 'Respetando las condiciones de uso.')}
+              ${perk('fa-envelope', 'Por WhatsApp y correo', 'Te enviamos los datos de la cuenta.')}
+            </div>
+
+            ${p.desc ? `
+            <section class="mt-8">
+              <h2 class="font-display text-xl font-bold">Sobre el juego</h2>
+              <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-300">${esc(p.desc)}</p>
+            </section>` : ''}
+
+            <section class="mt-8">
+              <h2 class="font-display text-xl font-bold">¿Cómo funciona?</h2>
+              <ol class="mt-3 space-y-2 text-sm text-slate-300">
+                <li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full grad text-xs font-bold text-night-950">1</span>Elegí el tipo de cuenta y tocá "Comprar por WhatsApp".</li>
+                <li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full grad text-xs font-bold text-night-950">2</span>Pagá con transferencia bancaria o Mercado Pago.</li>
+                <li class="flex gap-3"><span class="grid h-6 w-6 shrink-0 place-items-center rounded-full grad text-xs font-bold text-night-950">3</span>Recibí el correo y la contraseña de la cuenta, con los pasos para instalar el juego.</li>
+              </ol>
+              <a href="#faq" class="mt-3 inline-block text-sm text-neon-cyan hover:underline">Ver preguntas frecuentes</a>
+            </section>
+          </div>
+        </div>
+        ${related.length ? `
+        <section class="mt-14">
+          <h2 class="font-display text-2xl font-bold">También te puede interesar</h2>
+          <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            ${related.map(x => card(x, x.tag, true)).join('')}
+          </div>
+        </section>` : ''}`;
+    };
+    // Cambiar el tipo de cuenta vuelve a dibujar la página sin mover el scroll
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-acct]');
+      if (!b) return;
+      acct = b.dataset.acct;
+      viewEl.innerHTML = productView(+decodeURIComponent(location.hash.slice(1)).slice(6));
+      viewEl.querySelector(`[data-acct="${acct}"]`).focus();
+    });
+
     const views = { ofertas: offersView, ps3: () => consoleView('PS3'), ps4: () => consoleView('PS4'), ps5: () => consoleView('PS5'), 'playstation-plus': plusView, opiniones: opinionsView };
     const homeEl = document.getElementById('home'), viewEl = document.getElementById('view');
+    const viewFor = key => views[key]
+      || (key.startsWith('buscar/') ? () => searchView(key.slice(7)) : null)
+      || (key.startsWith('juego/') ? () => productView(+key.slice(6)) : null);
     const route = () => {
       const key = decodeURIComponent(location.hash.slice(1));
       document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('text-neon-cyan', a.dataset.nav === key));
       document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('bg-white/10', a.dataset.nav === key));
-      const view = views[key] || (key.startsWith('buscar/') ? () => searchView(key.slice(7)) : null);
+      const view = viewFor(key);
+      if (key.startsWith('juego/')) acct = 'primaria'; // cada juego arranca en cuenta primaria
       if (view) {
         viewEl.innerHTML = view();
         if (key === 'playstation-plus') updatePlus();
@@ -770,6 +894,7 @@
       const open = html => { box.innerHTML = html; box.classList.remove('hidden'); input.setAttribute('aria-expanded', 'true'); };
       const close = () => { box.classList.add('hidden'); input.setAttribute('aria-expanded', 'false'); active = -1; };
       const go = q => { if (q.trim()) { close(); input.blur(); location.hash = 'buscar/' + q.trim(); } };
+      const open1 = p => { close(); input.blur(); input.value = ''; location.hash = 'juego/' + p.id; };
       const render = () => {
         const q = input.value;
         if (!q.trim()) return close();
@@ -807,12 +932,12 @@
         if (e.key === 'ArrowDown') { e.preventDefault(); highlight(active + 1); }
         else if (e.key === 'ArrowUp') { e.preventDefault(); highlight(active - 1); }
         else if (e.key === 'Escape') close();
-        else if (e.key === 'Enter' && active >= 0) { e.preventDefault(); go(res[active].name); }
+        else if (e.key === 'Enter' && active >= 0) { e.preventDefault(); open1(res[active]); }
       });
       box.addEventListener('mousedown', e => e.preventDefault()); // que el clic no cierre la lista antes de tiempo
       box.addEventListener('click', e => {
         const item = e.target.closest('.search-item');
-        if (item) go(res[+item.dataset.i].name);
+        if (item) open1(res[+item.dataset.i]);
         else if (e.target.closest('[data-all]')) go(input.value);
       });
       input.addEventListener('blur', close);
@@ -916,6 +1041,9 @@
       id: r.id, name: r.name, plat: r.plat, price: r.price, old: r.old_price || 0,
       off: r.old_price > r.price ? Math.round((1 - r.price / r.old_price) * 100) : 0,
       img: r.img || '', stock: r.in_stock !== false, secs: r.sections || [],
+      priceSec: r.price_sec ?? null, oldSec: r.old_price_sec || 0,
+      offSec: r.old_price_sec > r.price_sec && r.price_sec != null ? Math.round((1 - r.price_sec / r.old_price_sec) * 100) : 0,
+      desc: r.description || '',
     });
     let catalogShown = false;
     const applyCatalog = ({ products, prices, banners, reviews: revs, settings }) => {
@@ -935,7 +1063,7 @@
       // Si se está viendo una página que muestra juegos o precios, se actualiza sin mover el scroll
       const key = decodeURIComponent(location.hash.slice(1));
       if (key === 'playstation-plus') updatePlus();
-      else if (views[key] || key.startsWith('buscar/')) viewEl.innerHTML = (views[key] || (() => searchView(key.slice(7))))();
+      else if (viewFor(key)) viewEl.innerHTML = viewFor(key)();
       else if (!catalogShown && key && document.getElementById(key)) document.getElementById(key).scrollIntoView();
       catalogShown = true;
     };

@@ -129,17 +129,35 @@
             <legend class="text-sm font-semibold">Consola</legend>
             <div id="plat-options" class="mt-1.5 grid grid-cols-3 gap-2"></div>
           </fieldset>
-          <div class="grid grid-cols-2 gap-3">
-            <label class="block text-sm font-semibold">Precio
-              <input name="price" type="number" min="0" step="1" required inputmode="numeric" placeholder="7000" class="field mt-1.5" />
-            </label>
-            <label class="block text-sm font-semibold">Precio anterior <span class="font-normal text-slate-500">(opcional)</span>
-              <input name="old_price" type="number" min="0" step="1" inputmode="numeric" placeholder="17500" class="field mt-1.5" />
-            </label>
+          <div class="rounded-xl bg-night-950/60 p-3 ring-1 ring-white/5">
+            <p class="text-xs font-bold tracking-widest text-neon-cyan">CUENTA PRIMARIA</p>
+            <div class="mt-2 grid grid-cols-2 gap-3">
+              <label class="block text-sm font-semibold">Precio
+                <input name="price" type="number" min="0" step="1" required inputmode="numeric" placeholder="7000" class="field mt-1.5" />
+              </label>
+              <label class="block text-sm font-semibold">Precio anterior <span class="font-normal text-slate-500">(opcional)</span>
+                <input name="old_price" type="number" min="0" step="1" inputmode="numeric" placeholder="17500" class="field mt-1.5" />
+              </label>
+            </div>
+            <p id="discount" class="mt-2 text-xs text-slate-400"></p>
           </div>
-          <p id="discount" class="text-sm text-slate-400"></p>
+          <div class="rounded-xl bg-night-950/60 p-3 ring-1 ring-white/5">
+            <p class="text-xs font-bold tracking-widest text-neon-cyan">CUENTA SECUNDARIA <span class="font-normal tracking-normal text-slate-500">(opcional)</span></p>
+            <div class="mt-2 grid grid-cols-2 gap-3">
+              <label class="block text-sm font-semibold">Precio
+                <input name="price_sec" type="number" min="0" step="1" inputmode="numeric" placeholder="Vacío = no se vende" class="field mt-1.5" />
+              </label>
+              <label class="block text-sm font-semibold">Precio anterior
+                <input name="old_price_sec" type="number" min="0" step="1" inputmode="numeric" class="field mt-1.5" />
+              </label>
+            </div>
+            <p id="discount-sec" class="mt-2 text-xs text-slate-400"></p>
+          </div>
         </div>
       </div>
+      <label class="mt-5 block text-sm font-semibold">Descripción <span class="font-normal text-slate-500">(opcional)</span>
+        <textarea name="description" rows="3" maxlength="1500" placeholder="De qué se trata el juego, idioma, modos de juego…" class="field mt-1.5 resize-y"></textarea>
+      </label>
       <fieldset class="mt-5">
         <legend class="text-sm font-semibold">Dónde aparece en el inicio</legend>
         <p class="text-xs text-slate-500">Igual aparece siempre en su consola, en el buscador y, si tiene descuento, en Ofertas activas.</p>
@@ -277,6 +295,7 @@
       if (/Email not confirmed/i.test(m)) return 'El correo todavía no está confirmado.';
       if (/Failed to fetch|NetworkError/i.test(m)) return 'Sin conexión. Revisá internet y probá de nuevo.';
       if (/relation .* does not exist|Could not find the table/i.test(m)) return 'Falta crear esta tabla en Supabase (archivo db/setup-2.sql).';
+      if (/column .* does not exist|Could not find the '.*' column/i.test(m)) return 'Falta actualizar la base en Supabase (archivo db/setup-3.sql).';
       return m;
     };
     const switchEl = (attr, id, checked, label) => `
@@ -467,6 +486,7 @@
             ${g.old_price ? `<p class="text-xs text-slate-500 line-through">${fmt(g.old_price)}</p>` : ''}
             <p class="font-display font-bold text-white">${fmt(g.price)}</p>
             ${off ? `<span class="inline-block rounded-full bg-neon-cyan px-2 text-[10px] font-bold text-night-950">-${off}%</span>` : ''}
+            ${g.price_sec != null ? `<p class="mt-0.5 text-[11px] text-slate-400">Secundaria ${fmt(g.price_sec)}</p>` : ''}
           </div>
           <div class="flex gap-1.5">
             <button data-edit-game="${g.id}" class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-night-600" title="Editar" aria-label="Editar ${esc(g.name)}"><i class="fa-solid fa-pen text-xs"></i></button>
@@ -493,11 +513,11 @@
       $('list-count').textContent = `${list.length} de ${store.games.length} juegos · Los precios se guardan solos al salir del casillero.`;
       $('list').innerHTML = !list.length ? empty('No hay juegos que coincidan.') : `
         <div class="overflow-x-auto rounded-2xl bg-night-800 ring-1 ring-white/5">
-          <table class="w-full min-w-[720px] text-sm">
+          <table class="w-full min-w-[860px] text-sm">
             <thead class="text-left text-xs text-slate-400">
               <tr class="border-b border-white/5">
                 <th class="p-3 w-10"><input type="checkbox" id="sel-all" class="h-4 w-4 accent-cyan-400" aria-label="Seleccionar todos" ${list.every(g => selected.has(g.id)) ? 'checked' : ''} /></th>
-                <th class="p-3">Juego</th><th class="p-3 w-32">Precio</th><th class="p-3 w-32">Precio anterior</th><th class="p-3 w-16">Desc.</th><th class="p-3 w-16">Stock</th><th class="p-3 w-16">Visible</th>
+                <th class="p-3">Juego</th><th class="p-3 w-32">Primaria</th><th class="p-3 w-32">Anterior</th><th class="p-3 w-16">Desc.</th><th class="p-3 w-32">Secundaria</th><th class="p-3 w-16">Stock</th><th class="p-3 w-16">Visible</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-white/5">
@@ -508,6 +528,7 @@
                 <td class="p-3"><input type="number" min="0" step="1" data-price="${g.id}" value="${g.price}" class="field field-sm" aria-label="Precio de ${esc(g.name)}" /></td>
                 <td class="p-3"><input type="number" min="0" step="1" data-old="${g.id}" value="${g.old_price ?? ''}" placeholder="—" class="field field-sm" aria-label="Precio anterior de ${esc(g.name)}" /></td>
                 <td class="p-3 text-xs font-bold text-neon-cyan" data-off="${g.id}">${discountOf(g.price, g.old_price) ? '-' + discountOf(g.price, g.old_price) + '%' : ''}</td>
+                <td class="p-3"><input type="number" min="0" step="1" data-psec="${g.id}" value="${g.price_sec ?? ''}" placeholder="—" class="field field-sm" aria-label="Precio secundaria de ${esc(g.name)}" /></td>
                 <td class="p-3">${switchEl('data-stock', g.id, g.in_stock, 'Hay stock')}</td>
                 <td class="p-3">${switchEl('data-active', g.id, g.active, 'Visible en la web')}</td>
               </tr>`).join('')}
@@ -542,15 +563,18 @@
       $('cover-preview').innerHTML = src ? `<img src="${esc(src)}" alt="" class="h-full w-full object-cover" />` : '<i class="fa-regular fa-image text-3xl"></i>';
       $('cover-remove').classList.toggle('hidden', !src);
     };
-    const paintDiscount = () => {
-      const price = +gForm.price.value, old = +gForm.old_price.value;
-      const off = gForm.price.value && old ? discountOf(price, old) : 0;
-      $('discount').innerHTML = off
-        ? `Descuento: <b class="text-neon-cyan">-${off}%</b> · aparece en Ofertas activas`
-        : (old && old <= price ? '<span class="text-amber-300">El precio anterior tiene que ser mayor que el precio para mostrar descuento.</span>' : 'Sin descuento');
+    const discountText = (priceIn, oldIn, extra) => {
+      const price = +priceIn.value, old = +oldIn.value;
+      const off = priceIn.value && old ? discountOf(price, old) : 0;
+      return off
+        ? `Descuento: <b class="text-neon-cyan">-${off}%</b>${extra}`
+        : (priceIn.value && old && old <= price ? '<span class="text-amber-300">El precio anterior tiene que ser mayor que el precio para mostrar descuento.</span>' : 'Sin descuento');
     };
-    gForm.price.addEventListener('input', paintDiscount);
-    gForm.old_price.addEventListener('input', paintDiscount);
+    const paintDiscount = () => {
+      $('discount').innerHTML = discountText(gForm.price, gForm.old_price, ' · aparece en Ofertas activas');
+      $('discount-sec').innerHTML = gForm.price_sec.value ? discountText(gForm.price_sec, gForm.old_price_sec, '') : 'Sin precio: en la web solo se ofrece cuenta primaria.';
+    };
+    ['price', 'old_price', 'price_sec', 'old_price_sec'].forEach(n => gForm[n].addEventListener('input', paintDiscount));
     const openGame = g => {
       editingGame = g || null;
       gForm.reset(); formState(gForm, false);
@@ -559,6 +583,9 @@
       gForm.querySelectorAll('[name=plat]').forEach(r => r.checked = g ? r.value === g.plat : r.value === 'PS5');
       gForm.price.value = g ? g.price : '';
       gForm.old_price.value = g && g.old_price ? g.old_price : '';
+      gForm.price_sec.value = g && g.price_sec != null ? g.price_sec : '';
+      gForm.old_price_sec.value = g && g.old_price_sec ? g.old_price_sec : '';
+      gForm.description.value = g && g.description ? g.description : '';
       gForm.querySelectorAll('[name=sections]').forEach(c => c.checked = g ? g.sections.includes(c.value) : false);
       gForm.in_stock.checked = g ? g.in_stock : true;
       gForm.active.checked = g ? g.active : true;
@@ -584,8 +611,11 @@
       let img = coverUrl || null;
       try { if (coverBlob) img = await upload(coverBlob, '', name); }
       catch (err) { return formState(gForm, false, 'No se pudo subir la portada: ' + friendly(err)); }
+      const num = input => input.value === '' ? null : Math.round(+input.value);
       const row = {
         name, price, old_price: old, img,
+        price_sec: num(gForm.price_sec), old_price_sec: num(gForm.old_price_sec),
+        description: gForm.description.value.trim() || null,
         plat: gForm.querySelector('[name=plat]:checked').value,
         sections: [...gForm.querySelectorAll('[name=sections]:checked')].map(c => c.value),
         in_stock: gForm.in_stock.checked, active: gForm.active.checked,
@@ -759,8 +789,8 @@
     };
     const EXPORTS = {
       juegos: ['Juegos', 'Todos los juegos con precios, descuento, stock y secciones.', 'fa-gamepad', () => csv('juegos',
-        ['ID', 'Nombre', 'Consola', 'Precio', 'Precio anterior', 'Descuento %', 'Stock', 'Visible', 'Secciones', 'Portada', 'Última modificación'],
-        store.games.map(g => [g.id, g.name, g.plat, g.price, g.old_price, discountOf(g.price, g.old_price) || '', g.in_stock ? 'Sí' : 'No', g.active ? 'Sí' : 'No',
+        ['ID', 'Nombre', 'Consola', 'Precio primaria', 'Precio anterior primaria', 'Descuento %', 'Precio secundaria', 'Precio anterior secundaria', 'Stock', 'Visible', 'Secciones', 'Portada', 'Última modificación'],
+        store.games.map(g => [g.id, g.name, g.plat, g.price, g.old_price, discountOf(g.price, g.old_price) || '', g.price_sec, g.old_price_sec, g.in_stock ? 'Sí' : 'No', g.active ? 'Sí' : 'No',
           SECTIONS.filter(([k]) => g.sections.includes(k)).map(([, l]) => l).join(', '), g.img, when(g.updated_at)]))],
       precios: ['Precios PlayStation Plus', 'Plan, duración y precio.', 'fa-brands fa-playstation', () => csv('precios-ps-plus',
         ['Plan', 'Meses', 'Precio'], PLANS.flatMap(p => MONTHS.map(m => { const r = store.prices.find(x => x.plan === p && x.months === m); return [p, m, r && r.price != null ? r.price : 'A consultar']; })))],
@@ -894,11 +924,11 @@
         t.closest('tr').classList.toggle('opacity-60', !byId(store.games, id).active);
         return toast(field === 'in_stock' ? (t.checked ? 'Con stock' : 'Sin stock') : (t.checked ? 'Visible en la web' : 'Oculto'));
       }
-      if (d.price || d.old) {
-        const id = +(d.price || d.old), g = byId(store.games, id);
+      if (d.price || d.old || d.psec) {
+        const id = +(d.price || d.old || d.psec), g = byId(store.games, id);
         const val = t.value === '' ? null : Math.round(+t.value);
         if (d.price && (val == null || val < 0)) { t.value = g.price; return toast('Poné un precio válido.', true); }
-        const field = d.price ? 'price' : 'old_price';
+        const field = d.price ? 'price' : d.old ? 'old_price' : 'price_sec';
         if (val === g[field]) return;
         if (!await updateGame(id, { [field]: val })) { t.value = g[field] ?? ''; return; }
         const off = discountOf(byId(store.games, id).price, byId(store.games, id).old_price);
