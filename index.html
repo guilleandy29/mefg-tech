@@ -89,16 +89,17 @@
       <div class="relative overflow-hidden rounded-3xl glow h-[300px] sm:h-[340px] lg:h-[380px]">
         <div id="hero-track" class="flex h-full transition-transform duration-700">
           <!-- Banner "Lo mejor del año": imagen entera y la misma imagen desenfocada de relleno en pantallas chicas -->
-          <div class="relative min-w-full h-full overflow-hidden bg-night-950">
+          <div data-banner class="relative min-w-full h-full overflow-hidden bg-night-950">
             <img src="img/banner-lo-mejor-del-anio-2.jpg" alt="" class="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-60 xl:hidden" />
             <img src="img/banner-lo-mejor-del-anio-2.jpg" alt="Ya disponible: lo mejor del año. EA Sports FC 27 y GTA VI para PS4 y PS5" class="relative h-full w-full object-contain xl:object-cover" />
           </div>
           <!-- Banner "Los más vendidos": imagen entera y la misma imagen desenfocada de relleno en pantallas chicas -->
-          <a href="#vendido" class="relative min-w-full h-full block overflow-hidden bg-night-950" aria-label="Los más vendidos: descubrí los juegos del momento">
+          <a href="#vendido" data-banner class="relative min-w-full h-full block overflow-hidden bg-night-950" aria-label="Los más vendidos: descubrí los juegos del momento">
             <img src="img/banner-mas-vendidos.jpg" alt="" class="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-60 xl:hidden" />
             <img src="img/banner-mas-vendidos.jpg" alt="Los más vendidos: descubrí los juegos del momento. Top semanal" class="relative h-full w-full object-contain xl:object-cover" />
           </a>
-          <div class="relative min-w-full h-full">
+          <!-- Slides de texto fijos (se pueden ocultar desde Configuración del panel) -->
+          <div data-text-slide class="relative min-w-full h-full">
             <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #22d3eeaa, transparent 50%), radial-gradient(circle at 95% 90%, #4a4f5266, transparent 40%), #0e1a21"></div>
             <div class="absolute inset-0 grid-bg"></div>
             <div class="relative h-full flex flex-col justify-end px-6 pt-6 pb-10 sm:px-16 sm:pb-12 max-w-xl">
@@ -108,7 +109,7 @@
               <a href="#black-friday" class="mt-4 w-fit rounded-lg grad px-5 py-2.5 text-sm font-bold text-night-950 hover:brightness-110">Comprar ahora</a>
             </div>
           </div>
-          <div class="relative min-w-full h-full">
+          <div data-text-slide class="relative min-w-full h-full">
             <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 40%, #1ee6fb88, transparent 50%), radial-gradient(circle at 15% 90%, #4a4f5299, transparent 45%), #10161b"></div>
             <div class="absolute inset-0 grid-bg"></div>
             <div class="relative h-full flex flex-col justify-end px-6 pt-6 pb-10 sm:px-16 sm:pb-12 max-w-xl">
@@ -118,7 +119,7 @@
             </div>
           </div>
           <!-- Banner de planes de PlayStation Plus: imagen entera y la misma imagen desenfocada de relleno -->
-          <a href="#playstation-plus" class="relative min-w-full h-full block overflow-hidden bg-night-950" aria-label="Conocé nuestros planes de PlayStation Plus">
+          <a href="#playstation-plus" data-banner class="relative min-w-full h-full block overflow-hidden bg-night-950" aria-label="Conocé nuestros planes de PlayStation Plus">
             <img src="img/banner-planes-ps-plus-3.jpg" alt="" class="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-60 xl:hidden" />
             <img src="img/banner-planes-ps-plus-3.jpg" alt="Conocé nuestros planes de PlayStation Plus: Essential, Extra y Premium" class="relative h-full w-full object-contain xl:object-cover" />
           </a>
@@ -265,11 +266,11 @@
         </a>
         <div class="mt-4 flex gap-4 text-lg text-slate-400">
           <a href="#" data-wa="Hola, tengo una consulta" target="_blank" rel="noopener" class="hover:text-neon-cyan" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-          <a href="https://www.instagram.com/mefg.tech/" target="_blank" rel="noopener" class="hover:text-neon-cyan" aria-label="Instagram @mefg.tech"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.instagram.com/mefg.tech/" data-ig target="_blank" rel="noopener" class="hover:text-neon-cyan" aria-label="Instagram @mefg.tech"><i class="fa-brands fa-instagram"></i></a>
         </div>
         <ul class="mt-4 space-y-1.5 text-sm text-slate-400">
-          <li><a href="#" data-wa="Hola, tengo una consulta" target="_blank" rel="noopener" class="hover:text-white"><i class="fa-brands fa-whatsapp mr-2 text-neon-cyan"></i>+54 9 351 342-9849</a></li>
-          <li><a href="https://www.instagram.com/mefg.tech/" target="_blank" rel="noopener" class="hover:text-white"><i class="fa-brands fa-instagram mr-2 text-neon-cyan"></i>@mefg.tech</a></li>
+          <li><a href="#" data-wa="Hola, tengo una consulta" target="_blank" rel="noopener" class="hover:text-white"><i class="fa-brands fa-whatsapp mr-2 text-neon-cyan"></i><span id="wa-label">+54 9 351 342-9849</span></a></li>
+          <li><a href="https://www.instagram.com/mefg.tech/" data-ig target="_blank" rel="noopener" class="hover:text-white"><i class="fa-brands fa-instagram mr-2 text-neon-cyan"></i><span id="ig-label">@mefg.tech</span></a></li>
         </ul>
       </div>
       <div>
@@ -288,9 +289,11 @@
         </ul>
         <div class="mt-4 text-xs text-slate-400 space-y-1">
           <p class="font-semibold text-slate-300"><i class="fa-regular fa-clock mr-1 text-neon-cyan"></i> Horario de atención</p>
-          <p>Lunes a viernes: 11:00 a 19:00 hs</p>
-          <p>Sábados: 10:00 a 13:00 hs</p>
-          <p class="text-slate-500">Fuera de horario respondemos según disponibilidad.</p>
+          <div id="hours" class="space-y-1">
+            <p>Lunes a viernes: 11:00 a 19:00 hs</p>
+            <p>Sábados: 10:00 a 13:00 hs</p>
+          </div>
+          <p id="hours-note" class="text-slate-500">Fuera de horario respondemos según disponibilidad.</p>
         </div>
       </div>
     </div>
@@ -309,12 +312,11 @@
   <script>
     // ---------- WhatsApp ----------
     // Número de WhatsApp de la tienda: código de país + número, sin espacios ni signos (ej: '5491112345678').
-    const WHATSAPP = '5493513429849';
+    // Se puede cambiar desde Configuración del panel (se actualiza al cargar).
+    let WHATSAPP = '5493513429849';
     const waLink = text => WHATSAPP ? `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}` : '#';
-    document.querySelectorAll('[data-wa]').forEach(a => {
-      a.href = waLink(a.dataset.wa);
-      if (!WHATSAPP) a.addEventListener('click', e => { e.preventDefault(); alert('El WhatsApp de soporte estará disponible muy pronto.'); });
-    });
+    const applyWa = () => document.querySelectorAll('[data-wa]').forEach(a => a.href = waLink(a.dataset.wa));
+    applyWa();
 
     // ---------- Datos ----------
     // Los juegos y los precios de PS Plus se cargan desde Supabase y se editan en admin.html.
@@ -324,7 +326,7 @@
 
     // Secciones del home. Cada juego elige en el panel en cuáles aparece (por la clave).
     const sections = {
-      'black-friday': { key: 'black-friday', eyebrow: 'BLACK FRIDAY 🔥', title: '¡Antes que termine! 🕰️', countdown: { d: 15, h: 18, m: 14 }, accent: 'pink', items: [] },
+      'black-friday': { key: 'black-friday', eyebrow: 'BLACK FRIDAY 🔥', title: '¡Antes que termine! 🕰️', end: null, accent: 'pink', items: [] },
     };
     const groups = {
       vendido: { eyebrow: 'LO MÁS VENDIDO', rows: [
@@ -381,8 +383,9 @@
         <button data-scroll="${id}" data-dir="1" class="grid place-items-center h-9 w-9 rounded-full bg-night-800 ring-1 ring-white/10 hover:ring-neon-violet" aria-label="Siguiente"><i class="fa-solid fa-chevron-right text-xs"></i></button>
       </div>`;
 
-    const countdownEl = (cd, color) => {
-      const end = Date.now() + ((cd.d * 24 + cd.h) * 60 + cd.m) * 60000;
+    // end: fecha de fin en milisegundos (se configura en el panel). Sin fecha no se muestra contador.
+    const countdownEl = (end, color) => {
+      if (!end) return '';
       const box = l => `<div class="text-center"><span data-u="${l}" class="block min-w-[2.6rem] rounded-lg bg-night-950 ring-1 px-2 py-1 font-display text-xl font-bold" style="--tw-ring-color:${color}66;color:${color}">00</span><span class="text-[10px] tracking-widest text-slate-400">${l}</span></div>`;
       return `<div class="countdown flex items-start gap-1.5" data-end="${end}">${box('DÍAS')}${box('HORAS')}${box('MINS')}${box('SEGS')}</div>`;
     };
@@ -408,7 +411,7 @@
               <p class="text-xs font-semibold tracking-[.3em]" style="color:${color}">${s.eyebrow}</p>
               <h2 class="font-display text-2xl sm:text-3xl font-bold">${s.title}</h2>
             </div>
-            <div class="flex items-center gap-4">${countdownEl(s.countdown, color)}${rowControls(r.id)}</div>
+            <div class="flex items-center gap-4">${countdownEl(s.end, color)}${rowControls(r.id)}</div>
           </div>
           <div class="mt-5">${r.html}</div>
         </div>`;
@@ -422,7 +425,7 @@
       const lead = built[0].rw.title ? null : built[0].r;
       let html = `<div class="flex flex-wrap items-end justify-between gap-4">
         <div><p class="text-xs font-semibold tracking-[.3em] text-neon-cyan">${g.eyebrow}</p>${g.title ? `<h2 class="font-display text-2xl sm:text-3xl font-bold">${g.title}</h2>` : ''}</div>
-        <div class="flex items-center gap-4">${g.countdown ? countdownEl(g.countdown, '#22d3ee') : ''}${lead ? rowControls(lead.id) : ''}</div></div>`;
+        <div class="flex items-center gap-4">${countdownEl(g.end, '#22d3ee')}${lead ? rowControls(lead.id) : ''}</div></div>`;
       built.forEach(({ rw, r }) => {
         if (!rw.title) {
           html += `<div class="mt-5">${r.html}</div>`;
@@ -450,22 +453,35 @@
     };
 
     // Opiniones
-    const reviews = [
+    // Se cargan desde Supabase (Testimonios en el panel). Mientras tanto se muestran estos.
+    let reviews = [
       { n: 'Lucas Esteban', t: '1 día', s: 5, q: '10000/10. La mejor página' },
       { n: 'Thiago Grau', t: '2 semanas', s: 4, q: 'Muy barato y es real, recibí las cuentas secundarias aunque como 5 o 7 horas después de que las pedí' },
       { n: 'Tute Serri', t: '2 semanas', s: 5, q: 'Siempre han cumplido en tiempo y forma, me generan confianza y les sigo comprando asiduamente' },
       { n: 'Sr Baaan', t: '1 mes', s: 5, q: 'Muy bueno el servicio y rápido la verdad!!! 😁' },
     ];
-    const reviewsHtml = () => reviews.map(r => `
+    // "2026-11-01" → "3 semanas"
+    const ago = d => {
+      const days = Math.max(0, Math.round((Date.now() - new Date(d + 'T12:00:00-03:00')) / 86400000));
+      const u = (n, a, b) => `${n} ${n === 1 ? a : b}`;
+      if (days < 1) return 'Hoy';
+      if (days < 7) return u(days, 'día', 'días');
+      if (days < 30) return u(Math.floor(days / 7), 'semana', 'semanas');
+      if (days < 365) return u(Math.floor(days / 30), 'mes', 'meses');
+      return u(Math.floor(days / 365), 'año', 'años');
+    };
+    const reviewsHtml = (max = Infinity) => reviews.slice(0, max).map(r => `
       <figure class="rounded-2xl bg-night-800 ring-1 ring-white/5 p-5 flex flex-col">
         <div class="text-neon-cyan text-sm">${'<i class="fa-solid fa-star"></i>'.repeat(r.s)}${'<i class="fa-regular fa-star"></i>'.repeat(5 - r.s)}</div>
-        <blockquote class="mt-3 text-sm text-slate-300 flex-1">"${r.q}"</blockquote>
+        <blockquote class="mt-3 text-sm text-slate-300 flex-1">"${esc(r.q)}"</blockquote>
         <figcaption class="mt-4 flex items-center gap-3">
-          <span class="grid place-items-center h-9 w-9 rounded-full grad text-night-950 font-bold">${r.n[0]}</span>
-          <span><b class="block text-sm text-white">${r.n}</b><span class="text-xs text-slate-500">${r.t}</span></span>
+          <span class="grid place-items-center h-9 w-9 rounded-full grad text-night-950 font-bold">${esc([...r.n][0] || '')}</span>
+          <span><b class="block text-sm text-white">${esc(r.n)}</b><span class="text-xs text-slate-500">${r.t}</span></span>
         </figcaption>
       </figure>`).join('');
-    document.querySelectorAll('.reviews').forEach(el => el.innerHTML = reviewsHtml());
+    // En el inicio, solo los 4 más recientes; en Opiniones, todos
+    const renderReviews = () => document.querySelectorAll('.reviews').forEach(el => el.innerHTML = reviewsHtml(4));
+    renderReviews();
 
     // ---------- Vistas de categoría ----------
     // Todos los juegos de la tienda (se llena al cargar desde Supabase)
@@ -851,16 +867,56 @@
 
     // Carrusel hero
     const track = document.getElementById('hero-track'), dots = document.getElementById('hero-dots');
-    const total = track.children.length; let cur = 0;
-    dots.innerHTML = Array.from({ length: total }, (_, i) => `<button class="h-1.5 rounded-full transition-all" data-i="${i}" aria-label="Slide ${i + 1}"></button>`).join('');
+    let total = 0, cur = 0;
     const go = i => {
+      if (!total) return;
       cur = (i + total) % total; track.style.transform = `translateX(-${cur * 100}%)`;
       dots.querySelectorAll('button').forEach((d, j) => d.className = `h-1.5 rounded-full transition-all ${j === cur ? 'w-8 grad' : 'w-3 bg-white/40'}`);
+    };
+    // Cuenta las diapositivas visibles y arma los puntitos (se llama de nuevo si cambian los banners)
+    const setupHero = () => {
+      total = [...track.children].filter(el => !el.hidden).length;
+      dots.innerHTML = Array.from({ length: total }, (_, i) => `<button class="h-1.5 rounded-full transition-all" data-i="${i}" aria-label="Slide ${i + 1}"></button>`).join('');
+      go(Math.min(cur, total - 1));
     };
     dots.addEventListener('click', e => e.target.dataset.i && go(+e.target.dataset.i));
     document.getElementById('hero-prev').onclick = () => go(cur - 1);
     document.getElementById('hero-next').onclick = () => go(cur + 1);
-    go(0); setInterval(() => go(cur + 1), 6000);
+    setupHero(); setInterval(() => go(cur + 1), 6000);
+
+    // Banner con imagen entera y la misma imagen desenfocada de relleno en pantallas chicas
+    const bannerSlide = b => {
+      const tag = b.link ? 'a' : 'div';
+      return `<${tag} data-banner ${b.link ? `href="${esc(b.link)}" aria-label="${esc(b.alt)}"` : ''} class="relative min-w-full h-full block overflow-hidden bg-night-950">
+        <img src="${esc(b.img)}" alt="" class="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-60 xl:hidden" />
+        <img src="${esc(b.img)}" alt="${esc(b.alt)}" class="relative h-full w-full object-contain xl:object-cover" />
+      </${tag}>`;
+    };
+    // Los banners de imagen van primero, después los slides de texto
+    const renderBanners = list => {
+      track.querySelectorAll('[data-banner]').forEach(el => el.remove());
+      track.insertAdjacentHTML('afterbegin', list.map(bannerSlide).join(''));
+      setupHero();
+    };
+
+    // Configuración general (WhatsApp, Instagram, horarios, Black Friday)
+    const applySettings = s => {
+      if (s.whatsapp) { WHATSAPP = String(s.whatsapp).replace(/\D/g, ''); applyWa(); }
+      if (s.whatsapp_label) document.getElementById('wa-label').textContent = s.whatsapp_label;
+      if (s.instagram) {
+        const ig = String(s.instagram).replace(/^@/, '');
+        document.querySelectorAll('[data-ig]').forEach(a => { a.href = `https://www.instagram.com/${encodeURIComponent(ig)}/`; a.setAttribute('aria-label', 'Instagram @' + ig); });
+        document.getElementById('ig-label').textContent = '@' + ig;
+      }
+      if (Array.isArray(s.hours)) document.getElementById('hours').innerHTML = s.hours.filter(Boolean).map(h => `<p>${esc(h)}</p>`).join('');
+      if (s.hours_note !== undefined) document.getElementById('hours-note').textContent = s.hours_note;
+      const bf = sections['black-friday'];
+      if (s.bf_eyebrow) bf.eyebrow = esc(s.bf_eyebrow);
+      if (s.bf_title) bf.title = esc(s.bf_title);
+      bf.end = s.bf_end ? new Date(s.bf_end + ':00-03:00').getTime() || null : null; // hora de Argentina
+      track.querySelectorAll('[data-text-slide]').forEach(el => el.hidden = s.text_slides === false);
+      setupHero();
+    };
 
     // ---------- Carga del catálogo desde Supabase ----------
     // Primero muestra la última copia guardada en el navegador (carga instantánea) y después la actualiza.
@@ -873,7 +929,13 @@
       img: r.img || '', stock: r.in_stock !== false, secs: r.sections || [],
     });
     let catalogShown = false;
-    const applyCatalog = ({ products, prices }) => {
+    const applyCatalog = ({ products, prices, banners, reviews: revs, settings }) => {
+      if (settings) applySettings(settings);
+      if (Array.isArray(banners)) renderBanners(banners);
+      if (Array.isArray(revs)) {
+        reviews = revs.map(r => ({ n: r.name, q: r.text, s: r.stars, t: ago(r.date) }));
+        renderReviews();
+      }
       allProducts = products.map(fromRow);
       allProducts.forEach(p => { const rw = groups.vendido.rows.find(r => p.secs.includes(r.key)); p.tag = rw && rw.tag; });
       Object.values(sections).forEach(s => s.items = allProducts.filter(p => p.secs.includes(s.key)));
@@ -893,11 +955,15 @@
       try { cached = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) {}
       if (cached && cached.products) applyCatalog(cached);
       try {
-        const [products, prices] = await Promise.all([
+        const optional = p => p.catch(e => { console.warn(e); return null; }); // si falla, se deja lo que ya hay
+        const [products, prices, banners, revs, settings] = await Promise.all([
           api('products?select=*&active=eq.true&order=sort.asc,id.asc'),
           api('ps_prices?select=plan,months,price'),
+          optional(api('banners?select=img,alt,link&active=eq.true&order=sort.asc,id.asc')),
+          optional(api('reviews?select=name,text,stars,date&active=eq.true&order=date.desc,id.desc')),
+          optional(api('settings?select=data&id=eq.1').then(r => r[0] ? r[0].data : null)),
         ]);
-        const data = { products, prices };
+        const data = { products, prices, banners, reviews: revs, settings };
         try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) {}
         applyCatalog(data);
       } catch (e) {

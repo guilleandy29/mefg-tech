@@ -28,97 +28,89 @@
     body { background: #11141a; }
     .grad { background-image: linear-gradient(90deg, #2cc0d6, #1ee6fb); }
     .grad-text { background-image: linear-gradient(90deg, #22d3ee, #1ee6fb); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .field { width: 100%; border-radius: .75rem; background: #0c0f14; padding: .65rem .85rem; font-size: .875rem; outline: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+    .field { width: 100%; border-radius: .75rem; background: #0c0f14; padding: .65rem .85rem; font-size: .875rem; outline: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); color: #e2e8f0; }
     .field:focus { box-shadow: inset 0 0 0 1px #22d3ee; }
+    .field-sm { padding: .4rem .6rem; }
     dialog::backdrop { background: rgba(0,0,0,.7); backdrop-filter: blur(2px); }
+    .switch { position: relative; display: inline-block; height: 1.5rem; width: 2.75rem; flex-shrink: 0; border-radius: 9999px; background: #2d333e; transition: background .2s; }
+    .switch::after { content: ''; position: absolute; left: .125rem; top: .125rem; height: 1.25rem; width: 1.25rem; border-radius: 9999px; background: #fff; transition: transform .2s; }
+    input:checked + .switch { background: #22d3ee; }
+    input:checked + .switch::after { transform: translateX(1.25rem); }
+    input:focus-visible + .switch { outline: 2px solid #22d3ee; outline-offset: 2px; }
   </style>
 </head>
 <body class="font-sans text-slate-200 antialiased min-h-screen">
 
-  <header class="sticky top-0 z-30 bg-night-950/90 backdrop-blur border-b border-white/5">
-    <div class="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
-      <a href="./" class="shrink-0"><img src="logo/mcfg-tech-transparente.png" alt="MEFG.TECH" class="h-10 w-auto" /></a>
-      <span class="hidden sm:inline font-display text-lg font-bold">Panel de <span class="grad-text">administración</span></span>
-      <div id="session" class="ml-auto hidden items-center gap-2">
-        <span id="session-email" class="hidden md:inline text-xs text-slate-400"></span>
-        <a href="./" target="_blank" class="rounded-lg bg-night-800 ring-1 ring-white/10 px-3 py-2 text-sm hover:ring-neon-cyan"><i class="fa-solid fa-arrow-up-right-from-square mr-1 text-xs"></i>Ver tienda</a>
-        <button id="logout" class="rounded-lg bg-night-800 ring-1 ring-white/10 px-3 py-2 text-sm hover:ring-neon-cyan"><i class="fa-solid fa-right-from-bracket mr-1 text-xs"></i>Salir</button>
-      </div>
-    </div>
-  </header>
+  <!-- Cargando / inicio de sesión / sin permisos -->
+  <div id="gate" class="min-h-screen grid place-items-center px-4 py-10">
+    <p id="boot" class="text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2 text-neon-cyan"></i>Cargando…</p>
 
-  <main class="mx-auto max-w-6xl px-4 py-8">
+    <form id="login" class="hidden w-full max-w-sm rounded-3xl bg-night-800 ring-1 ring-white/10 p-6 sm:p-8">
+      <img src="logo/mcfg-tech-transparente.png" alt="MEFG.TECH" class="mx-auto h-16 w-auto" />
+      <h1 class="mt-4 text-center font-display text-2xl font-bold">Panel de administración</h1>
+      <p class="mt-1 text-center text-sm text-slate-400">Solo para administradores de la tienda.</p>
+      <label class="mt-6 block text-sm font-semibold">Correo
+        <input name="email" type="email" required autocomplete="username" class="field mt-1.5" />
+      </label>
+      <label class="mt-4 block text-sm font-semibold">Contraseña
+        <input name="password" type="password" required autocomplete="current-password" class="field mt-1.5" />
+      </label>
+      <p id="login-error" class="mt-4 hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300"></p>
+      <button class="mt-6 w-full rounded-xl grad py-3 font-bold text-night-950 hover:brightness-110 disabled:opacity-60">Entrar</button>
+      <a href="./" class="mt-4 block text-center text-xs text-slate-500 hover:text-white">← Volver a la tienda</a>
+    </form>
 
-    <!-- Cargando -->
-    <p id="boot" class="py-20 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2 text-neon-cyan"></i>Cargando…</p>
-
-    <!-- Inicio de sesión -->
-    <section id="login" class="hidden mx-auto max-w-sm">
-      <form id="login-form" class="rounded-3xl bg-night-800 ring-1 ring-white/10 p-6 sm:p-8">
-        <h1 class="font-display text-2xl font-bold">Iniciar sesión</h1>
-        <p class="mt-1 text-sm text-slate-400">Solo para administradores de la tienda.</p>
-        <label class="mt-6 block text-sm font-semibold">Correo
-          <input name="email" type="email" required autocomplete="username" class="field mt-1.5" />
-        </label>
-        <label class="mt-4 block text-sm font-semibold">Contraseña
-          <input name="password" type="password" required autocomplete="current-password" class="field mt-1.5" />
-        </label>
-        <p id="login-error" class="mt-4 hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300"></p>
-        <button class="mt-6 w-full rounded-xl grad py-3 font-bold text-night-950 hover:brightness-110 disabled:opacity-60">Entrar</button>
-      </form>
-    </section>
-
-    <!-- Usuario sin permisos -->
-    <section id="denied" class="hidden mx-auto max-w-md rounded-3xl bg-night-800 ring-1 ring-white/10 p-8 text-center">
+    <div id="denied" class="hidden w-full max-w-md rounded-3xl bg-night-800 ring-1 ring-white/10 p-8 text-center">
       <i class="fa-solid fa-lock text-3xl text-neon-cyan"></i>
       <h1 class="mt-4 font-display text-2xl font-bold">Sin permisos</h1>
       <p class="mt-2 text-sm text-slate-400">Esta cuenta no es administradora de la tienda. Pedile al responsable de la web que la habilite.</p>
-    </section>
+      <button data-logout class="mt-6 rounded-xl bg-night-700 px-5 py-2.5 text-sm font-semibold hover:bg-night-600">Cerrar sesión</button>
+    </div>
+  </div>
 
-    <!-- Panel -->
-    <section id="panel" class="hidden">
-      <div class="flex gap-2 border-b border-white/10" role="tablist">
-        <button data-tab="games" role="tab" aria-selected="true" class="tab -mb-px border-b-2 border-transparent px-4 py-3 text-sm font-semibold text-slate-400 aria-selected:border-neon-cyan aria-selected:text-white"><i class="fa-solid fa-gamepad mr-1.5"></i>Juegos</button>
-        <button data-tab="plus" role="tab" aria-selected="false" class="tab -mb-px border-b-2 border-transparent px-4 py-3 text-sm font-semibold text-slate-400 aria-selected:border-neon-cyan aria-selected:text-white"><i class="fa-brands fa-playstation mr-1.5"></i>PlayStation Plus</button>
-      </div>
+  <!-- Panel -->
+  <div id="app" class="hidden">
+    <!-- Barra superior en celular -->
+    <header class="lg:hidden sticky top-0 z-30 flex items-center gap-3 bg-night-950/95 backdrop-blur border-b border-white/5 px-4 py-3">
+      <button id="menu-open" class="grid h-10 w-10 place-items-center rounded-lg bg-night-800 ring-1 ring-white/10" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+      <span id="mobile-title" class="font-display text-lg font-bold"></span>
+    </header>
 
-      <!-- Juegos -->
-      <div id="tab-games" class="mt-6">
-        <div class="flex flex-wrap items-center gap-3">
-          <div class="relative flex-1 min-w-[200px]">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-500"></i>
-            <input id="filter-q" type="search" placeholder="Buscar juego…" class="field pl-10" />
-          </div>
-          <select id="filter-plat" class="field w-auto">
-            <option value="">Todas las consolas</option><option>PS5</option><option>PS4</option><option>PS3</option>
-          </select>
-          <button id="new-game" class="rounded-xl grad px-4 py-2.5 text-sm font-bold text-night-950 hover:brightness-110"><i class="fa-solid fa-plus mr-1"></i>Nuevo juego</button>
+    <!-- Menú lateral -->
+    <div id="menu-backdrop" class="fixed inset-0 z-40 hidden bg-black/60 lg:hidden"></div>
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col bg-night-950 border-r border-white/5 transition-transform lg:translate-x-0">
+      <div class="flex items-center gap-3 border-b border-white/5 px-5 py-4">
+        <img src="logo/mcfg-tech-transparente.png" alt="" class="h-10 w-auto" />
+        <div>
+          <p class="font-display font-bold leading-tight">MEFG<span class="grad-text">.TECH</span></p>
+          <p class="text-[10px] font-semibold tracking-[.2em] text-slate-500">PANEL ADMIN</p>
         </div>
-        <p id="games-count" class="mt-4 text-xs text-slate-500"></p>
-        <div id="games" class="mt-2 space-y-2"></div>
       </div>
+      <nav id="nav" class="flex-1 overflow-y-auto p-3 space-y-1 text-sm"></nav>
+      <div class="border-t border-white/5 p-4 text-xs">
+        <p id="session-email" class="truncate text-slate-400"></p>
+        <button data-logout class="mt-2 block text-slate-500 hover:text-white"><i class="fa-solid fa-right-from-bracket mr-1.5"></i>Cerrar sesión</button>
+        <a href="./" target="_blank" class="mt-2 block text-slate-500 hover:text-white"><i class="fa-solid fa-arrow-left mr-1.5"></i>Volver a la tienda</a>
+      </div>
+    </aside>
 
-      <!-- PlayStation Plus -->
-      <div id="tab-plus" class="mt-6 hidden">
-        <p class="text-sm text-slate-400">Precios en pesos. Si dejás un casillero vacío, en la web aparece <b class="text-slate-200">"A consultar"</b>.</p>
-        <form id="plus-form" class="mt-5">
-          <div id="plus-grid" class="grid gap-4 sm:grid-cols-3"></div>
-          <button class="mt-6 rounded-xl grad px-6 py-3 font-bold text-night-950 hover:brightness-110 disabled:opacity-60"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Guardar precios</button>
-        </form>
+    <main class="lg:pl-64">
+      <div class="mx-auto max-w-6xl px-4 py-6 sm:px-8 sm:py-8">
+        <h1 id="page-title" class="hidden lg:block font-display text-3xl font-bold"></h1>
+        <p id="page-sub" class="mt-1 text-sm text-slate-400"></p>
+        <div id="page" class="mt-6"></div>
       </div>
-    </section>
-  </main>
+    </main>
+  </div>
 
   <!-- Formulario de juego -->
   <dialog id="game-dialog" class="w-[min(640px,calc(100vw-2rem))] rounded-3xl bg-night-800 p-0 text-slate-200 ring-1 ring-white/10">
-    <form id="game-form" method="dialog" class="p-5 sm:p-7">
+    <form id="game-form" class="p-5 sm:p-7">
       <div class="flex items-center justify-between gap-4">
         <h2 id="game-title" class="font-display text-xl font-bold">Nuevo juego</h2>
         <button type="button" data-close class="grid h-9 w-9 place-items-center rounded-full bg-night-700 hover:bg-night-600" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
       </div>
-
       <div class="mt-5 grid gap-5 sm:grid-cols-[150px_1fr]">
-        <!-- Portada -->
         <div>
           <span class="text-sm font-semibold">Portada</span>
           <div id="cover-preview" class="mt-1.5 aspect-[3/4] w-full overflow-hidden rounded-xl bg-night-950 ring-1 ring-white/10 grid place-items-center text-slate-600"></div>
@@ -129,18 +121,13 @@
           <button type="button" id="cover-remove" class="mt-1.5 w-full rounded-lg py-1.5 text-xs text-slate-400 hover:text-white">Quitar portada</button>
           <p class="mt-1 text-[11px] leading-snug text-slate-500">Vertical 3:4, ej. 600×800 px.</p>
         </div>
-
         <div class="space-y-4">
           <label class="block text-sm font-semibold">Nombre
             <input name="name" required maxlength="120" placeholder="Ej: God of War Ragnarök PS5" class="field mt-1.5" />
           </label>
           <fieldset>
             <legend class="text-sm font-semibold">Consola</legend>
-            <div class="mt-1.5 grid grid-cols-3 gap-2">
-              <label class="cursor-pointer"><input type="radio" name="plat" value="PS5" class="peer sr-only" required /><span class="block rounded-lg bg-night-950 py-2 text-center text-sm font-bold ring-1 ring-white/10 peer-checked:ring-2 peer-checked:ring-neon-cyan peer-checked:text-neon-cyan">PS5</span></label>
-              <label class="cursor-pointer"><input type="radio" name="plat" value="PS4" class="peer sr-only" /><span class="block rounded-lg bg-night-950 py-2 text-center text-sm font-bold ring-1 ring-white/10 peer-checked:ring-2 peer-checked:ring-neon-cyan peer-checked:text-neon-cyan">PS4</span></label>
-              <label class="cursor-pointer"><input type="radio" name="plat" value="PS3" class="peer sr-only" /><span class="block rounded-lg bg-night-950 py-2 text-center text-sm font-bold ring-1 ring-white/10 peer-checked:ring-2 peer-checked:ring-neon-cyan peer-checked:text-neon-cyan">PS3</span></label>
-            </div>
+            <div id="plat-options" class="mt-1.5 grid grid-cols-3 gap-2"></div>
           </fieldset>
           <div class="grid grid-cols-2 gap-3">
             <label class="block text-sm font-semibold">Precio
@@ -153,31 +140,101 @@
           <p id="discount" class="text-sm text-slate-400"></p>
         </div>
       </div>
-
       <fieldset class="mt-5">
         <legend class="text-sm font-semibold">Dónde aparece en el inicio</legend>
         <p class="text-xs text-slate-500">Igual aparece siempre en su consola, en el buscador y, si tiene descuento, en Ofertas activas.</p>
         <div id="section-checks" class="mt-2 grid gap-2 sm:grid-cols-2"></div>
       </fieldset>
-
       <div class="mt-5 grid gap-3 sm:grid-cols-3">
         <label class="flex items-center gap-2.5 rounded-xl bg-night-950 px-3 py-2.5 ring-1 ring-white/10 text-sm cursor-pointer"><input name="in_stock" type="checkbox" class="h-4 w-4 accent-cyan-400" />Hay stock</label>
         <label class="flex items-center gap-2.5 rounded-xl bg-night-950 px-3 py-2.5 ring-1 ring-white/10 text-sm cursor-pointer"><input name="active" type="checkbox" class="h-4 w-4 accent-cyan-400" />Visible en la web</label>
         <label class="flex items-center gap-2.5 rounded-xl bg-night-950 px-3 py-1.5 ring-1 ring-white/10 text-sm">Orden
-          <input name="sort" type="number" step="1" class="field py-1.5" title="Los números más bajos aparecen primero" />
+          <input name="sort" type="number" step="1" class="field field-sm" title="Los números más bajos aparecen primero" />
         </label>
       </div>
-
-      <p id="game-error" class="mt-4 hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300"></p>
+      <p data-error class="mt-4 hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300"></p>
       <div class="mt-6 flex justify-end gap-3">
         <button type="button" data-close class="rounded-xl bg-night-700 px-5 py-2.5 text-sm font-semibold hover:bg-night-600">Cancelar</button>
-        <button id="game-save" type="submit" class="rounded-xl grad px-6 py-2.5 text-sm font-bold text-night-950 hover:brightness-110 disabled:opacity-60"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Guardar</button>
+        <button data-save class="rounded-xl grad px-6 py-2.5 text-sm font-bold text-night-950 hover:brightness-110 disabled:opacity-60"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Formulario de banner -->
+  <dialog id="banner-dialog" class="w-[min(720px,calc(100vw-2rem))] rounded-3xl bg-night-800 p-0 text-slate-200 ring-1 ring-white/10">
+    <form id="banner-form" class="p-5 sm:p-7">
+      <div class="flex items-center justify-between gap-4">
+        <h2 id="banner-title" class="font-display text-xl font-bold">Nuevo banner</h2>
+        <button type="button" data-close class="grid h-9 w-9 place-items-center rounded-full bg-night-700 hover:bg-night-600" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="banner-preview" class="mt-5 aspect-[932/380] w-full overflow-hidden rounded-2xl bg-night-950 ring-1 ring-white/10 grid place-items-center text-slate-600"></div>
+      <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
+        <p class="text-xs text-slate-500">Tamaño recomendado: <b class="text-slate-300">1864×760 px</b> (horizontal). Lo importante, en el centro.</p>
+        <label class="cursor-pointer rounded-lg bg-night-700 px-4 py-2 text-xs font-semibold hover:bg-night-600">
+          <i class="fa-solid fa-upload mr-1"></i>Subir imagen
+          <input id="banner-file" type="file" accept="image/*" class="sr-only" />
+        </label>
+      </div>
+      <label class="mt-5 block text-sm font-semibold">Descripción de la imagen
+        <input name="alt" maxlength="200" placeholder="Ej: Los más vendidos de la semana" class="field mt-1.5" />
+        <span class="mt-1 block text-xs font-normal text-slate-500">Para buscadores y lectores de pantalla. Describí lo que dice el banner.</span>
+      </label>
+      <label class="mt-4 block text-sm font-semibold">Al tocarlo lleva a <span class="font-normal text-slate-500">(opcional)</span>
+        <select name="link" class="field mt-1.5">
+          <option value="">No lleva a ningún lado</option>
+          <option value="#ofertas">Ofertas activas</option>
+          <option value="#black-friday">Black Friday</option>
+          <option value="#vendido">Lo más vendido</option>
+          <option value="#playstation-plus">PlayStation Plus</option>
+          <option value="#ps5">Juegos de PS5</option>
+          <option value="#ps4">Juegos de PS4</option>
+          <option value="#ps3">Juegos de PS3</option>
+          <option value="#faq">Preguntas frecuentes</option>
+        </select>
+      </label>
+      <label class="mt-4 flex w-fit cursor-pointer items-center gap-2.5 text-sm"><input name="active" type="checkbox" class="h-4 w-4 accent-cyan-400" />Visible en la web</label>
+      <p data-error class="mt-4 hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300"></p>
+      <div class="mt-6 flex justify-end gap-3">
+        <button type="button" data-close class="rounded-xl bg-night-700 px-5 py-2.5 text-sm font-semibold hover:bg-night-600">Cancelar</button>
+        <button data-save class="rounded-xl grad px-6 py-2.5 text-sm font-bold text-night-950 hover:brightness-110 disabled:opacity-60"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Formulario de testimonio -->
+  <dialog id="review-dialog" class="w-[min(560px,calc(100vw-2rem))] rounded-3xl bg-night-800 p-0 text-slate-200 ring-1 ring-white/10">
+    <form id="review-form" class="p-5 sm:p-7">
+      <div class="flex items-center justify-between gap-4">
+        <h2 id="review-title" class="font-display text-xl font-bold">Nuevo testimonio</h2>
+        <button type="button" data-close class="grid h-9 w-9 place-items-center rounded-full bg-night-700 hover:bg-night-600" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <label class="mt-5 block text-sm font-semibold">Nombre del cliente
+        <input name="name" required maxlength="60" class="field mt-1.5" />
+      </label>
+      <label class="mt-4 block text-sm font-semibold">Opinión
+        <textarea name="text" required maxlength="400" rows="4" class="field mt-1.5 resize-y"></textarea>
+      </label>
+      <div class="mt-4 grid grid-cols-2 gap-3">
+        <label class="block text-sm font-semibold">Estrellas
+          <select name="stars" class="field mt-1.5">
+            <option value="5">★★★★★ 5</option><option value="4">★★★★☆ 4</option><option value="3">★★★☆☆ 3</option><option value="2">★★☆☆☆ 2</option><option value="1">★☆☆☆☆ 1</option>
+          </select>
+        </label>
+        <label class="block text-sm font-semibold">Fecha
+          <input name="date" type="date" required class="field mt-1.5 [color-scheme:dark]" />
+        </label>
+      </div>
+      <label class="mt-4 flex w-fit cursor-pointer items-center gap-2.5 text-sm"><input name="active" type="checkbox" class="h-4 w-4 accent-cyan-400" />Visible en la web</label>
+      <p data-error class="mt-4 hidden rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300"></p>
+      <div class="mt-6 flex justify-end gap-3">
+        <button type="button" data-close class="rounded-xl bg-night-700 px-5 py-2.5 text-sm font-semibold hover:bg-night-600">Cancelar</button>
+        <button data-save class="rounded-xl grad px-6 py-2.5 text-sm font-bold text-night-950 hover:brightness-110 disabled:opacity-60"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Guardar</button>
       </div>
     </form>
   </dialog>
 
   <!-- Avisos -->
-  <div id="toast" class="pointer-events-none fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-xl bg-night-700 px-4 py-3 text-sm font-semibold shadow-2xl ring-1 ring-white/10 opacity-0 transition"></div>
+  <div id="toast" role="status" class="pointer-events-none fixed top-5 left-1/2 z-[60] -translate-x-1/2 rounded-xl bg-night-700 px-4 py-3 text-sm font-semibold shadow-2xl ring-1 ring-white/10 opacity-0 transition"></div>
 
   <script>
     // Misma base que la tienda. La clave publicable es segura en el navegador: solo los administradores pueden editar.
@@ -186,7 +243,7 @@
     const BUCKET = 'portadas';
     const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Secciones del home (las mismas claves que usa index.html)
+    // Secciones del inicio (las mismas claves que usa index.html)
     const SECTIONS = [
       ['black-friday', 'Black Friday'],
       ['vendido-fijos', 'Lo más vendido · Fijos'],
@@ -197,11 +254,15 @@
     const MONTHS = [3, 12];
     const platColor = { PS5: '#1599ae', PS4: '#14899c', PS3: '#4a4f52' };
 
+    // ---------- Utilidades ----------
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const fmt = n => '$ ' + Number(n).toLocaleString('es-AR');
     const discountOf = (price, old) => old > price ? Math.round((1 - price / old) * 100) : 0;
-    const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const slug = s => norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'imagen';
+    const today = () => new Date(Date.now() - 3 * 3600000).toISOString().slice(0, 10); // fecha de Argentina
+    const when = iso => new Date(iso).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 
     let toastTimer;
     const toast = (msg, error) => {
@@ -210,79 +271,194 @@
       t.classList.remove('opacity-0');
       clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add('opacity-0'), 3000);
     };
-    const show = id => ['boot', 'login', 'denied', 'panel'].forEach(s => $(s).classList.toggle('hidden', s !== id));
     const friendly = e => {
       const m = (e && e.message) || String(e);
       if (/Invalid login credentials/i.test(m)) return 'Correo o contraseña incorrectos.';
       if (/Email not confirmed/i.test(m)) return 'El correo todavía no está confirmado.';
       if (/Failed to fetch|NetworkError/i.test(m)) return 'Sin conexión. Revisá internet y probá de nuevo.';
+      if (/relation .* does not exist|Could not find the table/i.test(m)) return 'Falta crear esta tabla en Supabase (archivo db/setup-2.sql).';
       return m;
     };
-
-    // ---------- Sesión ----------
-    const enter = async session => {
-      $('session').classList.toggle('hidden', !session);
-      $('session').classList.toggle('flex', !!session);
-      if (!session) return show('login');
-      $('session-email').textContent = session.user.email;
-      const { data, error } = await db.from('admins').select('user_id').eq('user_id', session.user.id).maybeSingle();
-      if (error || !data) return show('denied');
-      show('panel');
-      loadGames(); loadPlus();
-    };
-    let currentUser = null;
-    db.auth.onAuthStateChange((event, session) => {
-      const uid = session ? session.user.id : null;
-      if (uid === currentUser && event !== 'INITIAL_SESSION') return; // ignora renovaciones del token
-      currentUser = uid;
-      setTimeout(() => enter(session)); // fuera del callback, como recomienda Supabase
-    });
-
-    $('login-form').addEventListener('submit', async e => {
-      e.preventDefault();
-      const f = e.target, btn = f.querySelector('button'), err = $('login-error');
-      btn.disabled = true; err.classList.add('hidden');
-      const { error } = await db.auth.signInWithPassword({ email: f.email.value.trim(), password: f.password.value });
-      btn.disabled = false;
-      if (error) { err.textContent = friendly(error); err.classList.remove('hidden'); }
-    });
-    $('logout').addEventListener('click', () => db.auth.signOut());
-
-    // ---------- Pestañas ----------
-    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', b === t));
-      $('tab-games').classList.toggle('hidden', t.dataset.tab !== 'games');
-      $('tab-plus').classList.toggle('hidden', t.dataset.tab !== 'plus');
-    }));
-
-    // ---------- Juegos ----------
-    let games = [];
-    const loadGames = async () => {
-      $('games').innerHTML = '<p class="py-10 text-center text-sm text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Cargando juegos…</p>';
-      const { data, error } = await db.from('products').select('*').order('sort').order('id');
-      if (error) { $('games').innerHTML = `<p class="py-10 text-center text-sm text-red-300">${esc(friendly(error))}</p>`; return; }
-      games = data; renderGames();
-    };
-
+    const switchEl = (attr, id, checked, label) => `
+      <label class="flex cursor-pointer items-center gap-2 text-xs text-slate-400" title="${label}">
+        <input type="checkbox" ${attr}="${id}" ${checked ? 'checked' : ''} class="sr-only" /><span class="switch"></span>
+      </label>`;
+    const empty = msg => `<p class="rounded-2xl bg-night-800 py-12 text-center text-sm text-slate-400 ring-1 ring-white/5">${msg}</p>`;
+    const loading = () => '<p class="py-12 text-center text-sm text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Cargando…</p>';
     const thumb = g => g.img
-      ? `<img src="${esc(g.img)}" alt="" class="h-16 w-12 shrink-0 rounded-lg object-cover bg-night-950" />`
-      : `<span class="grid h-16 w-12 shrink-0 place-items-center rounded-lg bg-night-950 text-slate-600 ring-1 ring-white/5"><i class="fa-brands fa-playstation"></i></span>`;
+      ? `<img src="${esc(g.img)}" alt="" class="h-14 w-[42px] shrink-0 rounded-lg object-cover bg-night-950" />`
+      : `<span class="grid h-14 w-[42px] shrink-0 place-items-center rounded-lg bg-night-950 text-slate-600 ring-1 ring-white/5"><i class="fa-brands fa-playstation"></i></span>`;
+    const platBadge = p => `<span class="rounded px-1.5 py-0.5 text-[10px] font-bold text-white" style="background:${platColor[p]}">${p}</span>`;
 
-    const renderGames = () => {
-      const q = norm($('filter-q').value.trim()), plat = $('filter-plat').value;
-      const list = games.filter(g => (!plat || g.plat === plat) && (!q || norm(g.name).includes(q)));
-      $('games-count').textContent = `${list.length} de ${games.length} juegos`;
-      if (!list.length) { $('games').innerHTML = '<p class="py-10 text-center text-sm text-slate-400">No hay juegos que coincidan.</p>'; return; }
-      $('games').innerHTML = list.map(g => {
+    // Achica una imagen y la pasa a JPG (carga más rápido en la web)
+    const shrink = (file, maxW) => new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const w = Math.min(maxW, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(img.src);
+        c.toBlob(b => b ? resolve(b) : reject(new Error('No se pudo procesar la imagen')), 'image/jpeg', 0.88);
+      };
+      img.onerror = () => reject(new Error('Ese archivo no es una imagen válida'));
+      img.src = URL.createObjectURL(file);
+    });
+    const upload = async (blob, folder, name) => {
+      const path = `${folder}${Date.now()}-${slug(name)}.jpg`;
+      const { error } = await db.storage.from(BUCKET).upload(path, blob, { contentType: 'image/jpeg', cacheControl: '31536000' });
+      if (error) throw error;
+      return db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+    };
+    // Borra una imagen subida al panel (las que vienen de la carpeta img/ de la web no se tocan)
+    const removeImage = url => {
+      const mark = `/storage/v1/object/public/${BUCKET}/`;
+      if (url && url.includes(mark)) db.storage.from(BUCKET).remove([decodeURIComponent(url.split(mark)[1])]);
+    };
+
+    // Diálogos: cerrar, errores y botón guardar
+    document.querySelectorAll('dialog [data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
+    const formState = (form, busy, msg) => {
+      form.querySelector('[data-save]').disabled = busy;
+      const err = form.querySelector('[data-error]');
+      err.textContent = msg || ''; err.classList.toggle('hidden', !msg);
+    };
+
+    // ---------- Datos ----------
+    const store = { games: null, banners: null, reviews: null, prices: null, settings: null };
+    const loadAll = async () => {
+      const [g, b, r, p, s] = await Promise.all([
+        db.from('products').select('*').order('sort').order('id'),
+        db.from('banners').select('*').order('sort').order('id'),
+        db.from('reviews').select('*').order('date', { ascending: false }).order('id', { ascending: false }),
+        db.from('ps_prices').select('*'),
+        db.from('settings').select('data').eq('id', 1).maybeSingle(),
+      ]);
+      store.errors = {};
+      [['games', g], ['banners', b], ['reviews', r], ['prices', p]].forEach(([k, res]) => {
+        if (res.error) { store.errors[k] = friendly(res.error); store[k] = []; } else store[k] = res.data;
+      });
+      if (s.error) store.errors.settings = friendly(s.error);
+      store.settings = (s.data && s.data.data) || {};
+    };
+    const sortGames = () => store.games.sort((a, b) => a.sort - b.sort || a.id - b.id);
+
+    // ---------- Navegación ----------
+    const PAGES = {
+      dashboard: { icon: 'fa-chart-simple', label: 'Dashboard', sub: 'Resumen de la tienda.' },
+      productos: { icon: 'fa-gamepad', label: 'Productos', sub: 'Agregá, editá o borrá juegos.' },
+      inventario: { icon: 'fa-boxes-stacked', label: 'Inventario', sub: 'Stock, precios y visibilidad de varios juegos a la vez.' },
+      banners: { icon: 'fa-images', label: 'Banners', sub: 'Las imágenes del carrusel del inicio.' },
+      testimonios: { icon: 'fa-comment-dots', label: 'Testimonios', sub: 'Las opiniones de clientes que se ven en la web.' },
+      'ps-plus': { icon: 'fa-brands fa-playstation', label: 'PlayStation Plus', sub: 'Precios de los planes.' },
+      exportar: { icon: 'fa-file-arrow-down', label: 'Exportar CSV', sub: 'Descargá los datos para abrirlos en Excel.' },
+      configuracion: { icon: 'fa-gear', label: 'Configuración', sub: 'Contacto, horarios y Black Friday.' },
+    };
+    $('nav').innerHTML = Object.entries(PAGES).map(([k, p]) => `
+      <a href="#${k}" data-page="${k}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-slate-300 hover:bg-white/5 hover:text-white aria-[current=page]:bg-neon-cyan aria-[current=page]:text-night-950 aria-[current=page]:font-semibold">
+        <i class="${p.icon.includes('fa-brands') ? p.icon : 'fa-solid ' + p.icon} w-4 text-center"></i>${p.label}
+      </a>`).join('');
+
+    const closeMenu = () => { $('sidebar').classList.add('-translate-x-full'); $('menu-backdrop').classList.add('hidden'); };
+    $('menu-open').addEventListener('click', () => { $('sidebar').classList.remove('-translate-x-full'); $('menu-backdrop').classList.remove('hidden'); });
+    $('menu-backdrop').addEventListener('click', closeMenu);
+
+    const render = () => {
+      const key = PAGES[location.hash.slice(1)] ? location.hash.slice(1) : 'dashboard';
+      const p = PAGES[key];
+      document.querySelectorAll('[data-page]').forEach(a => a.dataset.page === key ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+      $('page-title').textContent = $('mobile-title').textContent = p.label;
+      $('page-sub').textContent = p.sub;
+      document.title = `${p.label} · Panel MEFG.TECH`;
+      const err = { productos: 'games', inventario: 'games', banners: 'banners', testimonios: 'reviews', 'ps-plus': 'prices', configuracion: 'settings' }[key];
+      $('page').innerHTML = store.errors[err] ? empty(`<i class="fa-solid fa-triangle-exclamation mr-2 text-red-300"></i>${esc(store.errors[err])}`) : views[key]();
+      if (after[key]) after[key]();
+      closeMenu();
+    };
+    window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+
+    // ---------- Dashboard ----------
+    const stat = (icon, label, value, href, warn) => `
+      <a href="${href}" class="rounded-2xl bg-night-800 p-5 ring-1 ring-white/5 hover:ring-neon-cyan/60 transition">
+        <p class="flex items-center gap-2 text-xs font-semibold tracking-wider text-slate-400"><i class="fa-solid ${icon} ${warn ? 'text-amber-300' : 'text-neon-cyan'}"></i>${label}</p>
+        <p class="mt-2 font-display text-3xl font-bold ${warn ? 'text-amber-300' : 'text-white'}">${value}</p>
+      </a>`;
+    const views = {};
+    const after = {};
+    views.dashboard = () => {
+      const g = store.games, visible = g.filter(x => x.active);
+      const noStock = visible.filter(x => !x.in_stock), offers = visible.filter(x => x.in_stock && discountOf(x.price, x.old_price));
+      const noCover = visible.filter(x => !x.img), hidden = g.filter(x => !x.active);
+      const pricesSet = store.prices.filter(x => x.price != null).length;
+      const recent = [...g].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)).slice(0, 6);
+      return `
+        <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+          ${stat('fa-gamepad', 'JUEGOS EN LA WEB', visible.length, '#productos')}
+          ${stat('fa-tag', 'EN OFERTA', offers.length, '#inventario')}
+          ${stat('fa-box-open', 'SIN STOCK', noStock.length, '#inventario', noStock.length)}
+          ${stat('fa-eye-slash', 'OCULTOS', hidden.length, '#inventario')}
+          ${stat('fa-image', 'SIN PORTADA', noCover.length, '#productos', noCover.length)}
+          ${stat('fa-images', 'BANNERS ACTIVOS', store.banners.filter(x => x.active).length, '#banners')}
+          ${stat('fa-comment-dots', 'TESTIMONIOS', store.reviews.filter(x => x.active).length, '#testimonios')}
+          ${stat('fa-crown', 'PRECIOS PS PLUS', `${pricesSet}/${PLANS.length * MONTHS.length}`, '#ps-plus', pricesSet < PLANS.length * MONTHS.length)}
+        </div>
+        <div class="mt-6 grid gap-6 lg:grid-cols-2">
+          <section class="rounded-2xl bg-night-800 p-5 ring-1 ring-white/5">
+            <h2 class="font-display text-lg font-bold">Últimos cambios</h2>
+            <ul class="mt-3 divide-y divide-white/5">
+              ${recent.map(x => `<li class="flex items-center gap-3 py-2.5">${thumb(x)}<div class="min-w-0 flex-1"><p class="truncate text-sm font-semibold">${esc(x.name)}</p><p class="text-xs text-slate-500">${when(x.updated_at)}</p></div><span class="font-display font-bold">${fmt(x.price)}</span></li>`).join('') || '<li class="py-3 text-sm text-slate-500">Todavía no hay juegos.</li>'}
+            </ul>
+          </section>
+          <section class="rounded-2xl bg-night-800 p-5 ring-1 ring-white/5">
+            <h2 class="font-display text-lg font-bold">Sin stock</h2>
+            <ul class="mt-3 divide-y divide-white/5">
+              ${noStock.slice(0, 6).map(x => `<li class="flex items-center gap-3 py-2.5">${thumb(x)}<div class="min-w-0 flex-1"><p class="truncate text-sm font-semibold">${esc(x.name)}</p>${platBadge(x.plat)}</div></li>`).join('') || '<li class="py-3 text-sm text-slate-500"><i class="fa-solid fa-circle-check mr-1.5 text-neon-cyan"></i>Todos los juegos tienen stock.</li>'}
+            </ul>
+            ${noStock.length > 6 ? `<a href="#inventario" class="mt-2 inline-block text-sm text-neon-cyan hover:underline">Ver los ${noStock.length}</a>` : ''}
+          </section>
+        </div>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <button data-new-game class="rounded-xl grad px-5 py-2.5 text-sm font-bold text-night-950 hover:brightness-110"><i class="fa-solid fa-plus mr-1"></i>Nuevo juego</button>
+          <a href="#banners" class="rounded-xl bg-night-800 px-5 py-2.5 text-sm font-semibold ring-1 ring-white/10 hover:ring-neon-cyan"><i class="fa-solid fa-images mr-1.5"></i>Cambiar banners</a>
+          <a href="./" target="_blank" class="rounded-xl bg-night-800 px-5 py-2.5 text-sm font-semibold ring-1 ring-white/10 hover:ring-neon-cyan"><i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i>Ver tienda</a>
+        </div>`;
+    };
+
+    // ---------- Productos ----------
+    const filters = { q: '', plat: '' };
+    const filtered = () => store.games.filter(g => (!filters.plat || g.plat === filters.plat) && (!filters.q || norm(g.name).includes(norm(filters.q))));
+    const toolbar = extra => `
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="relative flex-1 min-w-[200px]">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-500"></i>
+          <input id="filter-q" type="search" value="${esc(filters.q)}" placeholder="Buscar juego…" class="field pl-10" />
+        </div>
+        <select id="filter-plat" class="field w-auto">
+          <option value="">Todas las consolas</option>${['PS5', 'PS4', 'PS3'].map(p => `<option ${filters.plat === p ? 'selected' : ''}>${p}</option>`).join('')}
+        </select>
+        ${extra || ''}
+      </div>
+      <p id="list-count" class="mt-4 text-xs text-slate-500"></p>
+      <div id="list" class="mt-2"></div>`;
+    const bindFilters = draw => {
+      $('filter-q').addEventListener('input', e => { filters.q = e.target.value; draw(); });
+      $('filter-plat').addEventListener('change', e => { filters.plat = e.target.value; draw(); });
+      draw();
+    };
+
+    views.productos = () => toolbar(`<button data-new-game class="rounded-xl grad px-4 py-2.5 text-sm font-bold text-night-950 hover:brightness-110"><i class="fa-solid fa-plus mr-1"></i>Nuevo juego</button>`);
+    const drawProducts = () => {
+      const list = filtered();
+      $('list-count').textContent = `${list.length} de ${store.games.length} juegos`;
+      $('list').innerHTML = !list.length ? empty('No hay juegos que coincidan.') : '<div class="space-y-2">' + list.map(g => {
         const off = discountOf(g.price, g.old_price);
         const secs = SECTIONS.filter(([k]) => g.sections.includes(k)).map(([, l]) => `<span class="rounded bg-night-700 px-1.5 py-0.5">${l}</span>`).join('');
         return `
         <article class="flex flex-wrap items-center gap-3 rounded-2xl bg-night-800 p-3 ring-1 ring-white/5 ${g.active ? '' : 'opacity-60'}">
           ${thumb(g)}
           <div class="min-w-0 flex-1 basis-48">
-            <p class="flex items-center gap-2">
-              <span class="rounded px-1.5 py-0.5 text-[10px] font-bold text-white" style="background:${platColor[g.plat]}">${g.plat}</span>
+            <p class="flex items-center gap-2">${platBadge(g.plat)}
               ${g.active ? '' : '<span class="rounded bg-night-600 px-1.5 py-0.5 text-[10px] font-bold">OCULTO</span>'}
+              ${g.in_stock ? '' : '<span class="rounded bg-amber-400/20 px-1.5 py-0.5 text-[10px] font-bold text-amber-300">SIN STOCK</span>'}
               <b class="truncate text-sm text-white">${esc(g.name)}</b>
             </p>
             <p class="mt-1 flex flex-wrap gap-1 text-[11px] text-slate-400">${secs || '<span class="text-slate-600">Sin sección en el inicio</span>'}</p>
@@ -292,177 +468,482 @@
             <p class="font-display font-bold text-white">${fmt(g.price)}</p>
             ${off ? `<span class="inline-block rounded-full bg-neon-cyan px-2 text-[10px] font-bold text-night-950">-${off}%</span>` : ''}
           </div>
-          <label class="flex cursor-pointer items-center gap-2 text-xs text-slate-400" title="Hay stock">
-            <input type="checkbox" data-stock="${g.id}" ${g.in_stock ? 'checked' : ''} class="peer sr-only" />
-            <span class="relative h-6 w-11 rounded-full bg-night-600 transition peer-checked:bg-neon-cyan after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition peer-checked:after:translate-x-5"></span>
-            <span class="w-14">${g.in_stock ? 'Stock' : 'Sin stock'}</span>
-          </label>
           <div class="flex gap-1.5">
-            <button data-edit="${g.id}" class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-night-600" title="Editar" aria-label="Editar ${esc(g.name)}"><i class="fa-solid fa-pen text-xs"></i></button>
-            <button data-del="${g.id}" class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-red-500/30" title="Borrar" aria-label="Borrar ${esc(g.name)}"><i class="fa-solid fa-trash text-xs"></i></button>
+            <button data-edit-game="${g.id}" class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-night-600" title="Editar" aria-label="Editar ${esc(g.name)}"><i class="fa-solid fa-pen text-xs"></i></button>
+            <button data-del-game="${g.id}" class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-red-500/30" title="Borrar" aria-label="Borrar ${esc(g.name)}"><i class="fa-solid fa-trash text-xs"></i></button>
           </div>
         </article>`;
-      }).join('');
+      }).join('') + '</div>';
     };
-    $('filter-q').addEventListener('input', renderGames);
-    $('filter-plat').addEventListener('change', renderGames);
+    after.productos = () => bindFilters(drawProducts);
 
-    // Archivo de portada guardado en nuestro bucket (para poder borrarlo)
-    const storagePath = url => {
-      const mark = `/storage/v1/object/public/${BUCKET}/`;
-      return url && url.includes(mark) ? decodeURIComponent(url.split(mark)[1]) : null;
+    // ---------- Inventario ----------
+    const selected = new Set();
+    views.inventario = () => toolbar() + `
+      <div id="bulk" class="fixed bottom-5 left-1/2 z-40 hidden -translate-x-1/2 lg:ml-32 flex-wrap items-center justify-center gap-2 rounded-2xl bg-night-700 p-2 shadow-2xl ring-1 ring-white/10">
+        <span id="bulk-count" class="px-2 text-sm font-semibold"></span>
+        <button data-bulk="in_stock:true" class="rounded-lg bg-night-800 px-3 py-2 text-xs font-semibold hover:bg-night-600">Con stock</button>
+        <button data-bulk="in_stock:false" class="rounded-lg bg-night-800 px-3 py-2 text-xs font-semibold hover:bg-night-600">Sin stock</button>
+        <button data-bulk="active:true" class="rounded-lg bg-night-800 px-3 py-2 text-xs font-semibold hover:bg-night-600">Mostrar</button>
+        <button data-bulk="active:false" class="rounded-lg bg-night-800 px-3 py-2 text-xs font-semibold hover:bg-night-600">Ocultar</button>
+        <button data-bulk="clear" class="grid h-8 w-8 place-items-center rounded-lg hover:bg-night-600" aria-label="Quitar selección"><i class="fa-solid fa-xmark"></i></button>
+      </div>`;
+    const drawInventory = () => {
+      const list = filtered();
+      $('list-count').textContent = `${list.length} de ${store.games.length} juegos · Los precios se guardan solos al salir del casillero.`;
+      $('list').innerHTML = !list.length ? empty('No hay juegos que coincidan.') : `
+        <div class="overflow-x-auto rounded-2xl bg-night-800 ring-1 ring-white/5">
+          <table class="w-full min-w-[720px] text-sm">
+            <thead class="text-left text-xs text-slate-400">
+              <tr class="border-b border-white/5">
+                <th class="p-3 w-10"><input type="checkbox" id="sel-all" class="h-4 w-4 accent-cyan-400" aria-label="Seleccionar todos" ${list.every(g => selected.has(g.id)) ? 'checked' : ''} /></th>
+                <th class="p-3">Juego</th><th class="p-3 w-32">Precio</th><th class="p-3 w-32">Precio anterior</th><th class="p-3 w-16">Desc.</th><th class="p-3 w-16">Stock</th><th class="p-3 w-16">Visible</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              ${list.map(g => `
+              <tr class="${g.active ? '' : 'opacity-60'}">
+                <td class="p-3"><input type="checkbox" data-sel="${g.id}" ${selected.has(g.id) ? 'checked' : ''} class="h-4 w-4 accent-cyan-400" aria-label="Seleccionar ${esc(g.name)}" /></td>
+                <td class="p-3"><div class="flex items-center gap-2">${platBadge(g.plat)}<span class="font-semibold">${esc(g.name)}</span></div></td>
+                <td class="p-3"><input type="number" min="0" step="1" data-price="${g.id}" value="${g.price}" class="field field-sm" aria-label="Precio de ${esc(g.name)}" /></td>
+                <td class="p-3"><input type="number" min="0" step="1" data-old="${g.id}" value="${g.old_price ?? ''}" placeholder="—" class="field field-sm" aria-label="Precio anterior de ${esc(g.name)}" /></td>
+                <td class="p-3 text-xs font-bold text-neon-cyan" data-off="${g.id}">${discountOf(g.price, g.old_price) ? '-' + discountOf(g.price, g.old_price) + '%' : ''}</td>
+                <td class="p-3">${switchEl('data-stock', g.id, g.in_stock, 'Hay stock')}</td>
+                <td class="p-3">${switchEl('data-active', g.id, g.active, 'Visible en la web')}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+      drawBulk();
     };
-    const removeCover = url => { const p = storagePath(url); if (p) db.storage.from(BUCKET).remove([p]); };
+    const drawBulk = () => {
+      const b = $('bulk'); if (!b) return;
+      b.classList.toggle('hidden', !selected.size); b.classList.toggle('flex', !!selected.size);
+      $('bulk-count').textContent = `${selected.size} seleccionado${selected.size === 1 ? '' : 's'}`;
+    };
+    const updateGame = async (id, patch) => {
+      const { data, error } = await db.from('products').update(patch).eq('id', id).select().single();
+      if (error) { toast(friendly(error), true); return false; }
+      const i = store.games.findIndex(g => g.id === id); store.games[i] = data; return true;
+    };
+    after.inventario = () => bindFilters(drawInventory);
 
-    $('games').addEventListener('change', async e => {
-      const id = e.target.dataset.stock;
-      if (!id) return;
-      const g = games.find(x => x.id == id), val = e.target.checked;
-      const { error } = await db.from('products').update({ in_stock: val }).eq('id', id);
-      if (error) { e.target.checked = !val; return toast(friendly(error), true); }
-      g.in_stock = val; renderGames();
-      toast(val ? 'Marcado con stock' : 'Marcado sin stock');
-    });
-
-    $('games').addEventListener('click', async e => {
-      const edit = e.target.closest('[data-edit]'), del = e.target.closest('[data-del]');
-      if (edit) openForm(games.find(g => g.id == edit.dataset.edit));
-      if (del) {
-        const g = games.find(x => x.id == del.dataset.del);
-        if (!confirm(`¿Borrar "${g.name}"? No se puede deshacer.\n\nSi solo querés sacarlo de la web por un tiempo, editalo y destildá "Visible en la web".`)) return;
-        const { error } = await db.from('products').delete().eq('id', g.id);
-        if (error) return toast(friendly(error), true);
-        removeCover(g.img);
-        games = games.filter(x => x !== g); renderGames(); toast('Juego borrado');
-      }
-    });
-
-    // ---------- Formulario ----------
-    const dlg = $('game-dialog'), form = $('game-form');
+    // ---------- Formulario de juego ----------
+    const gForm = $('game-form'), gDlg = $('game-dialog');
+    $('plat-options').innerHTML = ['PS5', 'PS4', 'PS3'].map(p => `
+      <label class="cursor-pointer"><input type="radio" name="plat" value="${p}" class="peer sr-only" /><span class="block rounded-lg bg-night-950 py-2 text-center text-sm font-bold ring-1 ring-white/10 peer-checked:ring-2 peer-checked:ring-neon-cyan peer-checked:text-neon-cyan peer-focus-visible:ring-neon-cyan">${p}</span></label>`).join('');
     $('section-checks').innerHTML = SECTIONS.map(([k, l]) => `
       <label class="flex cursor-pointer items-center gap-2.5 rounded-xl bg-night-950 px-3 py-2.5 text-sm ring-1 ring-white/10">
         <input type="checkbox" name="sections" value="${k}" class="h-4 w-4 accent-cyan-400" />${l}
       </label>`).join('');
-
-    let editing = null, coverUrl = '', coverBlob = null;
+    let editingGame = null, coverUrl = '', coverBlob = null;
     const paintCover = () => {
       const src = coverBlob ? URL.createObjectURL(coverBlob) : coverUrl;
       $('cover-preview').innerHTML = src ? `<img src="${esc(src)}" alt="" class="h-full w-full object-cover" />` : '<i class="fa-regular fa-image text-3xl"></i>';
       $('cover-remove').classList.toggle('hidden', !src);
     };
     const paintDiscount = () => {
-      const price = +form.price.value, old = +form.old_price.value;
-      const off = form.price.value && old ? discountOf(price, old) : 0;
+      const price = +gForm.price.value, old = +gForm.old_price.value;
+      const off = gForm.price.value && old ? discountOf(price, old) : 0;
       $('discount').innerHTML = off
         ? `Descuento: <b class="text-neon-cyan">-${off}%</b> · aparece en Ofertas activas`
         : (old && old <= price ? '<span class="text-amber-300">El precio anterior tiene que ser mayor que el precio para mostrar descuento.</span>' : 'Sin descuento');
     };
-    form.price.addEventListener('input', paintDiscount);
-    form.old_price.addEventListener('input', paintDiscount);
-
-    const openForm = g => {
-      editing = g || null;
-      form.reset();
+    gForm.price.addEventListener('input', paintDiscount);
+    gForm.old_price.addEventListener('input', paintDiscount);
+    const openGame = g => {
+      editingGame = g || null;
+      gForm.reset(); formState(gForm, false);
       $('game-title').textContent = g ? 'Editar juego' : 'Nuevo juego';
-      $('game-error').classList.add('hidden');
-      form.name.value = g ? g.name : '';
-      form.querySelectorAll('[name=plat]').forEach(r => r.checked = g ? r.value === g.plat : r.value === 'PS5');
-      form.price.value = g ? g.price : '';
-      form.old_price.value = g && g.old_price ? g.old_price : '';
-      form.querySelectorAll('[name=sections]').forEach(c => c.checked = g ? g.sections.includes(c.value) : false);
-      form.in_stock.checked = g ? g.in_stock : true;
-      form.active.checked = g ? g.active : true;
-      form.sort.value = g ? g.sort : (games.reduce((m, x) => Math.max(m, x.sort), 0) + 10);
+      gForm.name.value = g ? g.name : '';
+      gForm.querySelectorAll('[name=plat]').forEach(r => r.checked = g ? r.value === g.plat : r.value === 'PS5');
+      gForm.price.value = g ? g.price : '';
+      gForm.old_price.value = g && g.old_price ? g.old_price : '';
+      gForm.querySelectorAll('[name=sections]').forEach(c => c.checked = g ? g.sections.includes(c.value) : false);
+      gForm.in_stock.checked = g ? g.in_stock : true;
+      gForm.active.checked = g ? g.active : true;
+      gForm.sort.value = g ? g.sort : (store.games.reduce((m, x) => Math.max(m, x.sort), 0) + 10);
       coverUrl = g ? g.img || '' : ''; coverBlob = null;
       paintCover(); paintDiscount();
-      dlg.showModal();
+      gDlg.showModal();
     };
-    $('new-game').addEventListener('click', () => openForm());
-    dlg.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => dlg.close()));
-
-    // Achica la imagen a 600 px de ancho como máximo y la pasa a JPG (carga más rápido en la web)
-    const shrink = file => new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        const w = Math.min(600, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
-        const c = document.createElement('canvas'); c.width = w; c.height = h;
-        c.getContext('2d').drawImage(img, 0, 0, w, h);
-        URL.revokeObjectURL(img.src);
-        c.toBlob(b => b ? resolve(b) : reject(new Error('No se pudo procesar la imagen')), 'image/jpeg', 0.86);
-      };
-      img.onerror = () => reject(new Error('Ese archivo no es una imagen válida'));
-      img.src = URL.createObjectURL(file);
-    });
     $('cover-file').addEventListener('change', async e => {
-      const file = e.target.files[0];
+      const file = e.target.files[0]; e.target.value = '';
       if (!file) return;
-      try { coverBlob = await shrink(file); paintCover(); } catch (err) { toast(err.message, true); }
-      e.target.value = '';
+      try { coverBlob = await shrink(file, 600); paintCover(); } catch (err) { toast(err.message, true); }
     });
     $('cover-remove').addEventListener('click', () => { coverUrl = ''; coverBlob = null; paintCover(); });
-
-    const slug = s => norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'juego';
-
-    form.addEventListener('submit', async e => {
+    gForm.addEventListener('submit', async e => {
       e.preventDefault();
-      const err = $('game-error'), btn = $('game-save');
-      const name = form.name.value.trim(), price = Math.round(+form.price.value);
-      const old = form.old_price.value ? Math.round(+form.old_price.value) : null;
-      const fail = msg => { err.textContent = msg; err.classList.remove('hidden'); btn.disabled = false; };
-      if (!name) return fail('Poné el nombre del juego.');
-      if (!(price >= 0) || form.price.value === '') return fail('Poné un precio válido.');
-      btn.disabled = true; err.classList.add('hidden');
-
-      const oldImg = editing ? editing.img : null;
+      const name = gForm.name.value.trim(), price = Math.round(+gForm.price.value);
+      const old = gForm.old_price.value ? Math.round(+gForm.old_price.value) : null;
+      if (!name) return formState(gForm, false, 'Poné el nombre del juego.');
+      if (gForm.price.value === '' || !(price >= 0)) return formState(gForm, false, 'Poné un precio válido.');
+      formState(gForm, true);
+      const oldImg = editingGame ? editingGame.img : null;
       let img = coverUrl || null;
-      if (coverBlob) {
-        const path = `${Date.now()}-${slug(name)}.jpg`;
-        const up = await db.storage.from(BUCKET).upload(path, coverBlob, { contentType: 'image/jpeg', cacheControl: '31536000' });
-        if (up.error) return fail('No se pudo subir la portada: ' + friendly(up.error));
-        img = db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-      }
+      try { if (coverBlob) img = await upload(coverBlob, '', name); }
+      catch (err) { return formState(gForm, false, 'No se pudo subir la portada: ' + friendly(err)); }
       const row = {
         name, price, old_price: old, img,
-        plat: form.querySelector('[name=plat]:checked').value,
-        sections: [...form.querySelectorAll('[name=sections]:checked')].map(c => c.value),
-        in_stock: form.in_stock.checked, active: form.active.checked,
-        sort: Math.round(+form.sort.value || 0),
+        plat: gForm.querySelector('[name=plat]:checked').value,
+        sections: [...gForm.querySelectorAll('[name=sections]:checked')].map(c => c.value),
+        in_stock: gForm.in_stock.checked, active: gForm.active.checked,
+        sort: Math.round(+gForm.sort.value || 0),
       };
-      const q = editing ? db.from('products').update(row).eq('id', editing.id) : db.from('products').insert(row);
+      const q = editingGame ? db.from('products').update(row).eq('id', editingGame.id) : db.from('products').insert(row);
       const { data, error } = await q.select().single();
-      if (error) return fail(friendly(error));
-      if (oldImg && oldImg !== img) removeCover(oldImg); // borra la portada vieja si se cambió
-      if (editing) games[games.indexOf(editing)] = data; else games.push(data);
-      games.sort((a, b) => a.sort - b.sort || a.id - b.id);
-      btn.disabled = false; dlg.close(); renderGames();
-      toast(editing ? 'Cambios guardados' : 'Juego agregado');
+      if (error) return formState(gForm, false, friendly(error));
+      if (oldImg && oldImg !== img) removeImage(oldImg);
+      if (editingGame) store.games[store.games.indexOf(editingGame)] = data; else store.games.push(data);
+      sortGames(); formState(gForm, false); gDlg.close(); render();
+      toast(editingGame ? 'Cambios guardados' : 'Juego agregado');
+    });
+
+    // ---------- Banners ----------
+    const linkLabel = l => { const o = [...$('banner-form').link.options].find(x => x.value === (l || '')); return o ? o.textContent : l; };
+    views.banners = () => `
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <p class="text-sm text-slate-400">Se muestran en este orden. Usá las flechas para moverlos.</p>
+        <button data-new-banner class="rounded-xl grad px-4 py-2.5 text-sm font-bold text-night-950 hover:brightness-110"><i class="fa-solid fa-plus mr-1"></i>Nuevo banner</button>
+      </div>
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
+        ${store.banners.map((b, i) => `
+        <article class="overflow-hidden rounded-2xl bg-night-800 ring-1 ring-white/5 ${b.active ? '' : 'opacity-60'}">
+          <img src="${esc(b.img)}" alt="" class="aspect-[932/380] w-full object-cover bg-night-950" />
+          <div class="flex items-center gap-3 p-3">
+            <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-night-950 font-display font-bold text-neon-cyan">${i + 1}</span>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-semibold">${esc(b.alt) || '<span class="text-slate-500">Sin descripción</span>'}</p>
+              <p class="truncate text-xs text-slate-500"><i class="fa-solid fa-link mr-1"></i>${esc(linkLabel(b.link))}</p>
+            </div>
+            ${switchEl('data-banner-active', b.id, b.active, 'Visible en la web')}
+          </div>
+          <div class="flex gap-1.5 border-t border-white/5 p-2">
+            <button data-move-banner="${b.id}:-1" ${i === 0 ? 'disabled' : ''} class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-night-600 disabled:opacity-30" aria-label="Mover antes"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+            <button data-move-banner="${b.id}:1" ${i === store.banners.length - 1 ? 'disabled' : ''} class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-night-600 disabled:opacity-30" aria-label="Mover después"><i class="fa-solid fa-arrow-right text-xs"></i></button>
+            <span class="flex-1"></span>
+            <button data-edit-banner="${b.id}" class="rounded-lg bg-night-700 px-3 text-xs font-semibold hover:bg-night-600"><i class="fa-solid fa-pen mr-1"></i>Editar</button>
+            <button data-del-banner="${b.id}" class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-red-500/30" aria-label="Borrar banner"><i class="fa-solid fa-trash text-xs"></i></button>
+          </div>
+        </article>`).join('') || `<div class="md:col-span-2">${empty('No hay banners. Agregá uno.')}</div>`}
+      </div>
+      <p class="mt-6 rounded-xl bg-night-800 px-4 py-3 text-xs text-slate-400 ring-1 ring-white/5"><i class="fa-solid fa-circle-info mr-1.5 text-neon-cyan"></i>Después de estos banners aparecen los 2 de texto de Black Friday. Se pueden ocultar en <a href="#configuracion" class="text-neon-cyan hover:underline">Configuración</a>.</p>`;
+
+    const bForm = $('banner-form'), bDlg = $('banner-dialog');
+    let editingBanner = null, bannerUrl = '', bannerBlob = null;
+    const paintBanner = () => {
+      const src = bannerBlob ? URL.createObjectURL(bannerBlob) : bannerUrl;
+      $('banner-preview').innerHTML = src ? `<img src="${esc(src)}" alt="" class="h-full w-full object-cover" />` : '<span class="text-sm"><i class="fa-regular fa-image mr-2 text-2xl align-middle"></i>Subí una imagen</span>';
+    };
+    const openBanner = b => {
+      editingBanner = b || null;
+      bForm.reset(); formState(bForm, false);
+      $('banner-title').textContent = b ? 'Editar banner' : 'Nuevo banner';
+      bForm.alt.value = b ? b.alt : '';
+      bForm.link.value = b && b.link ? b.link : '';
+      bForm.active.checked = b ? b.active : true;
+      bannerUrl = b ? b.img : ''; bannerBlob = null;
+      paintBanner(); bDlg.showModal();
+    };
+    $('banner-file').addEventListener('change', async e => {
+      const file = e.target.files[0]; e.target.value = '';
+      if (!file) return;
+      try { bannerBlob = await shrink(file, 1920); paintBanner(); } catch (err) { toast(err.message, true); }
+    });
+    bForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!bannerBlob && !bannerUrl) return formState(bForm, false, 'Subí una imagen.');
+      formState(bForm, true);
+      let img = bannerUrl;
+      try { if (bannerBlob) img = await upload(bannerBlob, 'banners/', bForm.alt.value || 'banner'); }
+      catch (err) { return formState(bForm, false, 'No se pudo subir la imagen: ' + friendly(err)); }
+      const row = { img, alt: bForm.alt.value.trim(), link: bForm.link.value || null, active: bForm.active.checked };
+      if (!editingBanner) row.sort = store.banners.reduce((m, x) => Math.max(m, x.sort), 0) + 10;
+      const q = editingBanner ? db.from('banners').update(row).eq('id', editingBanner.id) : db.from('banners').insert(row);
+      const { data, error } = await q.select().single();
+      if (error) return formState(bForm, false, friendly(error));
+      if (editingBanner && editingBanner.img !== img) removeImage(editingBanner.img);
+      if (editingBanner) store.banners[store.banners.indexOf(editingBanner)] = data; else store.banners.push(data);
+      formState(bForm, false); bDlg.close(); render();
+      toast(editingBanner ? 'Banner actualizado' : 'Banner agregado');
+    });
+
+    // ---------- Testimonios ----------
+    views.testimonios = () => `
+      <div class="flex justify-end">
+        <button data-new-review class="rounded-xl grad px-4 py-2.5 text-sm font-bold text-night-950 hover:brightness-110"><i class="fa-solid fa-plus mr-1"></i>Nuevo testimonio</button>
+      </div>
+      <p class="mt-2 text-xs text-slate-500">En el inicio se muestran los 4 más recientes; en la página Opiniones, todos.</p>
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
+        ${store.reviews.map(r => `
+        <article class="flex flex-col rounded-2xl bg-night-800 p-5 ring-1 ring-white/5 ${r.active ? '' : 'opacity-60'}">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-sm text-neon-cyan">${'<i class="fa-solid fa-star"></i>'.repeat(r.stars)}${'<i class="fa-regular fa-star"></i>'.repeat(5 - r.stars)}</span>
+            ${switchEl('data-review-active', r.id, r.active, 'Visible en la web')}
+          </div>
+          <p class="mt-3 flex-1 text-sm text-slate-300">"${esc(r.text)}"</p>
+          <div class="mt-4 flex items-center gap-3">
+            <div class="min-w-0 flex-1"><b class="block truncate text-sm text-white">${esc(r.name)}</b><span class="text-xs text-slate-500">${new Date(r.date + 'T12:00:00').toLocaleDateString('es-AR')}</span></div>
+            <button data-edit-review="${r.id}" class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-night-600" aria-label="Editar"><i class="fa-solid fa-pen text-xs"></i></button>
+            <button data-del-review="${r.id}" class="grid h-9 w-9 place-items-center rounded-lg bg-night-700 hover:bg-red-500/30" aria-label="Borrar"><i class="fa-solid fa-trash text-xs"></i></button>
+          </div>
+        </article>`).join('') || `<div class="md:col-span-2">${empty('No hay testimonios.')}</div>`}
+      </div>`;
+    const rForm = $('review-form'), rDlg = $('review-dialog');
+    let editingReview = null;
+    const openReview = r => {
+      editingReview = r || null;
+      rForm.reset(); formState(rForm, false);
+      $('review-title').textContent = r ? 'Editar testimonio' : 'Nuevo testimonio';
+      rForm.name.value = r ? r.name : '';
+      rForm.text.value = r ? r.text : '';
+      rForm.stars.value = r ? r.stars : 5;
+      rForm.date.value = r ? r.date : today();
+      rForm.active.checked = r ? r.active : true;
+      rDlg.showModal();
+    };
+    rForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const row = { name: rForm.name.value.trim(), text: rForm.text.value.trim(), stars: +rForm.stars.value, date: rForm.date.value, active: rForm.active.checked };
+      if (!row.name || !row.text) return formState(rForm, false, 'Completá el nombre y la opinión.');
+      formState(rForm, true);
+      const q = editingReview ? db.from('reviews').update(row).eq('id', editingReview.id) : db.from('reviews').insert(row);
+      const { data, error } = await q.select().single();
+      if (error) return formState(rForm, false, friendly(error));
+      if (editingReview) store.reviews[store.reviews.indexOf(editingReview)] = data; else store.reviews.push(data);
+      store.reviews.sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
+      formState(rForm, false); rDlg.close(); render();
+      toast(editingReview ? 'Testimonio actualizado' : 'Testimonio agregado');
     });
 
     // ---------- PlayStation Plus ----------
-    const loadPlus = async () => {
-      const { data, error } = await db.from('ps_prices').select('*');
-      if (error) return toast(friendly(error), true);
-      const price = (p, m) => { const r = data.find(x => x.plan === p && x.months === m); return r && r.price != null ? r.price : ''; };
-      $('plus-grid').innerHTML = PLANS.map(p => `
-        <fieldset class="rounded-2xl bg-night-800 p-5 ring-1 ring-white/10">
-          <legend class="sr-only">${p}</legend>
-          <p class="font-display text-xl font-bold">${p}</p>
-          ${MONTHS.map(m => `
-            <label class="mt-3 block text-sm font-semibold">${m} meses
-              <div class="relative mt-1.5"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
-              <input type="number" min="0" step="1" inputmode="numeric" data-plan="${p}" data-months="${m}" value="${price(p, m)}" placeholder="A consultar" class="field pl-7" /></div>
-            </label>`).join('')}
-        </fieldset>`).join('');
+    views['ps-plus'] = () => {
+      const price = (p, m) => { const r = store.prices.find(x => x.plan === p && x.months === m); return r && r.price != null ? r.price : ''; };
+      return `
+        <p class="text-sm text-slate-400">Precios en pesos. Si dejás un casillero vacío, en la web aparece <b class="text-slate-200">"A consultar"</b>.</p>
+        <form id="plus-form" class="mt-5">
+          <div class="grid gap-4 sm:grid-cols-3">
+            ${PLANS.map(p => `
+            <fieldset class="rounded-2xl bg-night-800 p-5 ring-1 ring-white/10">
+              <legend class="sr-only">${p}</legend>
+              <p class="font-display text-xl font-bold">${p}</p>
+              ${MONTHS.map(m => `
+                <label class="mt-3 block text-sm font-semibold">${m} meses
+                  <span class="relative mt-1.5 block"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+                  <input type="number" min="0" step="1" inputmode="numeric" data-plan="${p}" data-months="${m}" value="${price(p, m)}" placeholder="A consultar" class="field pl-7" /></span>
+                </label>`).join('')}
+            </fieldset>`).join('')}
+          </div>
+          <button class="mt-6 rounded-xl grad px-6 py-3 font-bold text-night-950 hover:brightness-110 disabled:opacity-60"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Guardar precios</button>
+        </form>`;
     };
-    $('plus-form').addEventListener('submit', async e => {
+    after['ps-plus'] = () => $('plus-form').addEventListener('submit', async e => {
       e.preventDefault();
       const btn = e.target.querySelector('button'); btn.disabled = true;
-      const rows = [...e.target.querySelectorAll('[data-plan]')].map(i => ({
-        plan: i.dataset.plan, months: +i.dataset.months, price: i.value === '' ? null : Math.round(+i.value),
-      }));
-      const { error } = await db.from('ps_prices').upsert(rows);
+      const rows = [...e.target.querySelectorAll('[data-plan]')].map(i => ({ plan: i.dataset.plan, months: +i.dataset.months, price: i.value === '' ? null : Math.round(+i.value) }));
+      const { data, error } = await db.from('ps_prices').upsert(rows).select();
       btn.disabled = false;
-      toast(error ? friendly(error) : 'Precios guardados', !!error);
+      if (error) return toast(friendly(error), true);
+      store.prices = data; toast('Precios guardados');
+    });
+
+    // ---------- Exportar CSV ----------
+    const csv = (name, header, rows) => {
+      const cell = v => { const s = v == null ? '' : String(v); return /[";\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+      const text = '﻿' + [header, ...rows].map(r => r.map(cell).join(';')).join('\r\n'); // ; y BOM para que Excel en español lo abra bien
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+      a.download = `${name}-${today()}.csv`; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    };
+    const EXPORTS = {
+      juegos: ['Juegos', 'Todos los juegos con precios, descuento, stock y secciones.', 'fa-gamepad', () => csv('juegos',
+        ['ID', 'Nombre', 'Consola', 'Precio', 'Precio anterior', 'Descuento %', 'Stock', 'Visible', 'Secciones', 'Portada', 'Última modificación'],
+        store.games.map(g => [g.id, g.name, g.plat, g.price, g.old_price, discountOf(g.price, g.old_price) || '', g.in_stock ? 'Sí' : 'No', g.active ? 'Sí' : 'No',
+          SECTIONS.filter(([k]) => g.sections.includes(k)).map(([, l]) => l).join(', '), g.img, when(g.updated_at)]))],
+      precios: ['Precios PlayStation Plus', 'Plan, duración y precio.', 'fa-brands fa-playstation', () => csv('precios-ps-plus',
+        ['Plan', 'Meses', 'Precio'], PLANS.flatMap(p => MONTHS.map(m => { const r = store.prices.find(x => x.plan === p && x.months === m); return [p, m, r && r.price != null ? r.price : 'A consultar']; })))],
+      testimonios: ['Testimonios', 'Nombre, opinión, estrellas y fecha.', 'fa-comment-dots', () => csv('testimonios',
+        ['Nombre', 'Opinión', 'Estrellas', 'Fecha', 'Visible'], store.reviews.map(r => [r.name, r.text, r.stars, r.date, r.active ? 'Sí' : 'No']))],
+    };
+    views.exportar = () => `
+      <div class="grid gap-4 sm:grid-cols-3">
+        ${Object.entries(EXPORTS).map(([k, [t, d, i]]) => `
+        <div class="flex flex-col rounded-2xl bg-night-800 p-5 ring-1 ring-white/5">
+          <i class="${i.includes('fa-brands') ? i : 'fa-solid ' + i} text-2xl text-neon-cyan"></i>
+          <p class="mt-3 font-display text-lg font-bold">${t}</p>
+          <p class="mt-1 flex-1 text-sm text-slate-400">${d}</p>
+          <button data-export="${k}" class="mt-4 rounded-xl grad py-2.5 text-sm font-bold text-night-950 hover:brightness-110"><i class="fa-solid fa-download mr-1.5"></i>Descargar CSV</button>
+        </div>`).join('')}
+      </div>`;
+
+    // ---------- Configuración ----------
+    views.configuracion = () => {
+      const s = store.settings;
+      const field = (name, label, value, attrs = '', help = '') => `
+        <label class="block text-sm font-semibold">${label}
+          <input name="${name}" value="${esc(value ?? '')}" ${attrs} class="field mt-1.5" />
+          ${help ? `<span class="mt-1 block text-xs font-normal text-slate-500">${help}</span>` : ''}
+        </label>`;
+      const card = (title, body) => `<fieldset class="rounded-2xl bg-night-800 p-5 ring-1 ring-white/5"><legend class="sr-only">${title}</legend><h2 class="font-display text-lg font-bold">${title}</h2><div class="mt-4 space-y-4">${body}</div></fieldset>`;
+      return `
+        <form id="settings-form" class="grid gap-5 lg:grid-cols-2">
+          ${card('Contacto',
+            field('whatsapp', 'WhatsApp (para los botones)', s.whatsapp, 'inputmode="numeric" placeholder="5493513429849"', 'Código de país + número, sin espacios ni signos. Ej: 5493513429849') +
+            field('whatsapp_label', 'WhatsApp (como se ve en la web)', s.whatsapp_label, 'placeholder="+54 9 351 342-9849"') +
+            field('instagram', 'Usuario de Instagram', s.instagram, 'placeholder="mefg.tech"', 'Sin la @.'))}
+          ${card('Horario de atención', `
+            <label class="block text-sm font-semibold">Horarios <span class="font-normal text-slate-500">(uno por renglón)</span>
+              <textarea name="hours" rows="3" class="field mt-1.5 resize-y">${esc((s.hours || []).join('\n'))}</textarea>
+            </label>` + field('hours_note', 'Aclaración', s.hours_note))}
+          ${card('Black Friday',
+            field('bf_eyebrow', 'Texto chico de arriba', s.bf_eyebrow, 'maxlength="40"') +
+            field('bf_title', 'Título de la sección', s.bf_title, 'maxlength="60"') +
+            field('bf_end', 'Termina el', s.bf_end, 'type="datetime-local" style="color-scheme:dark"', 'Hora de Argentina. Si lo dejás vacío, no se muestra el contador.'))}
+          ${card('Carrusel del inicio', `
+            <label class="flex cursor-pointer items-center gap-3 text-sm"><input type="checkbox" name="text_slides" ${s.text_slides !== false ? 'checked' : ''} class="sr-only" /><span class="switch"></span>Mostrar los 2 banners de texto de Black Friday</label>
+            <p class="text-xs text-slate-500">"FC26 al precio más bajo" y "Las mejores rebajas del año". Aparecen después de los banners de imagen.</p>`)}
+          <div class="lg:col-span-2">
+            <button class="rounded-xl grad px-6 py-3 font-bold text-night-950 hover:brightness-110 disabled:opacity-60"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Guardar configuración</button>
+          </div>
+        </form>`;
+    };
+    after.configuracion = () => $('settings-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const f = e.target, btn = f.querySelector('button');
+      const wa = f.whatsapp.value.replace(/\D/g, '');
+      if (wa && wa.length < 10) return toast('El número de WhatsApp parece incompleto.', true);
+      const data = {
+        ...store.settings,
+        whatsapp: wa, whatsapp_label: f.whatsapp_label.value.trim(), instagram: f.instagram.value.trim().replace(/^@/, ''),
+        hours: f.hours.value.split('\n').map(x => x.trim()).filter(Boolean), hours_note: f.hours_note.value.trim(),
+        bf_eyebrow: f.bf_eyebrow.value.trim(), bf_title: f.bf_title.value.trim(), bf_end: f.bf_end.value || null,
+        text_slides: f.text_slides.checked,
+      };
+      btn.disabled = true;
+      const { error } = await db.from('settings').upsert({ id: 1, data });
+      btn.disabled = false;
+      if (error) return toast(friendly(error), true);
+      store.settings = data; toast('Configuración guardada');
+    });
+
+    // ---------- Acciones (clics y cambios en todo el panel) ----------
+    const byId = (list, id) => list.find(x => x.id == id);
+    document.addEventListener('click', async e => {
+      const t = e.target.closest('button, a');
+      if (!t) return;
+      const d = t.dataset;
+      if ('logout' in d) return db.auth.signOut();
+      if ('newGame' in d) return openGame();
+      if (d.editGame) return openGame(byId(store.games, d.editGame));
+      if (d.delGame) {
+        const g = byId(store.games, d.delGame);
+        if (!confirm(`¿Borrar "${g.name}"? No se puede deshacer.\n\nSi solo querés sacarlo de la web por un tiempo, ocultalo desde Inventario.`)) return;
+        const { error } = await db.from('products').delete().eq('id', g.id);
+        if (error) return toast(friendly(error), true);
+        removeImage(g.img); store.games.splice(store.games.indexOf(g), 1); render(); return toast('Juego borrado');
+      }
+      if (d.bulk) {
+        if (d.bulk === 'clear') { selected.clear(); return drawInventory(); }
+        const [field, val] = d.bulk.split(':'), ids = [...selected];
+        const { data, error } = await db.from('products').update({ [field]: val === 'true' }).in('id', ids).select();
+        if (error) return toast(friendly(error), true);
+        data.forEach(row => { store.games[store.games.findIndex(g => g.id === row.id)] = row; });
+        selected.clear(); drawInventory(); return toast(`${data.length} juegos actualizados`);
+      }
+      if ('newBanner' in d) return openBanner();
+      if (d.editBanner) return openBanner(byId(store.banners, d.editBanner));
+      if (d.delBanner) {
+        const b = byId(store.banners, d.delBanner);
+        if (!confirm('¿Borrar este banner? No se puede deshacer.')) return;
+        const { error } = await db.from('banners').delete().eq('id', b.id);
+        if (error) return toast(friendly(error), true);
+        removeImage(b.img); store.banners.splice(store.banners.indexOf(b), 1); render(); return toast('Banner borrado');
+      }
+      if (d.moveBanner) {
+        const [id, dir] = d.moveBanner.split(':'), list = store.banners, i = list.findIndex(x => x.id == id), j = i + +dir;
+        if (j < 0 || j >= list.length) return;
+        [list[i], list[j]] = [list[j], list[i]];
+        list.forEach((b, k) => b.sort = (k + 1) * 10); // renumera para que el orden quede prolijo
+        render();
+        const res = await Promise.all(list.map(b => db.from('banners').update({ sort: b.sort }).eq('id', b.id)));
+        const err = res.find(r => r.error);
+        return err ? toast(friendly(err.error), true) : toast('Orden guardado');
+      }
+      if ('newReview' in d) return openReview();
+      if (d.editReview) return openReview(byId(store.reviews, d.editReview));
+      if (d.delReview) {
+        const r = byId(store.reviews, d.delReview);
+        if (!confirm(`¿Borrar el testimonio de ${r.name}?`)) return;
+        const { error } = await db.from('reviews').delete().eq('id', r.id);
+        if (error) return toast(friendly(error), true);
+        store.reviews.splice(store.reviews.indexOf(r), 1); render(); return toast('Testimonio borrado');
+      }
+      if (d.export) return EXPORTS[d.export][3]();
+    });
+
+    document.addEventListener('change', async e => {
+      const t = e.target, d = t.dataset;
+      // Inventario
+      if (t.id === 'sel-all') { filtered().forEach(g => t.checked ? selected.add(g.id) : selected.delete(g.id)); return drawInventory(); }
+      if (d.sel) { t.checked ? selected.add(+d.sel) : selected.delete(+d.sel); return drawBulk(); }
+      if (d.stock || d.active) {
+        const id = +(d.stock || d.active), field = d.stock ? 'in_stock' : 'active';
+        if (!await updateGame(id, { [field]: t.checked })) return (t.checked = !t.checked);
+        t.closest('tr').classList.toggle('opacity-60', !byId(store.games, id).active);
+        return toast(field === 'in_stock' ? (t.checked ? 'Con stock' : 'Sin stock') : (t.checked ? 'Visible en la web' : 'Oculto'));
+      }
+      if (d.price || d.old) {
+        const id = +(d.price || d.old), g = byId(store.games, id);
+        const val = t.value === '' ? null : Math.round(+t.value);
+        if (d.price && (val == null || val < 0)) { t.value = g.price; return toast('Poné un precio válido.', true); }
+        const field = d.price ? 'price' : 'old_price';
+        if (val === g[field]) return;
+        if (!await updateGame(id, { [field]: val })) { t.value = g[field] ?? ''; return; }
+        const off = discountOf(byId(store.games, id).price, byId(store.games, id).old_price);
+        document.querySelector(`[data-off="${id}"]`).textContent = off ? `-${off}%` : '';
+        return toast('Precio guardado');
+      }
+      // Banners y testimonios
+      if (d.bannerActive || d.reviewActive) {
+        const [table, list, id] = d.bannerActive ? ['banners', store.banners, d.bannerActive] : ['reviews', store.reviews, d.reviewActive];
+        const { error } = await db.from(table).update({ active: t.checked }).eq('id', id);
+        if (error) { t.checked = !t.checked; return toast(friendly(error), true); }
+        byId(list, id).active = t.checked; t.closest('article').classList.toggle('opacity-60', !t.checked);
+        return toast(t.checked ? 'Visible en la web' : 'Oculto');
+      }
+    });
+
+    // ---------- Sesión ----------
+    const showGate = id => {
+      $('gate').classList.toggle('hidden', !id); $('app').classList.toggle('hidden', !!id);
+      ['boot', 'login', 'denied'].forEach(s => $(s).classList.toggle('hidden', s !== id));
+    };
+    const enter = async session => {
+      if (!session) return showGate('login');
+      showGate('boot');
+      const { data, error } = await db.from('admins').select('user_id').eq('user_id', session.user.id).maybeSingle();
+      if (error || !data) return showGate('denied');
+      $('session-email').textContent = session.user.email;
+      await loadAll();
+      showGate(null); render();
+    };
+    let currentUser;
+    db.auth.onAuthStateChange((event, session) => {
+      const uid = session ? session.user.id : null;
+      if (uid === currentUser) return; // ignora renovaciones del token
+      currentUser = uid;
+      setTimeout(() => enter(session)); // fuera del callback, como recomienda Supabase
+    });
+
+    $('login').addEventListener('submit', async e => {
+      e.preventDefault();
+      const f = e.target, btn = f.querySelector('button'), err = $('login-error');
+      btn.disabled = true; err.classList.add('hidden');
+      const { error } = await db.auth.signInWithPassword({ email: f.email.value.trim(), password: f.password.value });
+      btn.disabled = false;
+      if (error) { err.textContent = friendly(error); err.classList.remove('hidden'); }
     });
   </script>
 </body>
