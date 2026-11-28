@@ -158,6 +158,29 @@
       <label class="mt-5 block text-sm font-semibold">Descripción <span class="font-normal text-slate-500">(opcional)</span>
         <textarea name="description" rows="3" maxlength="1500" placeholder="De qué se trata el juego, idioma, modos de juego…" class="field mt-1.5 resize-y"></textarea>
       </label>
+      <fieldset class="mt-5 rounded-xl bg-night-950/60 p-3 ring-1 ring-white/5">
+        <legend class="sr-only">Ficha técnica</legend>
+        <p class="text-xs font-bold tracking-widest text-neon-cyan">FICHA TÉCNICA <span class="font-normal tracking-normal text-slate-500">(opcional, lo que quede vacío no se muestra)</span></p>
+        <div class="mt-2 grid gap-3 sm:grid-cols-2">
+          <label class="block text-sm font-semibold sm:col-span-2">Género
+            <input name="genre" maxlength="80" list="genres" placeholder="Acción, Mundo abierto, Aventura" class="field mt-1.5" />
+          </label>
+          <label class="block text-sm font-semibold">Peso
+            <input name="size" maxlength="20" placeholder="212 GB" class="field mt-1.5" />
+          </label>
+          <label class="block text-sm font-semibold">Multijugador local
+            <select name="local_mp" class="field mt-1.5"><option value="">No mostrar</option><option value="true">Sí</option><option value="false">No</option></select>
+          </label>
+          <label class="block text-sm font-semibold">Idioma audios
+            <input name="audio_lang" maxlength="40" list="langs" placeholder="Inglés" class="field mt-1.5" />
+          </label>
+          <label class="block text-sm font-semibold">Idioma textos
+            <input name="text_lang" maxlength="40" list="langs" placeholder="Español" class="field mt-1.5" />
+          </label>
+        </div>
+        <datalist id="genres"><option>Acción</option><option>Aventura</option><option>Mundo abierto</option><option>Deportes</option><option>Fútbol</option><option>Carreras</option><option>Lucha</option><option>Terror</option><option>Shooter</option><option>RPG</option><option>Plataformas</option><option>Estrategia</option><option>Simulación</option><option>Supervivencia</option></datalist>
+        <datalist id="langs"><option>Español</option><option>Español latino</option><option>Inglés</option><option>Español e inglés</option></datalist>
+      </fieldset>
       <fieldset class="mt-5">
         <legend class="text-sm font-semibold">Dónde aparece en el inicio</legend>
         <p class="text-xs text-slate-500">Igual aparece siempre en su consola, en el buscador y, si tiene descuento, en Ofertas activas.</p>
@@ -586,6 +609,8 @@
       gForm.price_sec.value = g && g.price_sec != null ? g.price_sec : '';
       gForm.old_price_sec.value = g && g.old_price_sec ? g.old_price_sec : '';
       gForm.description.value = g && g.description ? g.description : '';
+      ['genre', 'size', 'audio_lang', 'text_lang'].forEach(n => gForm[n].value = g && g[n] ? g[n] : '');
+      gForm.local_mp.value = g && g.local_mp != null ? String(g.local_mp) : '';
       gForm.querySelectorAll('[name=sections]').forEach(c => c.checked = g ? g.sections.includes(c.value) : false);
       gForm.in_stock.checked = g ? g.in_stock : true;
       gForm.active.checked = g ? g.active : true;
@@ -616,6 +641,9 @@
         name, price, old_price: old, img,
         price_sec: num(gForm.price_sec), old_price_sec: num(gForm.old_price_sec),
         description: gForm.description.value.trim() || null,
+        genre: gForm.genre.value.trim() || null, size: gForm.size.value.trim() || null,
+        audio_lang: gForm.audio_lang.value.trim() || null, text_lang: gForm.text_lang.value.trim() || null,
+        local_mp: gForm.local_mp.value === '' ? null : gForm.local_mp.value === 'true',
         plat: gForm.querySelector('[name=plat]:checked').value,
         sections: [...gForm.querySelectorAll('[name=sections]:checked')].map(c => c.value),
         in_stock: gForm.in_stock.checked, active: gForm.active.checked,
@@ -789,8 +817,9 @@
     };
     const EXPORTS = {
       juegos: ['Juegos', 'Todos los juegos con precios, descuento, stock y secciones.', 'fa-gamepad', () => csv('juegos',
-        ['ID', 'Nombre', 'Consola', 'Precio primaria', 'Precio anterior primaria', 'Descuento %', 'Precio secundaria', 'Precio anterior secundaria', 'Stock', 'Visible', 'Secciones', 'Portada', 'Última modificación'],
-        store.games.map(g => [g.id, g.name, g.plat, g.price, g.old_price, discountOf(g.price, g.old_price) || '', g.price_sec, g.old_price_sec, g.in_stock ? 'Sí' : 'No', g.active ? 'Sí' : 'No',
+        ['ID', 'Nombre', 'Consola', 'Precio primaria', 'Precio anterior primaria', 'Descuento %', 'Precio secundaria', 'Precio anterior secundaria', 'Género', 'Peso', 'Idioma audios', 'Idioma textos', 'Multijugador local', 'Stock', 'Visible', 'Secciones', 'Portada', 'Última modificación'],
+        store.games.map(g => [g.id, g.name, g.plat, g.price, g.old_price, discountOf(g.price, g.old_price) || '', g.price_sec, g.old_price_sec,
+          g.genre, g.size, g.audio_lang, g.text_lang, g.local_mp == null ? '' : g.local_mp ? 'Sí' : 'No', g.in_stock ? 'Sí' : 'No', g.active ? 'Sí' : 'No',
           SECTIONS.filter(([k]) => g.sections.includes(k)).map(([, l]) => l).join(', '), g.img, when(g.updated_at)]))],
       precios: ['Precios PlayStation Plus', 'Plan, duración y precio.', 'fa-brands fa-playstation', () => csv('precios-ps-plus',
         ['Plan', 'Meses', 'Precio'], PLANS.flatMap(p => MONTHS.map(m => { const r = store.prices.find(x => x.plan === p && x.months === m); return [p, m, r && r.price != null ? r.price : 'A consultar']; })))],

@@ -749,6 +749,7 @@
       { k: 'secundaria', label: 'Cuenta secundaria', tag: 'EL MENOR PRECIO', price: p.priceSec, old: p.priceSec != null ? p.oldSec : 0, off: p.priceSec != null ? p.offSec : 0,
         ask: p.priceSec == null, info: 'Jugás el juego completo desde el perfil que te damos. Es la opción más económica.' },
     ];
+    const spec = (icon, label, value) => value ? `<li><i class="fa-solid ${icon} fa-fw mr-1.5 text-neon-cyan"></i><b class="text-white">${label}:</b> ${esc(value)}</li>` : '';
     const withPlat = p => p.name.includes(p.plat) ? p.name : `${p.name} (${p.plat})`; // evita "GTA V PS5 (PS5)"
     const buyMsg = (p, a) => `Hola, quiero comprar ${withPlat(p)} - ${a.label} - ${fmt(a.price)}`;
     const productView = id => {
@@ -828,11 +829,21 @@
               ${perk('fa-envelope', 'Por WhatsApp y correo', 'Te enviamos los datos de la cuenta.')}
             </div>
 
-            ${p.desc ? `
             <section class="mt-8">
               <h2 class="font-display text-xl font-bold">Sobre el juego</h2>
-              <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-300">${esc(p.desc)}</p>
-            </section>` : ''}
+              ${p.desc ? `<p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-300">${esc(p.desc)}</p>` : ''}
+              <ul class="mt-4 w-fit space-y-1.5 rounded-2xl bg-night-800 p-4 pr-6 text-sm text-slate-300 ring-1 ring-white/10">
+                ${spec('fa-gamepad', 'Género', p.genre)}
+                ${spec('fa-hard-drive', 'Peso', p.size)}
+                ${spec('fa-volume-high', 'Idioma audios', p.audio)}
+                ${spec('fa-language', 'Idioma textos', p.texts)}
+                ${p.localMp == null ? '' : spec(p.localMp ? 'fa-user-group' : 'fa-user-slash', 'Multijugador local', p.localMp ? 'Sí' : 'No')}
+                <li><i class="fa-solid fa-shield-halved fa-fw mr-1.5 text-neon-cyan"></i>Juego original y completo</li>
+                <li><i class="fa-solid fa-download fa-fw mr-1.5 text-neon-cyan"></i>Descarga desde tu consola</li>
+                <li><i class="fa-solid fa-book-open fa-fw mr-1.5 text-neon-cyan"></i>Incluye guía paso a paso</li>
+                <li><i class="fa-solid fa-bolt fa-fw mr-1.5 text-neon-cyan"></i><b class="text-white">Entrega en hasta 24 hs</b> <span class="text-slate-500">(inmediata si hay stock)</span></li>
+              </ul>
+            </section>
 
             <section class="mt-8">
               <h2 class="font-display text-xl font-bold">¿Cómo funciona?</h2>
@@ -1048,6 +1059,7 @@
       priceSec: r.price_sec ?? null, oldSec: r.old_price_sec || 0,
       offSec: r.old_price_sec > r.price_sec && r.price_sec != null ? Math.round((1 - r.price_sec / r.old_price_sec) * 100) : 0,
       desc: r.description || '',
+      genre: r.genre || '', size: r.size || '', audio: r.audio_lang || '', texts: r.text_lang || '', localMp: r.local_mp ?? null,
     });
     const applyCatalog = ({ products, prices, banners, reviews: revs, settings }) => {
       if (settings) applySettings(settings);
